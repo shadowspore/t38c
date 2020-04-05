@@ -19,14 +19,37 @@ type Bounds struct {
 
 // Object is a Tile38 object.
 type Object struct {
-	Tile38ID string `json:"tile38_id"` // get this
+	Tile38ID string             `json:"tile38_id"` // get this
+	Fields   map[string]float64 `json:"fields"`    // and this from up-level json
+}
+
+// GeoJSONObject struct
+type GeoJSONObject struct {
+	Object
 	// Can be geojson.FeatureCollection or geojson.Feature or geojson.Geometry
-	GeoJSON interface{}        `json:"geojson"`
-	Fields  map[string]float64 `json:"fields"` // and this from up-level json
+	GeoJSON interface{} `json:"geojson"`
+}
+
+// PointObject struct
+type PointObject struct {
+	Object
+	Point Point `json:"point"`
+}
+
+// BoundsObject struct
+type BoundsObject struct {
+	Object
+	Bounds Bounds `json:"bounds"`
+}
+
+// HashObject struct
+type HashObject struct {
+	Object
+	Hash string `json:"hash"`
 }
 
 // UnmarshalJSON decodes the data into a GeoJSON object.
-func (ob *Object) UnmarshalJSON(data []byte) (err error) {
+func (ob *GeoJSONObject) UnmarshalJSON(data []byte) (err error) {
 	ob.GeoJSON, err = unmarshalGeoJSON(data)
 	return
 }

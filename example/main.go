@@ -50,4 +50,11 @@ func main() {
 		log.Fatal(err)
 	}
 	pp.Println(obe.GeoJSON)
+
+	pts, err := tile38.WithinPoints("fleet", t38c.AreaCircle(2, 2, 99999))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	pp.Println(pts)
 }

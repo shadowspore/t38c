@@ -58,14 +58,14 @@ func (client *Tile38Client) Keys(pattern string) ([]string, error) {
 }
 
 // Get GeoJSON object.
-func (client *Tile38Client) Get(key, objectID string, withFields bool) (*Object, error) {
+func (client *Tile38Client) Get(key, objectID string, withFields bool) (*GeoJSONObject, error) {
 	return client.GetObject(key, objectID, withFields)
 }
 
 // GetObject returns GeoJSON object of an id.
-func (client *Tile38Client) GetObject(key, objectID string, withFields bool) (*Object, error) {
+func (client *Tile38Client) GetObject(key, objectID string, withFields bool) (*GeoJSONObject, error) {
 	var resp struct {
-		Object *Object            `json:"object"`
+		Object *GeoJSONObject     `json:"object"`
 		Fields map[string]float64 `json:"fields"`
 	}
 
