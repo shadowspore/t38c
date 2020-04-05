@@ -18,6 +18,13 @@ type Tile38Client struct {
 // ClientOption ...
 type ClientOption func(*Tile38Client)
 
+// Conn ...
+func Conn(conn redis.Conn) ClientOption {
+	return func(c *Tile38Client) {
+		c.conn = conn
+	}
+}
+
 // Debug ...
 func Debug() ClientOption {
 	return func(c *Tile38Client) {
