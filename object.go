@@ -21,8 +21,8 @@ type Bounds struct {
 type Object struct {
 	Tile38ID string `json:"tile38_id"` // get this
 	// Can be geojson.FeatureCollection or geojson.Feature or geojson.Geometry
-	GeoJSON interface{}    `json:"geojson"`
-	Fields  map[string]int `json:"fields"` // and this from up-level json
+	GeoJSON interface{}        `json:"geojson"`
+	Fields  map[string]float64 `json:"fields"` // and this from up-level json
 }
 
 // UnmarshalJSON decodes the data into a GeoJSON object.

@@ -8,9 +8,9 @@ func (client *Tile38Client) searchObjects(cmd, key, area string, opts []SearchOp
 	var resp struct {
 		Fields  []string `json:"fields"`
 		Objects []struct {
-			ID     string  `json:"id"`
-			Object *Object `json:"object"`
-			Fields []int   `json:"fields"`
+			ID     string    `json:"id"`
+			Object *Object   `json:"object"`
+			Fields []float64 `json:"fields"`
 		} `json:"objects"`
 	}
 
@@ -25,7 +25,7 @@ func (client *Tile38Client) searchObjects(cmd, key, area string, opts []SearchOp
 		o := obj.Object
 		o.Tile38ID = obj.ID
 		if haveFields {
-			o.Fields = make(map[string]int)
+			o.Fields = make(map[string]float64)
 			for fieldIdx, field := range resp.Fields {
 				o.Fields[field] = obj.Fields[fieldIdx]
 			}

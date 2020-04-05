@@ -65,8 +65,8 @@ func (client *Tile38Client) Get(key, objectID string, withFields bool) (*Object,
 // GetObject returns GeoJSON object of an id.
 func (client *Tile38Client) GetObject(key, objectID string, withFields bool) (*Object, error) {
 	var resp struct {
-		Object *Object        `json:"object"`
-		Fields map[string]int `json:"fields"`
+		Object *Object            `json:"object"`
+		Fields map[string]float64 `json:"fields"`
 	}
 
 	cmd := "GET " + key + " " + objectID
