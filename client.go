@@ -10,20 +10,12 @@ import (
 
 // Tile38Client ...
 type Tile38Client struct {
-	addr  string
 	debug bool
 	conn  redis.Conn
 }
 
 // ClientOption ...
 type ClientOption func(*Tile38Client)
-
-// Conn ...
-func Conn(conn redis.Conn) ClientOption {
-	return func(c *Tile38Client) {
-		c.conn = conn
-	}
-}
 
 // Debug ...
 func Debug() ClientOption {
@@ -40,8 +32,13 @@ func New(address string, opts ...ClientOption) (*Tile38Client, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	return NewWithConn(conn, opts...)
+}
+
+// NewWithConn ...
+func NewWithConn(conn redis.Conn, opts ...ClientOption) (*Tile38Client, error) {
 	client := &Tile38Client{
-		addr: address,
 		conn: conn,
 	}
 
