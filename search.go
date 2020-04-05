@@ -44,31 +44,6 @@ func (client *Tile38Client) searchObjects(cmd, key, area string, opts []SearchOp
 	return objects, nil
 }
 
-func buildSearchCommand(cmd, key, area string, opts []SearchOption) string {
-	var sb strings.Builder
-	sb.WriteString(cmd + " " + key)
-	for _, opt := range opts {
-		sb.WriteString(" " + string(opt))
-	}
-	sb.WriteString(" " + area)
-	return sb.String()
-}
-
-// Intersects searches a collection for objects that intersect a specified bounding area.
-func (client *Tile38Client) Intersects(key string, area SearchArea, opts ...SearchOption) ([]*GeoJSONObject, error) {
-	return client.searchObjects("INTERSECTS", key, string(area), opts)
-}
-
-// Within searches a collection for objects that are fully contained inside of a specified bounding area.
-func (client *Tile38Client) Within(key string, area SearchArea, opts ...SearchOption) ([]*GeoJSONObject, error) {
-	return client.searchObjects("WITHIN", key, string(area), opts)
-}
-
-// Nearby searches a collection for objects that are close to a specified point.
-func (client *Tile38Client) Nearby(key string, area NearbyArea, opts ...SearchOption) ([]*GeoJSONObject, error) {
-	return client.searchObjects("NEARBY", key, string(area), opts)
-}
-
 func (client *Tile38Client) searchPoints(cmd, key, area string, opts []SearchOption) ([]*PointObject, error) {
 	var resp struct {
 		Fields []string `json:"fields"`
@@ -104,6 +79,45 @@ func (client *Tile38Client) searchPoints(cmd, key, area string, opts []SearchOpt
 	return points, nil
 }
 
+func (client *Tile38Client) searchIDs(cmd, key, area string, opts []SearchOption) ([]string, error) {
+	var resp struct {
+		IDs []string `json:"ids"`
+	}
+
+	opts = append(opts, SearchOption("IDS"))
+	command := buildSearchCommand(cmd, key, area, opts)
+	if err := client.execute(command, &resp); err != nil {
+		return nil, err
+	}
+
+	return resp.IDs, nil
+}
+
+func buildSearchCommand(cmd, key, area string, opts []SearchOption) string {
+	var sb strings.Builder
+	sb.WriteString(cmd + " " + key)
+	for _, opt := range opts {
+		sb.WriteString(" " + string(opt))
+	}
+	sb.WriteString(" " + area)
+	return sb.String()
+}
+
+// Intersects searches a collection for objects that intersect a specified bounding area.
+func (client *Tile38Client) Intersects(key string, area SearchArea, opts ...SearchOption) ([]*GeoJSONObject, error) {
+	return client.searchObjects("INTERSECTS", key, string(area), opts)
+}
+
+// Within searches a collection for objects that are fully contained inside of a specified bounding area.
+func (client *Tile38Client) Within(key string, area SearchArea, opts ...SearchOption) ([]*GeoJSONObject, error) {
+	return client.searchObjects("WITHIN", key, string(area), opts)
+}
+
+// Nearby searches a collection for objects that are close to a specified point.
+func (client *Tile38Client) Nearby(key string, area NearbyArea, opts ...SearchOption) ([]*GeoJSONObject, error) {
+	return client.searchObjects("NEARBY", key, string(area), opts)
+}
+
 // IntersectsPoints ...
 func (client *Tile38Client) IntersectsPoints(key string, area SearchArea, opts ...SearchOption) ([]*PointObject, error) {
 	return client.searchPoints("INTERSECTS", key, string(area), opts)
@@ -117,20 +131,6 @@ func (client *Tile38Client) WithinPoints(key string, area SearchArea, opts ...Se
 // NearbyPoints ...
 func (client *Tile38Client) NearbyPoints(key string, area NearbyArea, opts ...SearchOption) ([]*PointObject, error) {
 	return client.searchPoints("NEARBY", key, string(area), opts)
-}
-
-func (client *Tile38Client) searchIDs(cmd, key, area string, opts []SearchOption) ([]string, error) {
-	var resp struct {
-		IDs []string `json:"ids"`
-	}
-
-	opts = append(opts, SearchOption("IDS"))
-	command := buildSearchCommand(cmd, key, area, opts)
-	if err := client.execute(command, &resp); err != nil {
-		return nil, err
-	}
-
-	return resp.IDs, nil
 }
 
 // IntersectsIDs ...

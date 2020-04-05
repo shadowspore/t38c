@@ -1,10 +1,5 @@
 package t38c
 
-import (
-	geojson "github.com/paulmach/go.geojson"
-	"github.com/tidwall/gjson"
-)
-
 // Point struct
 type Point struct {
 	Lat float64 `json:"lat"`
@@ -19,8 +14,8 @@ type Bounds struct {
 
 // Object is a Tile38 object.
 type Object struct {
-	Tile38ID string             `json:"tile38_id"` // get this
-	Fields   map[string]float64 `json:"fields"`    // and this from up-level json
+	Tile38ID string             `json:"tile38_id"`
+	Fields   map[string]float64 `json:"fields"`
 }
 
 // GeoJSONObject struct
@@ -46,15 +41,4 @@ type BoundsObject struct {
 type HashObject struct {
 	Object
 	Hash string `json:"hash"`
-}
-
-func unmarshalGeoJSON(data []byte) (interface{}, error) {
-	switch gjson.GetBytes(data, "type").String() {
-	case "FeatureCollection":
-		return geojson.UnmarshalFeatureCollection(data)
-	case "Feature":
-		return geojson.UnmarshalFeature(data)
-	default:
-		return geojson.UnmarshalGeometry(data)
-	}
 }
