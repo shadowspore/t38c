@@ -1,6 +1,7 @@
 package t38c
 
 import (
+	"encoding/json"
 	"strings"
 )
 
@@ -8,9 +9,9 @@ func (client *Tile38Client) searchObjects(cmd, key, area string, opts []SearchOp
 	var resp struct {
 		Fields  []string `json:"fields"`
 		Objects []struct {
-			ID     string         `json:"id"`
-			Object *GeoJSONObject `json:"object"`
-			Fields []float64      `json:"fields"`
+			ID     string          `json:"id"`
+			Object json.RawMessage `json:"object"`
+			Fields []float64       `json:"fields"`
 		} `json:"objects"`
 	}
 
@@ -22,16 +23,22 @@ func (client *Tile38Client) searchObjects(cmd, key, area string, opts []SearchOp
 	objects := make([]*GeoJSONObject, len(resp.Objects))
 	haveFields := len(resp.Fields) > 0
 	for idx, obj := range resp.Objects {
-		o := obj.Object
-		o.Tile38ID = obj.ID
+		geoObj := &GeoJSONObject{}
+		geoObj.Tile38ID = obj.ID
+		geo, err := unmarshalGeoJSON(obj.Object)
+		if err != nil {
+			return nil, err
+		}
+
+		geoObj.GeoJSON = geo
 		if haveFields {
-			o.Fields = make(map[string]float64)
+			geoObj.Fields = make(map[string]float64)
 			for fieldIdx, field := range resp.Fields {
-				o.Fields[field] = obj.Fields[fieldIdx]
+				geoObj.Fields[field] = obj.Fields[fieldIdx]
 			}
 		}
 
-		objects[idx] = o
+		objects[idx] = geoObj
 	}
 
 	return objects, nil
