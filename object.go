@@ -48,12 +48,6 @@ type HashObject struct {
 	Hash string `json:"hash"`
 }
 
-// UnmarshalJSON decodes the data into a GeoJSON object.
-func (ob *GeoJSONObject) UnmarshalJSON(data []byte) (err error) {
-	ob.GeoJSON, err = unmarshalGeoJSON(data)
-	return
-}
-
 func unmarshalGeoJSON(data []byte) (interface{}, error) {
 	switch gjson.GetBytes(data, "type").String() {
 	case "FeatureCollection":
