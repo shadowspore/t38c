@@ -1,6 +1,7 @@
 package t38c
 
 import (
+	"encoding/json"
 	"strconv"
 	"strings"
 
@@ -65,7 +66,7 @@ func (client *Tile38Client) Get(key, objectID string, withFields bool) (*GeoJSON
 // GetObject returns GeoJSON object of an id.
 func (client *Tile38Client) GetObject(key, objectID string, withFields bool) (*GeoJSONObject, error) {
 	var resp struct {
-		Object *GeoJSONObject     `json:"object"`
+		Object json.RawMessage    `json:"object"`
 		Fields map[string]float64 `json:"fields"`
 	}
 
@@ -79,9 +80,19 @@ func (client *Tile38Client) GetObject(key, objectID string, withFields bool) (*G
 		return nil, err
 	}
 
-	resp.Object.Tile38ID = objectID
-	resp.Object.Fields = resp.Fields
-	return resp.Object, nil
+	geo, err := unmarshalGeoJSON(resp.Object)
+	if err != nil {
+		return nil, err
+	}
+
+	obj := &GeoJSONObject{
+		Object: Object{
+			Tile38ID: key,
+			Fields:   resp.Fields,
+		},
+		GeoJSON: geo,
+	}
+	return obj, nil
 }
 
 // GetPoint get latitude, longitude point.
