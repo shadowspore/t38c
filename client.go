@@ -3,6 +3,7 @@ package t38c
 import (
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/garyburd/redigo/redis"
 )
@@ -26,7 +27,9 @@ func Debug() ClientOption {
 
 // New ...
 func New(address string, opts ...ClientOption) (*Tile38Client, error) {
-	conn, err := redis.Dial("tcp", address)
+	conn, err := redis.Dial("tcp", address,
+		redis.DialConnectTimeout(time.Second*10),
+	)
 	if err != nil {
 		return nil, err
 	}
