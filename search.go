@@ -118,3 +118,32 @@ func (client *Tile38Client) WithinPoints(key string, area SearchArea, opts ...Se
 func (client *Tile38Client) NearbyPoints(key string, area NearbyArea, opts ...SearchOption) ([]*PointObject, error) {
 	return client.searchPoints("NEARBY", key, string(area), opts)
 }
+
+func (client *Tile38Client) searchIDs(cmd, key, area string, opts []SearchOption) ([]string, error) {
+	var resp struct {
+		IDs []string `json:"ids"`
+	}
+
+	opts = append(opts, SearchOption("IDS"))
+	command := buildSearchCommand(cmd, key, area, opts)
+	if err := client.execute(command, &resp); err != nil {
+		return nil, err
+	}
+
+	return resp.IDs, nil
+}
+
+// IntersectsIDs ...
+func (client *Tile38Client) IntersectsIDs(key string, area SearchArea, opts ...SearchOption) ([]string, error) {
+	return client.searchIDs("INTERSECTS", key, string(area), opts)
+}
+
+// WithinIDs ...
+func (client *Tile38Client) WithinIDs(key string, area SearchArea, opts ...SearchOption) ([]string, error) {
+	return client.searchIDs("WITHIN", key, string(area), opts)
+}
+
+// NearbyIDs ...
+func (client *Tile38Client) NearbyIDs(key string, area NearbyArea, opts ...SearchOption) ([]string, error) {
+	return client.searchIDs("NEARBY", key, string(area), opts)
+}
