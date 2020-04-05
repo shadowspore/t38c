@@ -11,14 +11,13 @@ var _ = redis.Conn(&RedisMockedConn{})
 
 // RedisMockedConn struct
 type RedisMockedConn struct {
-	mtx         *sync.Mutex
+	mtx         sync.Mutex
 	mockedResps map[string][]byte
 }
 
 // NewMockedConn ...
 func NewMockedConn() *RedisMockedConn {
 	conn := &RedisMockedConn{
-		mtx:         &sync.Mutex{},
 		mockedResps: make(map[string][]byte, 0),
 	}
 	conn.Mock("PING", []byte(`{"ping": "pong"}`))
@@ -42,7 +41,7 @@ func (conn *RedisMockedConn) Do(command string, args ...interface{}) (interface{
 	req := requestToString(command, args)
 	resp, found := conn.mockedResps[req]
 	if !found {
-		return nil, fmt.Errorf("response for request '%s' not specified", req)
+		return nil, fmt.Errorf("request '%s' not specified", req)
 	}
 
 	return resp, nil
