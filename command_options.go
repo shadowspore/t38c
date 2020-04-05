@@ -10,29 +10,32 @@ func Sparse(n int) SearchOption {
 	)
 }
 
-// // Where allows for filtering out results based on field values.
-// func Where(field string, min, max float64) SearchOption {
-// 	return SearchOption(
-// 		"WHERE " + field + " " + floatToString(min) + " " + floatToString(max),
-// 	)
-// }
+// Where allows for filtering out results based on field values.
+func Where(field string, min, max float64) SearchOption {
+	return SearchOption(
+		NewCommand("WHERE", field, min, max),
+	)
+}
 
-// // Wherein is similar to Where except that it checks whether the object’s field value is in a given list.
-// func Wherein(field string, values ...float64) SearchOption {
-// 	var sb strings.Builder
-// 	sb.WriteString("WHEREIN " + field + " " + strconv.Itoa(len(values)))
-// 	for _, val := range values {
-// 		sb.WriteString(" " + floatToString(val))
-// 	}
-// 	return SearchOption(sb.String())
-// }
+// Wherein is similar to Where except that it checks whether the object’s field value is in a given list.
+func Wherein(field string, values ...float64) SearchOption {
+	var args []interface{}
+	args = append(args, len(values))
+	for _, val := range values {
+		args = append(args, val)
+	}
 
-// // Match is similar to WHERE except that it works on the object id instead of fields.
-// func Match(pattern string) SearchOption {
-// 	return SearchOption(
-// 		"MATCH " + pattern,
-// 	)
-// }
+	return SearchOption(
+		NewCommand("WHEREIN", args),
+	)
+}
+
+// Match is similar to WHERE except that it works on the object id instead of fields.
+func Match(pattern string) SearchOption {
+	return SearchOption(
+		NewCommand("MATCH", pattern),
+	)
+}
 
 // SetOption ...
 type SetOption Command
