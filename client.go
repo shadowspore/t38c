@@ -1,33 +1,20 @@
 package t38c
 
 import (
-	"encoding/json"
-	"fmt"
-	"io/ioutil"
 	"log"
-	"net/http"
-	"strings"
-	"time"
 
-	"github.com/tidwall/gjson"
+	"github.com/garyburd/redigo/redis"
 )
 
 // Tile38Client ...
 type Tile38Client struct {
-	addr       string
-	debug      bool
-	httpClient *http.Client
+	addr  string
+	debug bool
+	conn  redis.Conn
 }
 
 // ClientOption ...
 type ClientOption func(*Tile38Client)
-
-// WithHTTPClient ...
-func WithHTTPClient(httpClient *http.Client) ClientOption {
-	return func(c *Tile38Client) {
-		c.httpClient = httpClient
-	}
-}
 
 // Debug ...
 func Debug() ClientOption {
@@ -38,15 +25,21 @@ func Debug() ClientOption {
 
 // New ...
 func New(address string, opts ...ClientOption) (*Tile38Client, error) {
+	conn, err := redis.Dial("tcp", address)
+	if err != nil {
+		return nil, err
+	}
 	client := &Tile38Client{
 		addr: address,
-		httpClient: &http.Client{
-			Timeout: 30 * time.Second,
-		},
+		conn: conn,
 	}
 
 	for _, opt := range opts {
 		opt(client)
+	}
+
+	if _, err := client.Execute("OUTPUT", "json"); err != nil {
+		return nil, err
 	}
 
 	if err := client.Ping(); err != nil {
@@ -57,31 +50,20 @@ func New(address string, opts ...ClientOption) (*Tile38Client, error) {
 }
 
 // Execute command
-func (client *Tile38Client) execute(command string, response interface{}) error {
-	resp, err := client.httpClient.Post(client.addr, "", strings.NewReader(command))
-	if err != nil {
-		return err
-	}
-	defer resp.Body.Close()
-
-	b, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return err
-	}
-
+func (client *Tile38Client) Execute(command string, args ...interface{}) ([]byte, error) {
+	resp, err := client.conn.Do(command, args...)
 	if client.debug {
-		log.Printf("[%s]: %s", command, b)
+		log.Printf("[%s]: %s", command, resp)
 	}
 
-	if !gjson.GetBytes(b, "ok").Bool() {
-		return fmt.Errorf("command [%s]: %s", command, gjson.GetBytes(b, "err").String())
+	if err != nil {
+		return nil, err
 	}
 
-	if response != nil {
-		if err := json.Unmarshal(b, response); err != nil {
-			return err
-		}
+	body, ok := resp.([]byte)
+	if !ok {
+		log.Fatal("wtf")
 	}
 
-	return nil
+	return body, nil
 }

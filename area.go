@@ -1,25 +1,33 @@
 package t38c
 
-import (
-	geojson "github.com/paulmach/go.geojson"
-)
+import geojson "github.com/paulmach/go.geojson"
+
+type Command struct {
+	Name string
+	Args []interface{}
+}
+
+func NewCommand(name string, args ...interface{}) Command {
+	return Command{
+		Name: name,
+		Args: args,
+	}
+}
 
 // SearchArea ...
-type SearchArea string
+type SearchArea Command
 
 // AreaGet ...
 func AreaGet(objectID string) SearchArea {
-	return SearchArea("GET " + objectID)
+	return SearchArea(
+		NewCommand("GET", objectID),
+	)
 }
 
 // AreaBounds ...
 func AreaBounds(minlat, minlon, maxlat, maxlon float64) SearchArea {
 	return SearchArea(
-		"BOUNDS " +
-			floatToString(minlat) + " " +
-			floatToString(minlon) + " " +
-			floatToString(maxlat) + " " +
-			floatToString(maxlon),
+		NewCommand("BOUNDS", minlat, minlon, maxlat, maxlon),
 	)
 }
 
@@ -28,7 +36,7 @@ func AreaFeatureCollection(fc *geojson.FeatureCollection) SearchArea {
 	// TODO: handle error?
 	b, _ := fc.MarshalJSON()
 	return SearchArea(
-		"OBJECT " + string(b),
+		NewCommand("OBJECT", string(b)),
 	)
 }
 
@@ -37,7 +45,7 @@ func AreaFeature(ft *geojson.Feature) SearchArea {
 	// TODO: handle error?
 	b, _ := ft.MarshalJSON()
 	return SearchArea(
-		"OBJECT " + string(b),
+		NewCommand("OBJECT", string(b)),
 	)
 }
 
@@ -46,7 +54,7 @@ func AreaGeometry(gm *geojson.Geometry) SearchArea {
 	// TODO: handle error?
 	b, _ := gm.MarshalJSON()
 	return SearchArea(
-		"OBJECT " + string(b),
+		NewCommand("OBJECT", string(b)),
 	)
 
 }
@@ -54,37 +62,34 @@ func AreaGeometry(gm *geojson.Geometry) SearchArea {
 // AreaCircle ...
 func AreaCircle(lat, lon, meters float64) SearchArea {
 	return SearchArea(
-		"CIRCLE " +
-			floatToString(lat) + " " +
-			floatToString(lon) + " " +
-			floatToString(meters),
+		NewCommand("CIRCLE", lat, lon, meters),
 	)
 }
 
 // NearbyArea ...
-type NearbyArea string
+type NearbyArea Command
 
 // NearbyPoint ...
 func NearbyPoint(lat, lon, meters float64) NearbyArea {
 	return NearbyArea(
-		"POINT " + floatToString(lat) + " " + floatToString(lon) + " " + floatToString(meters),
+		NewCommand("POINT", lat, lon, meters),
 	)
 }
 
 // SetArea ...
-type SetArea string
+type SetArea Command
 
 // SetPoint ...
 func SetPoint(lat, lon float64) SetArea {
 	return SetArea(
-		"POINT " + floatToString(lat) + " " + floatToString(lon),
+		NewCommand("POINT", lat, lon),
 	)
 }
 
 // SetPointZ ...
 func SetPointZ(lat, lon, z float64) SetArea {
 	return SetArea(
-		"POINT " + floatToString(lat) + " " + floatToString(lon) + " " + floatToString(z),
+		NewCommand("POINT", lat, lon, z),
 	)
 }
 
@@ -92,7 +97,7 @@ func SetPointZ(lat, lon, z float64) SetArea {
 func SetFeatureCollection(fc *geojson.FeatureCollection) SetArea {
 	b, _ := fc.MarshalJSON()
 	return SetArea(
-		"OBJECT " + string(b),
+		NewCommand("OBJECT", string(b)),
 	)
 }
 
@@ -100,7 +105,7 @@ func SetFeatureCollection(fc *geojson.FeatureCollection) SetArea {
 func SetFeature(ft *geojson.Feature) SetArea {
 	b, _ := ft.MarshalJSON()
 	return SetArea(
-		"OBJECT " + string(b),
+		NewCommand("OBJECT", string(b)),
 	)
 }
 
@@ -108,6 +113,6 @@ func SetFeature(ft *geojson.Feature) SetArea {
 func SetGeometry(gm *geojson.Geometry) SetArea {
 	b, _ := gm.MarshalJSON()
 	return SetArea(
-		"OBJECT " + string(b),
+		NewCommand("OBJECT", string(b)),
 	)
 }
