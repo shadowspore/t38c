@@ -2,8 +2,6 @@ package t38c
 
 import (
 	"encoding/json"
-	"strconv"
-	"strings"
 
 	geojson "github.com/paulmach/go.geojson"
 )
@@ -13,7 +11,13 @@ func (client *Tile38Client) Bounds(key string) ([][][]float64, error) {
 	var resp struct {
 		Bounds geojson.Geometry `json:"bounds"`
 	}
-	if err := client.execute("BOUNDS "+key, &resp); err != nil {
+
+	b, err := client.Execute("BOUNDS", key)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := json.Unmarshal(b, &resp); err != nil {
 		return nil, err
 	}
 
@@ -22,26 +26,29 @@ func (client *Tile38Client) Bounds(key string) ([][][]float64, error) {
 
 // Del remove a specified object.
 func (client *Tile38Client) Del(key, objectID string) error {
-	err := client.execute("DEL "+key+" "+objectID, nil)
+	_, err := client.Execute("DEL", key)
 	return err
 }
 
 // Drop remove all objects from specified key.
 func (client *Tile38Client) Drop(key string) error {
-	err := client.execute("DROP "+key, nil)
+	_, err := client.Execute("DROP", key)
 	return err
 }
 
 // Set the value of an id. If a value is already associated to that key/id, it’ll be overwritten.
 func (client *Tile38Client) Set(key, objectID string, area SetArea, opts ...SetOption) error {
-	var sb strings.Builder
-	sb.WriteString("SET " + key + " " + objectID)
+	var args []interface{}
+	args = append(args, key)
+	args = append(args, objectID)
 	for _, opt := range opts {
-		sb.WriteString(" " + string(opt))
+		args = append(args, opt.Name)
+		args = append(args, opt.Args...)
 	}
-	sb.WriteString(" " + string(area))
+	args = append(args, area.Name)
+	args = append(args, area.Args...)
 
-	err := client.execute(sb.String(), nil)
+	_, err := client.Execute("SET", args...)
 	return err
 }
 
@@ -50,8 +57,13 @@ func (client *Tile38Client) Keys(pattern string) ([]string, error) {
 	var resp struct {
 		Keys []string `json:"keys"`
 	}
-	err := client.execute("KEYS "+pattern, &resp)
+
+	b, err := client.Execute("KEYS", pattern)
 	if err != nil {
+		return nil, err
+	}
+
+	if err := json.Unmarshal(b, &resp); err != nil {
 		return nil, err
 	}
 
@@ -70,13 +82,19 @@ func (client *Tile38Client) GetObject(key, objectID string, withFields bool) (*G
 		Fields map[string]float64 `json:"fields"`
 	}
 
-	cmd := "GET " + key + " " + objectID
+	var args []interface{}
+	args = append(args, key)
+	args = append(args, objectID)
 	if withFields {
-		cmd += " WITHFIELDS"
+		args = append(args, "WITHFIELDS")
 	}
 
-	err := client.execute(cmd, &resp)
+	b, err := client.Execute("GET", args...)
 	if err != nil {
+		return nil, err
+	}
+
+	if err := json.Unmarshal(b, &resp); err != nil {
 		return nil, err
 	}
 
@@ -101,9 +119,12 @@ func (client *Tile38Client) GetPoint(key, objectID string) (Point, error) {
 		Point Point `json:"point"`
 	}
 
-	cmd := "GET " + key + " " + objectID + " POINT"
-	err := client.execute(cmd, &resp)
+	b, err := client.Execute("GET", key, objectID, "POINT")
 	if err != nil {
+		return Point{}, err
+	}
+
+	if err := json.Unmarshal(b, &resp); err != nil {
 		return Point{}, err
 	}
 
@@ -116,9 +137,12 @@ func (client *Tile38Client) GetBounds(key, objectID string) (Bounds, error) {
 		Bounds Bounds `json:"bounds"`
 	}
 
-	cmd := "GET " + key + " " + objectID + " BOUNDS"
-	err := client.execute(cmd, &resp)
+	b, err := client.Execute("GET", key, objectID, "BOUNDS")
 	if err != nil {
+		return Bounds{}, err
+	}
+
+	if err := json.Unmarshal(b, &resp); err != nil {
 		return Bounds{}, err
 	}
 
@@ -131,9 +155,12 @@ func (client *Tile38Client) GetHash(key, objectID string, precision int) (string
 		Hash string `json:"hash"`
 	}
 
-	cmd := "GET " + key + " HASH " + strconv.Itoa(precision) + " " + objectID
-	err := client.execute(cmd, &resp)
+	b, err := client.Execute("GET", key, objectID, "HASH", precision)
 	if err != nil {
+		return "", err
+	}
+
+	if err := json.Unmarshal(b, &resp); err != nil {
 		return "", err
 	}
 

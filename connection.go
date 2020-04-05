@@ -1,6 +1,7 @@
 package t38c
 
 import (
+	"encoding/json"
 	"fmt"
 )
 
@@ -10,8 +11,13 @@ func (client *Tile38Client) Ping() error {
 		Ping string `json:"ping"`
 	}
 
-	if err := client.execute("PING", &resp); err != nil {
-		return fmt.Errorf("ping: %v", err)
+	b, err := client.Execute("PING")
+	if err != nil {
+		return err
+	}
+
+	if err := json.Unmarshal(b, &resp); err != nil {
+		return err
 	}
 
 	if resp.Ping != "pong" {
