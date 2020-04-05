@@ -1,6 +1,7 @@
 package t38c
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/garyburd/redigo/redis"
@@ -62,7 +63,7 @@ func (client *Tile38Client) Execute(command string, args ...interface{}) ([]byte
 
 	body, ok := resp.([]byte)
 	if !ok {
-		log.Fatal("wtf")
+		return nil, fmt.Errorf("invalid response type: %T", resp)
 	}
 
 	return body, nil
