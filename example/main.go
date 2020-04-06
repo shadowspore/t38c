@@ -9,7 +9,11 @@ import (
 )
 
 func main() {
-	tile38, err := t38c.New("localhost:9851", t38c.Debug())
+	tile38, err := t38c.New(t38c.ClientOptions{
+		Addr:     "localhost:9851",
+		Debug:    true,
+		PoolSize: 10,
+	})
 	if err != nil {
 		log.Fatal(err)
 	}
