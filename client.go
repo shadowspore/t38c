@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/mediocregopher/radix/v3"
+	"github.com/tidwall/gjson"
 )
 
 // Tile38Client ...
@@ -57,8 +58,9 @@ func NewWithPool(pool *radix.Pool, opts ...ClientOption) (*Tile38Client, error) 
 }
 
 // Execute command
-func (client *Tile38Client) Execute(command string, args ...string) (resp []byte, err error) {
-	err = client.pool.Do(radix.Cmd(&resp, command, args...))
+func (client *Tile38Client) Execute(command string, args ...string) ([]byte, error) {
+	var resp []byte
+	err := client.pool.Do(radix.Cmd(&resp, command, args...))
 	if client.debug {
 		cmd := command
 		if len(args) > 0 {
@@ -67,7 +69,20 @@ func (client *Tile38Client) Execute(command string, args ...string) (resp []byte
 		log.Printf("[%s]: %s", cmd, resp)
 	}
 
-	return
+	if err != nil {
+		return nil, err
+	}
+
+	if !gjson.GetBytes(resp, "ok").Bool() {
+		cmd := command
+		if len(args) > 0 {
+			cmd += " " + strings.Join(args, " ")
+		}
+
+		return nil, fmt.Errorf("command '%s': %s", cmd, gjson.GetBytes(resp, "err").String())
+	}
+
+	return resp, nil
 }
 
 // RadixJSONDialer ...
