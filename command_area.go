@@ -12,7 +12,7 @@ func AreaGet(objectID string) SearchArea {
 
 // AreaBounds ...
 func AreaBounds(minlat, minlon, maxlat, maxlon float64) SearchArea {
-	return SearchArea(NewCommand("BOUNDS", minlat, minlon, maxlat, maxlon))
+	return SearchArea(NewCommand("BOUNDS", floatString(minlat), floatString(minlon), floatString(maxlat), floatString(maxlon)))
 }
 
 // AreaFeatureCollection ...
@@ -39,7 +39,7 @@ func AreaGeometry(gm *geojson.Geometry) SearchArea {
 
 // AreaCircle ...
 func AreaCircle(lat, lon, meters float64) SearchArea {
-	return SearchArea(NewCommand("CIRCLE", lat, lon, meters))
+	return SearchArea(NewCommand("CIRCLE", floatString(lat), floatString(lon), floatString(meters)))
 }
 
 // NearbyArea ...
@@ -47,7 +47,7 @@ type NearbyArea Command
 
 // NearbyPoint ...
 func NearbyPoint(lat, lon, meters float64) NearbyArea {
-	return NearbyArea(NewCommand("POINT", lat, lon, meters))
+	return NearbyArea(NewCommand("POINT", floatString(lat), floatString(lon), floatString(meters)))
 }
 
 // SetArea ...
@@ -55,12 +55,12 @@ type SetArea Command
 
 // SetPoint ...
 func SetPoint(lat, lon float64) SetArea {
-	return SetArea(NewCommand("POINT", lat, lon))
+	return SetArea(NewCommand("POINT", floatString(lat), floatString(lon)))
 }
 
 // SetPointZ ...
 func SetPointZ(lat, lon, z float64) SetArea {
-	return SetArea(NewCommand("POINT", lat, lon, z))
+	return SetArea(NewCommand("POINT", floatString(lat), floatString(lon), floatString(z)))
 }
 
 // SetFeatureCollection ...

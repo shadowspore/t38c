@@ -8,12 +8,13 @@ import (
 )
 
 func TestBounds(t *testing.T) {
-	conn := NewMockedConn()
-	conn.Mock("BOUNDS test", []byte(`
-		{"ok":true,"bounds":{"type":"Polygon","coordinates":[[[1,1],[2,1],[2,2],[1,2],[1,1]]]},"elapsed":"19.52µs"}
-	`))
+	pool, err := NewMocker().
+		Mock(
+			`BOUNDS test`, `{"ok":true,"bounds":{"type":"Polygon","coordinates":[[[1,1],[2,1],[2,2],[1,2],[1,1]]]},"elapsed":"19.52µs"}`,
+		).GetPool()
+	assert.Nil(t, err)
 
-	tile38, err := t38c.NewWithConn(conn)
+	tile38, err := t38c.NewWithPool(pool, t38c.Debug())
 	assert.Nil(t, err)
 
 	resp, err := tile38.Bounds("test")

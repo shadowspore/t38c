@@ -2,6 +2,7 @@ package t38c
 
 import (
 	"encoding/json"
+	"strconv"
 )
 
 func (client *Tile38Client) searchObjects(cmd, key string, area Command, opts []SearchOption) ([]*GeoJSONObject, error) {
@@ -157,7 +158,7 @@ func (client *Tile38Client) searchHashes(cmd, key string, area Command, precisio
 		} `json:"hashes"`
 	}
 
-	opts = append(opts, SearchOption(NewCommand("HASHES", precision)))
+	opts = append(opts, SearchOption(NewCommand("HASHES", strconv.Itoa(precision))))
 	args := buildArgs(key, area, opts)
 	b, err := client.Execute(cmd, args...)
 	if err != nil {
@@ -187,8 +188,8 @@ func (client *Tile38Client) searchHashes(cmd, key string, area Command, precisio
 	return objects, nil
 }
 
-func buildArgs(key string, area Command, opts []SearchOption) []interface{} {
-	var args []interface{}
+func buildArgs(key string, area Command, opts []SearchOption) []string {
+	var args []string
 	args = append(args, key)
 	for _, opt := range opts {
 		args = append(args, opt.Name)

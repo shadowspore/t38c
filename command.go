@@ -3,11 +3,11 @@ package t38c
 // Command struct
 type Command struct {
 	Name string
-	Args []interface{}
+	Args []string
 }
 
 // NewCommand ...
-func NewCommand(name string, args ...interface{}) Command {
+func NewCommand(name string, args ...string) Command {
 	return Command{
 		Name: name,
 		Args: args,
