@@ -8,8 +8,10 @@ import (
 )
 
 func TestPing(t *testing.T) {
-	conn := NewMockedConn()
-	tile38, err := t38c.NewWithConn(conn)
+	pool, err := NewMocker().GetPool()
+	assert.Nil(t, err)
+
+	tile38, err := t38c.NewWithPool(pool, t38c.Debug())
 	assert.Nil(t, err)
 
 	err = tile38.Ping()

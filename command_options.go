@@ -1,27 +1,29 @@
 package t38c
 
+import "strconv"
+
 // SearchOption ...
 type SearchOption Command
 
 // Sparse will distribute the results of a search evenly across the requested area.
 func Sparse(n int) SearchOption {
-	return SearchOption(NewCommand("SPARSE", n))
+	return SearchOption(NewCommand("SPARSE", strconv.Itoa(n)))
 }
 
 // Where allows for filtering out results based on field values.
 func Where(field string, min, max float64) SearchOption {
-	return SearchOption(NewCommand("WHERE", field, min, max))
+	return SearchOption(NewCommand("WHERE", field, floatString(min), floatString(max)))
 }
 
 // Wherein is similar to Where except that it checks whether the object’s field value is in a given list.
 func Wherein(field string, values ...float64) SearchOption {
-	var args []interface{}
-	args = append(args, len(values))
+	var args []string
+	args = append(args, strconv.Itoa(len(values)))
 	for _, val := range values {
-		args = append(args, val)
+		args = append(args, floatString(val))
 	}
 
-	return SearchOption(NewCommand("WHEREIN", args))
+	return SearchOption(NewCommand("WHEREIN", args...))
 }
 
 // Match is similar to WHERE except that it works on the object id instead of fields.
@@ -34,7 +36,7 @@ type SetOption Command
 
 // SetField ...
 func SetField(name string, value float64) SetOption {
-	return SetOption(NewCommand("FIELD", name, value))
+	return SetOption(NewCommand("FIELD", name, floatString(value)))
 }
 
 // func SetEX(d time.Duration) SetOption {

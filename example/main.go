@@ -57,4 +57,11 @@ func main() {
 	}
 
 	pp.Println(pts)
+
+	hashes, err := tile38.NearbyBounds("fleet", t38c.NearbyPoint(0, 0, 999999))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	pp.Println(hashes)
 }

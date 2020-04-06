@@ -1,6 +1,8 @@
 package t38c
 
 import (
+	"strconv"
+
 	geojson "github.com/paulmach/go.geojson"
 	"github.com/tidwall/gjson"
 )
@@ -14,4 +16,8 @@ func unmarshalGeoJSON(data []byte) (interface{}, error) {
 	default:
 		return geojson.UnmarshalGeometry(data)
 	}
+}
+
+func floatString(val float64) string {
+	return strconv.FormatFloat(val, 'f', 10, 64)
 }

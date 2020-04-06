@@ -2,6 +2,7 @@ package t38c
 
 import (
 	"encoding/json"
+	"strconv"
 
 	geojson "github.com/paulmach/go.geojson"
 )
@@ -38,7 +39,7 @@ func (client *Tile38Client) Drop(key string) error {
 
 // Set the value of an id. If a value is already associated to that key/id, it’ll be overwritten.
 func (client *Tile38Client) Set(key, objectID string, area SetArea, opts ...SetOption) error {
-	var args []interface{}
+	var args []string
 	args = append(args, key)
 	args = append(args, objectID)
 	for _, opt := range opts {
@@ -82,7 +83,7 @@ func (client *Tile38Client) GetObject(key, objectID string, withFields bool) (*G
 		Fields map[string]float64 `json:"fields"`
 	}
 
-	var args []interface{}
+	var args []string
 	args = append(args, key)
 	args = append(args, objectID)
 	if withFields {
@@ -155,7 +156,7 @@ func (client *Tile38Client) GetHash(key, objectID string, precision int) (string
 		Hash string `json:"hash"`
 	}
 
-	b, err := client.Execute("GET", key, objectID, "HASH", precision)
+	b, err := client.Execute("GET", key, objectID, "HASH", strconv.Itoa(precision))
 	if err != nil {
 		return "", err
 	}
