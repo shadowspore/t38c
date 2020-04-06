@@ -20,7 +20,7 @@ func NewMocker() *Mocker {
 		mocks: make(map[string]string),
 	}
 
-	m.Mock(`PING`, `{"ping": "pong"}`)
+	m.Mock(`PING`, `{"ok": true, "ping": "pong"}`)
 	m.Mock(`OUTPUT json`, ``)
 
 	return m

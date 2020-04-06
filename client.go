@@ -27,7 +27,7 @@ type ClientOptions struct {
 
 // New ...
 func New(ops ClientOptions) (client *Tile38Client, err error) {
-	var pool *radix.Pool
+	pool := ops.Pool
 	if ops.Pool == nil {
 		pool, err = radix.NewPool("tcp", ops.Addr, ops.PoolSize, radix.PoolConnFunc(RadixJSONDialer))
 		if err != nil {
