@@ -14,7 +14,10 @@ func TestBounds(t *testing.T) {
 		).GetPool()
 	assert.Nil(t, err)
 
-	tile38, err := t38c.NewWithPool(pool, t38c.Debug())
+	tile38, err := t38c.New(t38c.ClientOptions{
+		Pool: pool,
+		Debug: true,
+	})
 	assert.Nil(t, err)
 
 	resp, err := tile38.Bounds("test")

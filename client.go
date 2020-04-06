@@ -10,44 +10,34 @@ import (
 	"github.com/tidwall/gjson"
 )
 
-// Tile38Client ...
+// Tile38Client struct
 type Tile38Client struct {
+	addr  string
 	debug bool
 	pool  *radix.Pool
 }
 
-// ClientOption ...
-type ClientOption func(*Tile38Client)
-
-// Debug ...
-func Debug() ClientOption {
-	return func(c *Tile38Client) {
-		c.debug = true
-	}
+// ClientOptions struct
+type ClientOptions struct {
+	Debug    bool
+	Addr     string
+	PoolSize int
+	Pool     *radix.Pool
 }
 
 // New ...
-func New(address string, opts ...ClientOption) (*Tile38Client, error) {
-	pool, err := radix.NewPool("tcp", address, 10, radix.PoolConnFunc(RadixJSONDialer))
-	if err != nil {
-		return nil, err
+func New(ops ClientOptions) (client *Tile38Client, err error) {
+	var pool *radix.Pool
+	if ops.Pool == nil {
+		pool, err = radix.NewPool("tcp", ops.Addr, ops.PoolSize, radix.PoolConnFunc(RadixJSONDialer))
+		if err != nil {
+			return nil, err
+		}
 	}
 
-	return NewWithPool(pool, opts...)
-}
-
-// NewWithPool ...
-func NewWithPool(pool *radix.Pool, opts ...ClientOption) (*Tile38Client, error) {
-	client := &Tile38Client{
-		pool: pool,
-	}
-
-	for _, opt := range opts {
-		opt(client)
-	}
-
-	if _, err := client.Execute("OUTPUT", "json"); err != nil {
-		return nil, err
+	client = &Tile38Client{
+		debug: ops.Debug,
+		pool:  pool,
 	}
 
 	if err := client.Ping(); err != nil {
@@ -110,5 +100,6 @@ func RadixJSONDialer(net, addr string) (radix.Conn, error) {
 		conn.Close()
 		return nil, fmt.Errorf("bad response: %s", b)
 	}
+
 	return conn, nil
 }
