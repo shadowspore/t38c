@@ -12,7 +12,7 @@ func TestPing(t *testing.T) {
 	assert.Nil(t, err)
 
 	tile38, err := t38c.New(t38c.ClientOptions{
-		Pool: pool,
+		Pool:  pool,
 		Debug: true,
 	})
 	assert.Nil(t, err)
