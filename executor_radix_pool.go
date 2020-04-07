@@ -7,7 +7,7 @@ import (
 	"github.com/mediocregopher/radix/v3"
 )
 
-var _ = Executor(&RadixPoolExecutor{})
+var _ Executor = (*RadixPoolExecutor)(nil)
 
 // RadixPoolExecutor struct
 type RadixPoolExecutor struct {
