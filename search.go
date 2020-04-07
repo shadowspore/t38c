@@ -284,8 +284,11 @@ func buildArgs(key string, area Command, opts []SearchOption) []string {
 		args = append(args, opt.Name)
 		args = append(args, opt.Args...)
 	}
-	args = append(args, area.Name)
-	args = append(args, area.Args...)
+
+	if len(area.Name) > 0 {
+		args = append(args, area.Name)
+		args = append(args, area.Args...)
+	}
 	return args
 }
 
@@ -377,4 +380,29 @@ func (client *Tile38Client) WithinCount(key string, area SearchArea, opts ...Sea
 // NearbyCount ...
 func (client *Tile38Client) NearbyCount(key string, area NearbyArea, opts ...SearchOption) (*SearchCountResponse, error) {
 	return client.searchCount("NEARBY", key, Command(area), opts)
+}
+
+// Scan ...
+func (client *Tile38Client) Scan(key string, opts ...SearchOption) (*SearchObjectsResponse, error) {
+	return client.searchObjects("SCAN", key, NewCommand(""), opts)
+}
+
+// ScanPoints ...
+func (client *Tile38Client) ScanPoints(key string, opts ...SearchOption) (*SearchPointsResponse, error) {
+	return client.searchPoints("SCAN", key, NewCommand(""), opts)
+}
+
+// ScanIDs ...
+func (client *Tile38Client) ScanIDs(key string, opts ...SearchOption) (*SearchIDsResponse, error) {
+	return client.searchIDs("SCAN", key, NewCommand(""), opts)
+}
+
+// ScanBounds ...
+func (client *Tile38Client) ScanBounds(key string, opts ...SearchOption) (*SearchBoundsResponse, error) {
+	return client.searchBounds("SCAN", key, NewCommand(""), opts)
+}
+
+// ScanHashes ...
+func (client *Tile38Client) ScanHashes(key string, precision int, opts ...SearchOption) (*SearchHashesResponse, error) {
+	return client.searchHashes("SCAN", key, NewCommand(""), precision, opts)
 }
