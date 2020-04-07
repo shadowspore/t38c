@@ -406,3 +406,18 @@ func (client *Tile38Client) ScanBounds(key string, opts ...SearchOption) (*Searc
 func (client *Tile38Client) ScanHashes(key string, precision int, opts ...SearchOption) (*SearchHashesResponse, error) {
 	return client.searchHashes("SCAN", key, NewCommand(""), precision, opts)
 }
+
+// Search ...
+func (client *Tile38Client) Search(key string, opts ...SearchOption) (*SearchObjectsResponse, error) {
+	return client.searchObjects("SEARCH", key, NewCommand(""), opts)
+}
+
+// SearchCount ...
+func (client *Tile38Client) SearchCount(key string, opts ...SearchOption) (*SearchCountResponse, error) {
+	return client.searchCount("SEARCH", key, NewCommand(""), opts)
+}
+
+// SearchIDs ...
+func (client *Tile38Client) SearchIDs(key string, opts ...SearchOption) (*SearchIDsResponse, error) {
+	return client.searchIDs("SEARCH", key, NewCommand(""), opts)
+}
