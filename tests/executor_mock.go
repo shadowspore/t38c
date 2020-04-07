@@ -7,7 +7,7 @@ import (
 	t38c "github.com/lostpeer/tile38-client"
 )
 
-var _ = t38c.Executor(&MockExecutor{})
+var _ t38c.Executor = (*MockExecutor)(nil)
 
 // MockExecutor struct
 type MockExecutor struct {
