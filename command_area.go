@@ -1,6 +1,10 @@
 package t38c
 
-import geojson "github.com/paulmach/go.geojson"
+import (
+	"strconv"
+
+	geojson "github.com/paulmach/go.geojson"
+)
 
 // SearchArea ...
 type SearchArea Command
@@ -43,8 +47,8 @@ func AreaCircle(lat, lon, meters float64) SearchArea {
 }
 
 // AreaTile ...
-func AreaTile(x, y, z float64) SearchArea {
-	return SearchArea(NewCommand("TILE", floatString(x), floatString(y), floatString(z)))
+func AreaTile(x, y, z int) SearchArea {
+	return SearchArea(NewCommand("TILE", strconv.Itoa(x), strconv.Itoa(y), strconv.Itoa(z)))
 }
 
 // AreaQuadkey ...
