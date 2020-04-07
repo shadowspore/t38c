@@ -5,6 +5,21 @@ import "strconv"
 // SearchOption ...
 type SearchOption Command
 
+// Desc ...
+func Desc() SearchOption {
+	return SearchOption(NewCommand("DESC"))
+}
+
+// Asc ...
+func Asc() SearchOption {
+	return SearchOption(NewCommand("ASC"))
+}
+
+// Count ...
+func Count(count int) SearchOption {
+	return SearchOption(NewCommand("COUNT", strconv.Itoa(count)))
+}
+
 // NoFields ...
 func NoFields() SearchOption {
 	return SearchOption(NewCommand("NOFIELDS"))
