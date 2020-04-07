@@ -42,6 +42,21 @@ func AreaCircle(lat, lon, meters float64) SearchArea {
 	return SearchArea(NewCommand("CIRCLE", floatString(lat), floatString(lon), floatString(meters)))
 }
 
+// AreaTile ...
+func AreaTile(x, y, z float64) SearchArea {
+	return SearchArea(NewCommand("TILE", floatString(x), floatString(y), floatString(z)))
+}
+
+// AreaQuadkey ...
+func AreaQuadkey(quadkey string) SearchArea {
+	return SearchArea(NewCommand("QUADKEY", quadkey))
+}
+
+// AreaHash ...
+func AreaHash(hash string) SearchArea {
+	return SearchArea(NewCommand("HASH", hash))
+}
+
 // NearbyArea ...
 type NearbyArea Command
 
