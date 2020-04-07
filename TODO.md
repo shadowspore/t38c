@@ -18,19 +18,19 @@
 - [x] (arg) BOUNDS
 - [x] (arg) HASHES precision
 
-- [ ] SEARCH
-- [ ] (arg) [CURSOR start]
-- [ ] (arg) [LIMIT count]
-- [ ] (arg) [MATCH pattern]
-- [ ] (arg) ASC
-- [ ] (arg) DESC
-- [ ] (arg) [WHERE field min max ...]
-- [ ] (arg) [WHEREIN field count value [value ...] ...]
+- [x] SEARCH
+- [x] (arg) [CURSOR start]
+- [x] (arg) [LIMIT count]
+- [x] (arg) [MATCH pattern]
+- [x] (arg) ASC
+- [x] (arg) DESC
+- [x] (arg) [WHERE field min max ...]
+- [x] (arg) [WHEREIN field count value [value ...] ...]
 - [ ] (arg) [WHEREEVAL script numargs arg [arg ...] ...]
 - [ ] (arg) [WHEREEVALSHA sha1 numargs arg [arg ...] ...]
-- [ ] (arg) [NOFIELDS]
-- [ ] (arg) COUNT
-- [ ] (arg) IDS
+- [x] (arg) [NOFIELDS]
+- [x] (arg) COUNT
+- [x] (arg) IDS
 
 - [x] NEARBY
 - [x] (arg) [CURSOR start]
