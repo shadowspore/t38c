@@ -21,9 +21,10 @@ func (client *Tile38Client) searchObjects(cmd, key string, area Command, opts []
 		searchResponse
 		Fields  []string `json:"fields"`
 		Objects []struct {
-			ID     string          `json:"id"`
-			Object json.RawMessage `json:"object"`
-			Fields []float64       `json:"fields"`
+			ID       string          `json:"id"`
+			Object   json.RawMessage `json:"object"`
+			Fields   []float64       `json:"fields"`
+			Distance *float64        `json:"distance,omitempty"`
 		} `json:"objects"`
 	}
 
@@ -42,6 +43,7 @@ func (client *Tile38Client) searchObjects(cmd, key string, area Command, opts []
 	for idx, obj := range resp.Objects {
 		geoObj := &GeoJSONObject{}
 		geoObj.Tile38ID = obj.ID
+		geoObj.Distance = obj.Distance
 		geo, err := unmarshalGeoJSON(obj.Object)
 		if err != nil {
 			return nil, err
@@ -75,9 +77,10 @@ func (client *Tile38Client) searchPoints(cmd, key string, area Command, opts []S
 		searchResponse
 		Fields []string `json:"fields"`
 		Points []struct {
-			ID     string    `json:"id"`
-			Point  Point     `json:"point"`
-			Fields []float64 `json:"fields"`
+			ID       string    `json:"id"`
+			Point    Point     `json:"point"`
+			Fields   []float64 `json:"fields"`
+			Distance *float64  `json:"distance,omitempty"`
 		} `json:"points"`
 	}
 
@@ -97,6 +100,7 @@ func (client *Tile38Client) searchPoints(cmd, key string, area Command, opts []S
 	for idx, point := range resp.Points {
 		pointObj := &PointObject{}
 		pointObj.Tile38ID = point.ID
+		pointObj.Distance = point.Distance
 		pointObj.Point = point.Point
 		if haveFields {
 			pointObj.Fields = make(map[string]float64)
@@ -154,9 +158,10 @@ func (client *Tile38Client) searchBounds(cmd, key string, area Command, opts []S
 		searchResponse
 		Fields []string `json:"fields"`
 		Bounds []struct {
-			ID     string    `json:"id"`
-			Bounds Bounds    `json:"bounds"`
-			Fields []float64 `json:"fields"`
+			ID       string    `json:"id"`
+			Bounds   Bounds    `json:"bounds"`
+			Fields   []float64 `json:"fields"`
+			Distance *float64  `json:"distance,omitempty"`
 		} `json:"bounds"`
 	}
 
@@ -176,6 +181,7 @@ func (client *Tile38Client) searchBounds(cmd, key string, area Command, opts []S
 	for idx, obj := range resp.Bounds {
 		boundObj := &BoundsObject{}
 		boundObj.Tile38ID = obj.ID
+		boundObj.Distance = obj.Distance
 		boundObj.Bounds = obj.Bounds
 		if haveFields {
 			boundObj.Fields = make(map[string]float64)
@@ -204,9 +210,10 @@ func (client *Tile38Client) searchHashes(cmd, key string, area Command, precisio
 		searchResponse
 		Fields []string `json:"fields"`
 		Hashes []struct {
-			ID     string    `json:"id"`
-			Hash   string    `json:"hash"`
-			Fields []float64 `json:"fields"`
+			ID       string    `json:"id"`
+			Hash     string    `json:"hash"`
+			Fields   []float64 `json:"fields"`
+			Distance *float64  `json:"distance,omitempty"`
 		} `json:"hashes"`
 	}
 
@@ -226,6 +233,7 @@ func (client *Tile38Client) searchHashes(cmd, key string, area Command, precisio
 	for idx, obj := range resp.Hashes {
 		hashObj := &HashObject{}
 		hashObj.Tile38ID = obj.ID
+		hashObj.Distance = obj.Distance
 		hashObj.Hash = obj.Hash
 		if haveFields {
 			hashObj.Fields = make(map[string]float64)
