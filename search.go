@@ -297,29 +297,9 @@ func (client *Tile38Client) Intersects(key string, area SearchArea, opts ...Sear
 	return client.searchObjects("INTERSECTS", key, Command(area), opts)
 }
 
-// Within searches a collection for objects that are fully contained inside of a specified bounding area.
-func (client *Tile38Client) Within(key string, area SearchArea, opts ...SearchOption) (*SearchObjectsResponse, error) {
-	return client.searchObjects("WITHIN", key, Command(area), opts)
-}
-
-// Nearby searches a collection for objects that are close to a specified point.
-func (client *Tile38Client) Nearby(key string, area NearbyArea, opts ...SearchOption) (*SearchObjectsResponse, error) {
-	return client.searchObjects("NEARBY", key, Command(area), opts)
-}
-
 // IntersectsPoints ...
 func (client *Tile38Client) IntersectsPoints(key string, area SearchArea, opts ...SearchOption) (*SearchPointsResponse, error) {
 	return client.searchPoints("INTERSECTS", key, Command(area), opts)
-}
-
-// WithinPoints ...
-func (client *Tile38Client) WithinPoints(key string, area SearchArea, opts ...SearchOption) (*SearchPointsResponse, error) {
-	return client.searchPoints("WITHIN", key, Command(area), opts)
-}
-
-// NearbyPoints ...
-func (client *Tile38Client) NearbyPoints(key string, area NearbyArea, opts ...SearchOption) (*SearchPointsResponse, error) {
-	return client.searchPoints("NEARBY", key, Command(area), opts)
 }
 
 // IntersectsIDs ...
@@ -327,29 +307,9 @@ func (client *Tile38Client) IntersectsIDs(key string, area SearchArea, opts ...S
 	return client.searchIDs("INTERSECTS", key, Command(area), opts)
 }
 
-// WithinIDs ...
-func (client *Tile38Client) WithinIDs(key string, area SearchArea, opts ...SearchOption) (*SearchIDsResponse, error) {
-	return client.searchIDs("WITHIN", key, Command(area), opts)
-}
-
-// NearbyIDs ...
-func (client *Tile38Client) NearbyIDs(key string, area NearbyArea, opts ...SearchOption) (*SearchIDsResponse, error) {
-	return client.searchIDs("NEARBY", key, Command(area), opts)
-}
-
 // IntersectsBounds ...
 func (client *Tile38Client) IntersectsBounds(key string, area SearchArea, opts ...SearchOption) (*SearchBoundsResponse, error) {
 	return client.searchBounds("INTERSECTS", key, Command(area), opts)
-}
-
-// WithinBounds ...
-func (client *Tile38Client) WithinBounds(key string, area SearchArea, opts ...SearchOption) (*SearchBoundsResponse, error) {
-	return client.searchBounds("WITHIN", key, Command(area), opts)
-}
-
-// NearbyBounds ...
-func (client *Tile38Client) NearbyBounds(key string, area NearbyArea, opts ...SearchOption) (*SearchBoundsResponse, error) {
-	return client.searchBounds("NEARBY", key, Command(area), opts)
 }
 
 // IntersectsHashes ...
@@ -357,24 +317,64 @@ func (client *Tile38Client) IntersectsHashes(key string, area SearchArea, precis
 	return client.searchHashes("INTERSECTS", key, Command(area), precision, opts)
 }
 
-// WithinHashes ...
-func (client *Tile38Client) WithinHashes(key string, area SearchArea, precision int, opts ...SearchOption) (*SearchHashesResponse, error) {
-	return client.searchHashes("WITHIN", key, Command(area), precision, opts)
-}
-
-// NearbyHashes ...
-func (client *Tile38Client) NearbyHashes(key string, area NearbyArea, precision int, opts ...SearchOption) (*SearchHashesResponse, error) {
-	return client.searchHashes("NEARBY", key, Command(area), precision, opts)
-}
-
 // IntersectsCount ...
 func (client *Tile38Client) IntersectsCount(key string, area SearchArea, opts ...SearchOption) (*SearchCountResponse, error) {
 	return client.searchCount("INTERSECTS", key, Command(area), opts)
 }
 
+// Within searches a collection for objects that are fully contained inside of a specified bounding area.
+func (client *Tile38Client) Within(key string, area SearchArea, opts ...SearchOption) (*SearchObjectsResponse, error) {
+	return client.searchObjects("WITHIN", key, Command(area), opts)
+}
+
+// WithinPoints ...
+func (client *Tile38Client) WithinPoints(key string, area SearchArea, opts ...SearchOption) (*SearchPointsResponse, error) {
+	return client.searchPoints("WITHIN", key, Command(area), opts)
+}
+
+// WithinIDs ...
+func (client *Tile38Client) WithinIDs(key string, area SearchArea, opts ...SearchOption) (*SearchIDsResponse, error) {
+	return client.searchIDs("WITHIN", key, Command(area), opts)
+}
+
+// WithinBounds ...
+func (client *Tile38Client) WithinBounds(key string, area SearchArea, opts ...SearchOption) (*SearchBoundsResponse, error) {
+	return client.searchBounds("WITHIN", key, Command(area), opts)
+}
+
+// WithinHashes ...
+func (client *Tile38Client) WithinHashes(key string, area SearchArea, precision int, opts ...SearchOption) (*SearchHashesResponse, error) {
+	return client.searchHashes("WITHIN", key, Command(area), precision, opts)
+}
+
 // WithinCount ...
 func (client *Tile38Client) WithinCount(key string, area SearchArea, opts ...SearchOption) (*SearchCountResponse, error) {
 	return client.searchCount("WITHIN", key, Command(area), opts)
+}
+
+// Nearby searches a collection for objects that are close to a specified point.
+func (client *Tile38Client) Nearby(key string, area NearbyArea, opts ...SearchOption) (*SearchObjectsResponse, error) {
+	return client.searchObjects("NEARBY", key, Command(area), opts)
+}
+
+// NearbyPoints ...
+func (client *Tile38Client) NearbyPoints(key string, area NearbyArea, opts ...SearchOption) (*SearchPointsResponse, error) {
+	return client.searchPoints("NEARBY", key, Command(area), opts)
+}
+
+// NearbyIDs ...
+func (client *Tile38Client) NearbyIDs(key string, area NearbyArea, opts ...SearchOption) (*SearchIDsResponse, error) {
+	return client.searchIDs("NEARBY", key, Command(area), opts)
+}
+
+// NearbyBounds ...
+func (client *Tile38Client) NearbyBounds(key string, area NearbyArea, opts ...SearchOption) (*SearchBoundsResponse, error) {
+	return client.searchBounds("NEARBY", key, Command(area), opts)
+}
+
+// NearbyHashes ...
+func (client *Tile38Client) NearbyHashes(key string, area NearbyArea, precision int, opts ...SearchOption) (*SearchHashesResponse, error) {
+	return client.searchHashes("NEARBY", key, Command(area), precision, opts)
 }
 
 // NearbyCount ...
