@@ -5,6 +5,16 @@ import "strconv"
 // SearchOption ...
 type SearchOption Command
 
+// Cursor ...
+func Cursor(start int) SearchOption {
+	return SearchOption(NewCommand("CURSOR", strconv.Itoa(start)))
+}
+
+// Limit ...
+func Limit(count int) SearchOption {
+	return SearchOption(NewCommand("LIMIT", strconv.Itoa(count)))
+}
+
 // Sparse will distribute the results of a search evenly across the requested area.
 func Sparse(n int) SearchOption {
 	return SearchOption(NewCommand("SPARSE", strconv.Itoa(n)))

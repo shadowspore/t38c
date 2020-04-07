@@ -5,8 +5,20 @@ import (
 	"strconv"
 )
 
-func (client *Tile38Client) searchObjects(cmd, key string, area Command, opts []SearchOption) ([]*GeoJSONObject, error) {
+type searchResponse struct {
+	Cursor int `json:"cursor"`
+	Count  int `json:"count"`
+}
+
+// SearchObjectsResponse struct
+type SearchObjectsResponse struct {
+	searchResponse
+	Objects []*GeoJSONObject
+}
+
+func (client *Tile38Client) searchObjects(cmd, key string, area Command, opts []SearchOption) (*SearchObjectsResponse, error) {
 	var resp struct {
+		searchResponse
 		Fields  []string `json:"fields"`
 		Objects []struct {
 			ID     string          `json:"id"`
@@ -46,11 +58,21 @@ func (client *Tile38Client) searchObjects(cmd, key string, area Command, opts []
 		objects[idx] = geoObj
 	}
 
-	return objects, nil
+	return &SearchObjectsResponse{
+		searchResponse: resp.searchResponse,
+		Objects:        objects,
+	}, nil
 }
 
-func (client *Tile38Client) searchPoints(cmd, key string, area Command, opts []SearchOption) ([]*PointObject, error) {
+// SearchPointsResponse struct
+type SearchPointsResponse struct {
+	searchResponse
+	Points []*PointObject
+}
+
+func (client *Tile38Client) searchPoints(cmd, key string, area Command, opts []SearchOption) (*SearchPointsResponse, error) {
 	var resp struct {
+		searchResponse
 		Fields []string `json:"fields"`
 		Points []struct {
 			ID     string    `json:"id"`
@@ -86,11 +108,21 @@ func (client *Tile38Client) searchPoints(cmd, key string, area Command, opts []S
 		points[idx] = pointObj
 	}
 
-	return points, nil
+	return &SearchPointsResponse{
+		searchResponse: resp.searchResponse,
+		Points:         points,
+	}, nil
 }
 
-func (client *Tile38Client) searchIDs(cmd, key string, area Command, opts []SearchOption) ([]string, error) {
+// SearchIDsResponse struct
+type SearchIDsResponse struct {
+	searchResponse
+	IDs []string
+}
+
+func (client *Tile38Client) searchIDs(cmd, key string, area Command, opts []SearchOption) (*SearchIDsResponse, error) {
 	var resp struct {
+		searchResponse
 		IDs []string `json:"ids"`
 	}
 
@@ -105,11 +137,21 @@ func (client *Tile38Client) searchIDs(cmd, key string, area Command, opts []Sear
 		return nil, err
 	}
 
-	return resp.IDs, nil
+	return &SearchIDsResponse{
+		searchResponse: resp.searchResponse,
+		IDs:            resp.IDs,
+	}, nil
 }
 
-func (client *Tile38Client) searchBounds(cmd, key string, area Command, opts []SearchOption) ([]*BoundsObject, error) {
+// SearchBoundsResponse struct
+type SearchBoundsResponse struct {
+	searchResponse
+	Bounds []*BoundsObject
+}
+
+func (client *Tile38Client) searchBounds(cmd, key string, area Command, opts []SearchOption) (*SearchBoundsResponse, error) {
 	var resp struct {
+		searchResponse
 		Fields []string `json:"fields"`
 		Bounds []struct {
 			ID     string    `json:"id"`
@@ -145,11 +187,21 @@ func (client *Tile38Client) searchBounds(cmd, key string, area Command, opts []S
 		objects[idx] = boundObj
 	}
 
-	return objects, nil
+	return &SearchBoundsResponse{
+		searchResponse: resp.searchResponse,
+		Bounds:         objects,
+	}, nil
 }
 
-func (client *Tile38Client) searchHashes(cmd, key string, area Command, precision int, opts []SearchOption) ([]*HashObject, error) {
+// SearchHashesResponse struct
+type SearchHashesResponse struct {
+	searchResponse
+	Hashes []*HashObject
+}
+
+func (client *Tile38Client) searchHashes(cmd, key string, area Command, precision int, opts []SearchOption) (*SearchHashesResponse, error) {
 	var resp struct {
+		searchResponse
 		Fields []string `json:"fields"`
 		Hashes []struct {
 			ID     string    `json:"id"`
@@ -185,7 +237,36 @@ func (client *Tile38Client) searchHashes(cmd, key string, area Command, precisio
 		objects[idx] = hashObj
 	}
 
-	return objects, nil
+	return &SearchHashesResponse{
+		searchResponse: resp.searchResponse,
+		Hashes:         objects,
+	}, nil
+}
+
+// SearchCountResponse struct
+type SearchCountResponse struct {
+	searchResponse
+}
+
+func (client *Tile38Client) searchCount(cmd, key string, area Command, opts []SearchOption) (*SearchCountResponse, error) {
+	var resp struct {
+		searchResponse
+	}
+
+	opts = append(opts, SearchOption(NewCommand("COUNT")))
+	args := buildArgs(key, area, opts)
+	b, err := client.Execute(cmd, args...)
+	if err != nil {
+		return &SearchCountResponse{}, err
+	}
+
+	if err := json.Unmarshal(b, &resp); err != nil {
+		return &SearchCountResponse{}, err
+	}
+
+	return &SearchCountResponse{
+		searchResponse: resp.searchResponse,
+	}, nil
 }
 
 func buildArgs(key string, area Command, opts []SearchOption) []string {
@@ -201,76 +282,91 @@ func buildArgs(key string, area Command, opts []SearchOption) []string {
 }
 
 // Intersects searches a collection for objects that intersect a specified bounding area.
-func (client *Tile38Client) Intersects(key string, area SearchArea, opts ...SearchOption) ([]*GeoJSONObject, error) {
+func (client *Tile38Client) Intersects(key string, area SearchArea, opts ...SearchOption) (*SearchObjectsResponse, error) {
 	return client.searchObjects("INTERSECTS", key, Command(area), opts)
 }
 
 // Within searches a collection for objects that are fully contained inside of a specified bounding area.
-func (client *Tile38Client) Within(key string, area SearchArea, opts ...SearchOption) ([]*GeoJSONObject, error) {
+func (client *Tile38Client) Within(key string, area SearchArea, opts ...SearchOption) (*SearchObjectsResponse, error) {
 	return client.searchObjects("WITHIN", key, Command(area), opts)
 }
 
 // Nearby searches a collection for objects that are close to a specified point.
-func (client *Tile38Client) Nearby(key string, area NearbyArea, opts ...SearchOption) ([]*GeoJSONObject, error) {
+func (client *Tile38Client) Nearby(key string, area NearbyArea, opts ...SearchOption) (*SearchObjectsResponse, error) {
 	return client.searchObjects("NEARBY", key, Command(area), opts)
 }
 
 // IntersectsPoints ...
-func (client *Tile38Client) IntersectsPoints(key string, area SearchArea, opts ...SearchOption) ([]*PointObject, error) {
+func (client *Tile38Client) IntersectsPoints(key string, area SearchArea, opts ...SearchOption) (*SearchPointsResponse, error) {
 	return client.searchPoints("INTERSECTS", key, Command(area), opts)
 }
 
 // WithinPoints ...
-func (client *Tile38Client) WithinPoints(key string, area SearchArea, opts ...SearchOption) ([]*PointObject, error) {
+func (client *Tile38Client) WithinPoints(key string, area SearchArea, opts ...SearchOption) (*SearchPointsResponse, error) {
 	return client.searchPoints("WITHIN", key, Command(area), opts)
 }
 
 // NearbyPoints ...
-func (client *Tile38Client) NearbyPoints(key string, area NearbyArea, opts ...SearchOption) ([]*PointObject, error) {
+func (client *Tile38Client) NearbyPoints(key string, area NearbyArea, opts ...SearchOption) (*SearchPointsResponse, error) {
 	return client.searchPoints("NEARBY", key, Command(area), opts)
 }
 
 // IntersectsIDs ...
-func (client *Tile38Client) IntersectsIDs(key string, area SearchArea, opts ...SearchOption) ([]string, error) {
+func (client *Tile38Client) IntersectsIDs(key string, area SearchArea, opts ...SearchOption) (*SearchIDsResponse, error) {
 	return client.searchIDs("INTERSECTS", key, Command(area), opts)
 }
 
 // WithinIDs ...
-func (client *Tile38Client) WithinIDs(key string, area SearchArea, opts ...SearchOption) ([]string, error) {
+func (client *Tile38Client) WithinIDs(key string, area SearchArea, opts ...SearchOption) (*SearchIDsResponse, error) {
 	return client.searchIDs("WITHIN", key, Command(area), opts)
 }
 
 // NearbyIDs ...
-func (client *Tile38Client) NearbyIDs(key string, area NearbyArea, opts ...SearchOption) ([]string, error) {
+func (client *Tile38Client) NearbyIDs(key string, area NearbyArea, opts ...SearchOption) (*SearchIDsResponse, error) {
 	return client.searchIDs("NEARBY", key, Command(area), opts)
 }
 
 // IntersectsBounds ...
-func (client *Tile38Client) IntersectsBounds(key string, area SearchArea, opts ...SearchOption) ([]*BoundsObject, error) {
+func (client *Tile38Client) IntersectsBounds(key string, area SearchArea, opts ...SearchOption) (*SearchBoundsResponse, error) {
 	return client.searchBounds("INTERSECTS", key, Command(area), opts)
 }
 
 // WithinBounds ...
-func (client *Tile38Client) WithinBounds(key string, area SearchArea, opts ...SearchOption) ([]*BoundsObject, error) {
+func (client *Tile38Client) WithinBounds(key string, area SearchArea, opts ...SearchOption) (*SearchBoundsResponse, error) {
 	return client.searchBounds("WITHIN", key, Command(area), opts)
 }
 
 // NearbyBounds ...
-func (client *Tile38Client) NearbyBounds(key string, area NearbyArea, opts ...SearchOption) ([]*BoundsObject, error) {
+func (client *Tile38Client) NearbyBounds(key string, area NearbyArea, opts ...SearchOption) (*SearchBoundsResponse, error) {
 	return client.searchBounds("NEARBY", key, Command(area), opts)
 }
 
 // IntersectsHashes ...
-func (client *Tile38Client) IntersectsHashes(key string, area SearchArea, precision int, opts ...SearchOption) ([]*HashObject, error) {
+func (client *Tile38Client) IntersectsHashes(key string, area SearchArea, precision int, opts ...SearchOption) (*SearchHashesResponse, error) {
 	return client.searchHashes("INTERSECTS", key, Command(area), precision, opts)
 }
 
 // WithinHashes ...
-func (client *Tile38Client) WithinHashes(key string, area SearchArea, precision int, opts ...SearchOption) ([]*HashObject, error) {
+func (client *Tile38Client) WithinHashes(key string, area SearchArea, precision int, opts ...SearchOption) (*SearchHashesResponse, error) {
 	return client.searchHashes("WITHIN", key, Command(area), precision, opts)
 }
 
 // NearbyHashes ...
-func (client *Tile38Client) NearbyHashes(key string, area NearbyArea, precision int, opts ...SearchOption) ([]*HashObject, error) {
+func (client *Tile38Client) NearbyHashes(key string, area NearbyArea, precision int, opts ...SearchOption) (*SearchHashesResponse, error) {
 	return client.searchHashes("NEARBY", key, Command(area), precision, opts)
+}
+
+// IntersectsCount ...
+func (client *Tile38Client) IntersectsCount(key string, area SearchArea, opts ...SearchOption) (*SearchCountResponse, error) {
+	return client.searchCount("INTERSECTS", key, Command(area), opts)
+}
+
+// WithinCount ...
+func (client *Tile38Client) WithinCount(key string, area SearchArea, opts ...SearchOption) (*SearchCountResponse, error) {
+	return client.searchCount("WITHIN", key, Command(area), opts)
+}
+
+// NearbyCount ...
+func (client *Tile38Client) NearbyCount(key string, area NearbyArea, opts ...SearchOption) (*SearchCountResponse, error) {
+	return client.searchCount("NEARBY", key, Command(area), opts)
 }
