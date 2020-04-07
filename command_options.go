@@ -51,6 +51,11 @@ func Match(pattern string) SearchOption {
 	return SearchOption(NewCommand("MATCH", pattern))
 }
 
+// Distance ...
+func Distance() SearchOption {
+	return SearchOption(NewCommand("DISTANCE"))
+}
+
 // SetOption ...
 type SetOption Command
 

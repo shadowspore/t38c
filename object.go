@@ -16,6 +16,7 @@ type Bounds struct {
 type Object struct {
 	Tile38ID string             `json:"tile38_id"`
 	Fields   map[string]float64 `json:"fields"`
+	Distance *float64           `json:"distance,omitempty"`
 }
 
 // GeoJSONObject struct
