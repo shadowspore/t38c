@@ -1,22 +1,22 @@
 # Group 'search'
 ```
-- [ ] SCAN
-- [ ] (arg) [CURSOR start]
-- [ ] (arg) [LIMIT count]
-- [ ] (arg) [MATCH pattern]
-- [ ] (arg) ASC
-- [ ] (arg) DESC
-- [ ] (arg) [WHERE field min max ...]
-- [ ] (arg) [WHEREIN field count value [value ...] ...]
+- [x] SCAN
+- [x] (arg) [CURSOR start]
+- [x] (arg) [LIMIT count]
+- [x] (arg) [MATCH pattern]
+- [x] (arg) ASC
+- [x] (arg) DESC
+- [x] (arg) [WHERE field min max ...]
+- [x] (arg) [WHEREIN field count value [value ...] ...]
 - [ ] (arg) [WHEREEVAL script numargs arg [arg ...] ...]
 - [ ] (arg) [WHEREEVALSHA sha1 numargs arg [arg ...] ...]
-- [ ] (arg) [NOFIELDS]
-- [ ] (arg) COUNT
-- [ ] (arg) IDS
-- [ ] (arg) OBJECTS
-- [ ] (arg) POINTS
-- [ ] (arg) BOUNDS
-- [ ] (arg) HASHES precision
+- [x] (arg) [NOFIELDS]
+- [x] (arg) COUNT
+- [x] (arg) IDS
+- [x] (arg) OBJECTS
+- [x] (arg) POINTS
+- [x] (arg) BOUNDS
+- [x] (arg) HASHES precision
 
 - [ ] SEARCH
 - [ ] (arg) [CURSOR start]
@@ -37,7 +37,7 @@
 - [x] (arg) [LIMIT count]
 - [x] (arg) [SPARSE spread]
 - [x] (arg) [MATCH pattern]
-- [ ] (arg) [DISTANCE]
+- [x] (arg) [DISTANCE]
 - [x] (arg) [WHERE field min max ...]
 - [x] (arg) [WHEREIN field count value [value ...] ...]
 - [ ] (arg) [WHEREEVAL script numargs arg [arg ...] ...]
@@ -78,9 +78,9 @@
 - [x] (arg) BOUNDS minlat minlon maxlat maxlon
 - [x] (arg) OBJECT geojson
 - [x] (arg) CIRCLE lat lon meters
-- [ ] (arg) TILE x y z
-- [ ] (arg) QUADKEY quadkey
-- [ ] (arg) HASH geohash
+- [x] (arg) TILE x y z
+- [x] (arg) QUADKEY quadkey
+- [x] (arg) HASH geohash
 
 - [x] INTERSECTS
 - [x] (arg) [CURSOR start]
@@ -106,9 +106,9 @@
 - [x] (arg) BOUNDS minlat minlon maxlat maxlon
 - [x] (arg) OBJECT geojson
 - [x] (arg) CIRCLE lat lon meters
-- [ ] (arg) TILE x y z
-- [ ] (arg) QUADKEY quadkey
-- [ ] (arg) HASH geohash
+- [x] (arg) TILE x y z
+- [x] (arg) QUADKEY quadkey
+- [x] (arg) HASH geohash
 
 
 ```
@@ -143,7 +143,7 @@
 - [ ] RENAME
 - [ ] PDEL
 - [x] GET
-- [ ] (arg) [WITHFIELDS]
+- [x] (arg) [WITHFIELDS]
 - [x] (arg) OBJECT
 - [x] (arg) POINT
 - [x] (arg) BOUNDS
