@@ -99,3 +99,13 @@ func SetGeometry(gm *geojson.Geometry) SetArea {
 	b, _ := gm.MarshalJSON()
 	return SetArea(NewCommand("OBJECT", string(b)))
 }
+
+// SetHash ...
+func SetHash(hash string) SetArea {
+	return SetArea(NewCommand("HASH", hash))
+}
+
+// SetString ...
+func SetString(str string) SetArea {
+	return SetArea(NewCommand("STRING", str))
+}

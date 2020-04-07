@@ -13,7 +13,7 @@ type searchResponse struct {
 // SearchObjectsResponse struct
 type SearchObjectsResponse struct {
 	searchResponse
-	Objects []*GeoJSONObject
+	Objects []*Object
 }
 
 func (client *Tile38Client) searchObjects(cmd, key string, area Command, opts []SearchOption) (*SearchObjectsResponse, error) {
@@ -38,18 +38,18 @@ func (client *Tile38Client) searchObjects(cmd, key string, area Command, opts []
 		return nil, err
 	}
 
-	objects := make([]*GeoJSONObject, len(resp.Objects))
+	objects := make([]*Object, len(resp.Objects))
 	haveFields := len(resp.Fields) > 0
 	for idx, obj := range resp.Objects {
-		geoObj := &GeoJSONObject{}
+		geoObj := &Object{}
 		geoObj.Tile38ID = obj.ID
 		geoObj.Distance = obj.Distance
-		geo, err := unmarshalGeoJSON(obj.Object)
+		ob, err := unmarshalObject(obj.Object)
 		if err != nil {
 			return nil, err
 		}
 
-		geoObj.GeoJSON = geo
+		geoObj.Object = ob
 		if haveFields {
 			geoObj.Fields = make(map[string]float64)
 			for fieldIdx, field := range resp.Fields {
