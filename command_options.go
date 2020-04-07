@@ -5,6 +5,16 @@ import "strconv"
 // SearchOption ...
 type SearchOption Command
 
+// NoFields ...
+func NoFields() SearchOption {
+	return SearchOption(NewCommand("NOFIELDS"))
+}
+
+// Clip ...
+func Clip() SearchOption {
+	return SearchOption(NewCommand("CLIP"))
+}
+
 // Cursor ...
 func Cursor(start int) SearchOption {
 	return SearchOption(NewCommand("CURSOR", strconv.Itoa(start)))
