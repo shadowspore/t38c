@@ -124,14 +124,14 @@
 - [ ] JDEL
 - [x] SET
 - [x] (arg) [FIELD name value ...]
-- [ ] (arg) [EX seconds]
+- [x] (arg) [EX seconds]
 - [x] (arg) NX
 - [x] (arg) XX
 - [x] (arg) OBJECT geojson
 - [x] (arg) POINT lat lon [z]
 - [x] (arg) BOUNDS minlat minlon maxlat maxlon
-- [ ] (arg) HASH geohash
-- [ ] (arg) STRING value
+- [x] (arg) HASH geohash
+- [x] (arg) STRING value
 
 - [ ] TTL
 - [ ] JGET
