@@ -1,14 +1,24 @@
 package t38c
 
 import (
+	"encoding/json"
 	"strconv"
 
 	geojson "github.com/paulmach/go.geojson"
 	"github.com/tidwall/gjson"
 )
 
-func unmarshalGeoJSON(data []byte) (interface{}, error) {
-	switch gjson.GetBytes(data, "type").String() {
+func unmarshalObject(data []byte) (interface{}, error) {
+	tp := gjson.GetBytes(data, "type")
+	if !tp.Exists() {
+		var str string
+		if err := json.Unmarshal(data, &str); err != nil {
+			return nil, err
+		}
+		return str, nil
+	}
+
+	switch tp.String() {
 	case "FeatureCollection":
 		return geojson.UnmarshalFeatureCollection(data)
 	case "Feature":

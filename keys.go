@@ -71,13 +71,13 @@ func (client *Tile38Client) Keys(pattern string) ([]string, error) {
 	return resp.Keys, nil
 }
 
-// Get GeoJSON object.
-func (client *Tile38Client) Get(key, objectID string, withFields bool) (*GeoJSONObject, error) {
+// Get object.
+func (client *Tile38Client) Get(key, objectID string, withFields bool) (*Object, error) {
 	return client.GetObject(key, objectID, withFields)
 }
 
-// GetObject returns GeoJSON object of an id.
-func (client *Tile38Client) GetObject(key, objectID string, withFields bool) (*GeoJSONObject, error) {
+// GetObject returns object of an id.
+func (client *Tile38Client) GetObject(key, objectID string, withFields bool) (*Object, error) {
 	var resp struct {
 		Object json.RawMessage    `json:"object"`
 		Fields map[string]float64 `json:"fields"`
@@ -99,17 +99,17 @@ func (client *Tile38Client) GetObject(key, objectID string, withFields bool) (*G
 		return nil, err
 	}
 
-	geo, err := unmarshalGeoJSON(resp.Object)
+	ob, err := unmarshalObject(resp.Object)
 	if err != nil {
 		return nil, err
 	}
 
-	obj := &GeoJSONObject{
-		Object: Object{
+	obj := &Object{
+		BaseObject: BaseObject{
 			Tile38ID: key,
 			Fields:   resp.Fields,
 		},
-		GeoJSON: geo,
+		Object: ob,
 	}
 	return obj, nil
 }
@@ -139,7 +139,7 @@ func (client *Tile38Client) GetPoint(key, objectID string, withFields bool) (*Po
 
 	return &PointObject{
 		Point: resp.Point,
-		Object: Object{
+		BaseObject: BaseObject{
 			Tile38ID: objectID,
 			Fields:   resp.Fields,
 		},
@@ -170,7 +170,7 @@ func (client *Tile38Client) GetBounds(key, objectID string, withFields bool) (*B
 	}
 
 	return &BoundsObject{
-		Object: Object{
+		BaseObject: BaseObject{
 			Tile38ID: objectID,
 			Fields:   resp.Fields,
 		},
@@ -203,7 +203,7 @@ func (client *Tile38Client) GetHash(key, objectID string, precision int, withFie
 	}
 
 	return &HashObject{
-		Object: Object{
+		BaseObject: BaseObject{
 			Tile38ID: objectID,
 			Fields:   resp.Fields,
 		},

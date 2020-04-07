@@ -12,34 +12,34 @@ type Bounds struct {
 	NE Point `json:"ne"`
 }
 
-// Object is a Tile38 object.
-type Object struct {
+// BaseObject is a Tile38 object.
+type BaseObject struct {
 	Tile38ID string             `json:"tile38_id"`
 	Fields   map[string]float64 `json:"fields"`
 	Distance *float64           `json:"distance,omitempty"`
 }
 
-// GeoJSONObject struct
-type GeoJSONObject struct {
-	Object
-	// Can be geojson.FeatureCollection or geojson.Feature or geojson.Geometry
-	GeoJSON interface{} `json:"geojson"`
+// Object struct
+type Object struct {
+	BaseObject
+	// Can be geojson.FeatureCollection or geojson.Feature or geojson.Geometry or string
+	Object interface{} `json:"object"`
 }
 
 // PointObject struct
 type PointObject struct {
-	Object
+	BaseObject
 	Point Point `json:"point"`
 }
 
 // BoundsObject struct
 type BoundsObject struct {
-	Object
+	BaseObject
 	Bounds Bounds `json:"bounds"`
 }
 
 // HashObject struct
 type HashObject struct {
-	Object
+	BaseObject
 	Hash string `json:"hash"`
 }
