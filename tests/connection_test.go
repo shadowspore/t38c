@@ -8,13 +8,9 @@ import (
 )
 
 func TestPing(t *testing.T) {
-	pool, err := NewMocker().GetPool()
-	assert.Nil(t, err)
+	mock := NewMockExecutor()
 
-	tile38, err := t38c.New(t38c.ClientOptions{
-		Pool:  pool,
-		Debug: true,
-	})
+	tile38, err := t38c.New(mock.DialFunc(), t38c.Debug)
 	assert.Nil(t, err)
 
 	err = tile38.Ping()

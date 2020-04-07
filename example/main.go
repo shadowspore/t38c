@@ -9,11 +9,7 @@ import (
 )
 
 func main() {
-	tile38, err := t38c.New(t38c.ClientOptions{
-		Addr:     "localhost:9851",
-		Debug:    true,
-		PoolSize: 10,
-	})
+	tile38, err := t38c.New(t38c.NewRadixPool("localhost:9851", 5))
 	if err != nil {
 		log.Fatal(err)
 	}

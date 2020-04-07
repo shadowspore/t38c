@@ -1,43 +1,40 @@
 package t38c
 
 import (
-	"encoding/json"
 	"fmt"
 	"log"
 	"strings"
 
-	"github.com/mediocregopher/radix/v3"
 	"github.com/tidwall/gjson"
 )
 
 // Tile38Client struct
 type Tile38Client struct {
-	addr  string
-	debug bool
-	pool  *radix.Pool
+	debug    bool
+	executor Executor
 }
 
-// ClientOptions struct
-type ClientOptions struct {
-	Debug    bool
-	Addr     string
-	PoolSize int
-	Pool     *radix.Pool
+// ClientOption func
+type ClientOption func(*Tile38Client)
+
+// Debug option
+var Debug = func(c *Tile38Client) {
+	c.debug = true
 }
 
 // New ...
-func New(ops ClientOptions) (client *Tile38Client, err error) {
-	pool := ops.Pool
-	if ops.Pool == nil {
-		pool, err = radix.NewPool("tcp", ops.Addr, ops.PoolSize, radix.PoolConnFunc(RadixJSONDialer))
-		if err != nil {
-			return nil, err
-		}
+func New(dialer ExecutorDialer, opts ...ClientOption) (*Tile38Client, error) {
+	executor, err := dialer()
+	if err != nil {
+		return nil, err
 	}
 
-	client = &Tile38Client{
-		debug: ops.Debug,
-		pool:  pool,
+	client := &Tile38Client{
+		executor: executor,
+	}
+
+	for _, opt := range opts {
+		opt(client)
 	}
 
 	if err := client.Ping(); err != nil {
@@ -49,8 +46,7 @@ func New(ops ClientOptions) (client *Tile38Client, err error) {
 
 // Execute command
 func (client *Tile38Client) Execute(command string, args ...string) ([]byte, error) {
-	var resp []byte
-	err := client.pool.Do(radix.Cmd(&resp, command, args...))
+	resp, err := client.executor.Execute(command, args...)
 	if client.debug {
 		cmd := command
 		if len(args) > 0 {
@@ -73,33 +69,4 @@ func (client *Tile38Client) Execute(command string, args ...string) ([]byte, err
 	}
 
 	return resp, nil
-}
-
-// RadixJSONDialer ...
-func RadixJSONDialer(net, addr string) (radix.Conn, error) {
-	conn, err := radix.Dial(net, addr)
-	if err != nil {
-		return nil, err
-	}
-
-	var b []byte
-	if err := conn.Do(radix.Cmd(&b, "OUTPUT", "json")); err != nil {
-		conn.Close()
-		return nil, err
-	}
-
-	var resp struct {
-		Ok bool `json:"ok"`
-	}
-	if err := json.Unmarshal(b, &resp); err != nil {
-		conn.Close()
-		return nil, err
-	}
-
-	if !resp.Ok {
-		conn.Close()
-		return nil, fmt.Errorf("bad response: %s", b)
-	}
-
-	return conn, nil
 }

@@ -8,16 +8,13 @@ import (
 )
 
 func TestBounds(t *testing.T) {
-	pool, err := NewMocker().
-		Mock(
-			`BOUNDS test`, `{"ok":true,"bounds":{"type":"Polygon","coordinates":[[[1,1],[2,1],[2,2],[1,2],[1,1]]]},"elapsed":"19.52µs"}`,
-		).GetPool()
-	assert.Nil(t, err)
+	mock := NewMockExecutor()
+	mock.Mock(
+		`BOUNDS test`,
+		`{"ok":true,"bounds":{"type":"Polygon","coordinates":[[[1,1],[2,1],[2,2],[1,2],[1,1]]]},"elapsed":"19.52µs"}`,
+	)
 
-	tile38, err := t38c.New(t38c.ClientOptions{
-		Pool:  pool,
-		Debug: true,
-	})
+	tile38, err := t38c.New(mock.DialFunc(), t38c.Debug)
 	assert.Nil(t, err)
 
 	resp, err := tile38.Bounds("test")
