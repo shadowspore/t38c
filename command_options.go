@@ -79,18 +79,17 @@ func SetField(name string, value float64) SetOption {
 	return SetOption(NewCommand("FIELD", name, floatString(value)))
 }
 
-// func SetEX(d time.Duration) SetOption {
-// 	return SetOption(
-// 		"EX ",
-// 	)
-// }
+// SetExpiration ...
+func SetExpiration(seconds int) SetOption {
+	return SetOption(NewCommand("EX", strconv.Itoa(seconds)))
+}
 
-// SetNX ...
-func SetNX() SetOption {
+// SetIfNotExists ...
+func SetIfNotExists() SetOption {
 	return SetOption(NewCommand("NX"))
 }
 
-// SetXX ...
-func SetXX() SetOption {
+// SetIfExists ...
+func SetIfExists() SetOption {
 	return SetOption(NewCommand("XX"))
 }
