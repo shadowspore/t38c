@@ -115,55 +115,98 @@ func (client *Tile38Client) GetObject(key, objectID string, withFields bool) (*G
 }
 
 // GetPoint get latitude, longitude point.
-func (client *Tile38Client) GetPoint(key, objectID string) (Point, error) {
+func (client *Tile38Client) GetPoint(key, objectID string, withFields bool) (*PointObject, error) {
 	var resp struct {
-		Point Point `json:"point"`
+		Point  Point              `json:"point"`
+		Fields map[string]float64 `json:"fields,omitempty"`
+	}
+	args := []string{
+		key, objectID,
+	}
+	if withFields {
+		args = append(args, "WITHFIELDS")
 	}
 
-	b, err := client.Execute("GET", key, objectID, "POINT")
+	args = append(args, "POINT")
+	b, err := client.Execute("GET", args...)
 	if err != nil {
-		return Point{}, err
+		return nil, err
 	}
 
 	if err := json.Unmarshal(b, &resp); err != nil {
-		return Point{}, err
+		return nil, err
 	}
 
-	return resp.Point, nil
+	return &PointObject{
+		Point: resp.Point,
+		Object: Object{
+			Tile38ID: objectID,
+			Fields:   resp.Fields,
+		},
+	}, nil
 }
 
 // GetBounds get bounding rectangle.
-func (client *Tile38Client) GetBounds(key, objectID string) (Bounds, error) {
+func (client *Tile38Client) GetBounds(key, objectID string, withFields bool) (*BoundsObject, error) {
 	var resp struct {
-		Bounds Bounds `json:"bounds"`
+		Bounds Bounds             `json:"bounds"`
+		Fields map[string]float64 `json:"fields,omitempty"`
+	}
+	args := []string{
+		key, objectID,
+	}
+	if withFields {
+		args = append(args, "WITHFIELDS")
 	}
 
-	b, err := client.Execute("GET", key, objectID, "BOUNDS")
+	args = append(args, "BOUNDS")
+	b, err := client.Execute("GET", args...)
 	if err != nil {
-		return Bounds{}, err
+		return nil, err
 	}
 
 	if err := json.Unmarshal(b, &resp); err != nil {
-		return Bounds{}, err
+		return nil, err
 	}
 
-	return resp.Bounds, nil
+	return &BoundsObject{
+		Object: Object{
+			Tile38ID: objectID,
+			Fields:   resp.Fields,
+		},
+		Bounds: resp.Bounds,
+	}, nil
 }
 
 // GetHash returns Geohash of object. Requires a precision of 1 to 22.
-func (client *Tile38Client) GetHash(key, objectID string, precision int) (string, error) {
+func (client *Tile38Client) GetHash(key, objectID string, precision int, withFields bool) (*HashObject, error) {
 	var resp struct {
-		Hash string `json:"hash"`
+		Hash   string             `json:"hash"`
+		Fields map[string]float64 `json:"fields,omitempty"`
+	}
+	args := []string{
+		key, objectID,
+	}
+	if withFields {
+		args = append(args, "WITHFIELDS")
 	}
 
-	b, err := client.Execute("GET", key, objectID, "HASH", strconv.Itoa(precision))
+	args = append(args, "HASH")
+	args = append(args, strconv.Itoa(precision))
+	b, err := client.Execute("GET", args...)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
 	if err := json.Unmarshal(b, &resp); err != nil {
-		return "", err
+		return nil, err
 	}
 
-	return resp.Hash, nil
+	return &HashObject{
+		Object: Object{
+			Tile38ID: objectID,
+			Fields:   resp.Fields,
+		},
+		Hash: resp.Hash,
+	}, nil
 }
