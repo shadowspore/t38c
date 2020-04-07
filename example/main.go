@@ -9,10 +9,39 @@ import (
 )
 
 func main() {
-	tile38, err := t38c.New(t38c.NewRadixPool("localhost:9851", 5))
+	fencer, err := t38c.NewFence(t38c.NewRedisFencer("localhost:9851"))
+	if err != nil {
+		panic(err)
+	}
+
+	ch, err := fencer.FenceRoamIDs("people", "people", "*", 10000,
+		nil,
+	)
+	if err != nil {
+		panic(err)
+	}
+
+	for event := range ch {
+		pp.Println(event)
+	}
+
+	return
+	tile38, err := t38c.New(t38c.NewRadixPool("localhost:9851", 5), t38c.Debug)
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	err = tile38.Set("keke", "popo", t38c.SetString("abce"))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	res, err := tile38.SearchCount("keke")
+	if err != nil {
+		log.Fatal(err)
+	}
+	pp.Println(res)
+	return
 
 	tile38.Bounds("fleet")
 	feat := geojson.NewPolygonFeature([][][]float64{
@@ -38,7 +67,7 @@ func main() {
 	}
 	pp.Println(obs)
 
-	ob, err := tile38.GetPoint("fleet", "truck1")
+	ob, err := tile38.GetPoint("fleet", "truck1", false)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -49,7 +78,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	pp.Println(obe.GeoJSON)
+	pp.Println(obe.Object)
 
 	pts, err := tile38.WithinPoints("fleet", t38c.AreaCircle(2, 2, 99999))
 	if err != nil {
