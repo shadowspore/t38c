@@ -103,32 +103,32 @@ func (client *FenceClient) FenceRoamPoints(key, target, pattern string, meters i
 	return objChan, nil
 }
 
-type GeofenceRoamIDsChan chan GeofenceRoamID
+// type GeofenceRoamIDsChan chan GeofenceRoamID
 
-func (client *FenceClient) FenceRoamIDs(key, target, pattern string, meters int, detectActions []FenceDetectAction, opts ...SearchOption) (GeofenceRoamIDsChan, error) {
-	args := buildFenceArgs("IDS", key, target, pattern, meters, detectActions, opts)
+// func (client *FenceClient) FenceRoamIDs(key, target, pattern string, meters int, detectActions []FenceDetectAction, opts ...SearchOption) (GeofenceRoamIDsChan, error) {
+// 	args := buildFenceArgs("IDS", key, target, pattern, meters, detectActions, opts)
 
-	ch, err := client.exec.Fence("NEARBY", args...)
-	if err != nil {
-		return nil, err
-	}
+// 	ch, err := client.exec.Fence("NEARBY", args...)
+// 	if err != nil {
+// 		return nil, err
+// 	}
 
-	objChan := make(GeofenceRoamIDsChan, 10)
-	go func() {
-		defer close(objChan)
-		for event := range ch {
-			if event.Err != nil {
-				log.Fatal(event.Err)
-			}
-			fmt.Printf("%s\n\n\n", event.Data)
-			var resp GeofenceRoamID
-			if err := json.Unmarshal(event.Data, &resp); err != nil {
-				panic(err)
-			}
+// 	objChan := make(GeofenceRoamIDsChan, 10)
+// 	go func() {
+// 		defer close(objChan)
+// 		for event := range ch {
+// 			if event.Err != nil {
+// 				log.Fatal(event.Err)
+// 			}
+// 			fmt.Printf("%s\n\n\n", event.Data)
+// 			var resp GeofenceRoamID
+// 			if err := json.Unmarshal(event.Data, &resp); err != nil {
+// 				panic(err)
+// 			}
 
-			objChan <- resp
-		}
-	}()
+// 			objChan <- resp
+// 		}
+// 	}()
 
-	return objChan, nil
-}
+// 	return objChan, nil
+// }
