@@ -2,7 +2,6 @@ package t38c
 
 import (
 	"encoding/json"
-	"strconv"
 
 	geojson "github.com/paulmach/go.geojson"
 )
@@ -72,16 +71,13 @@ func (client *Tile38Client) Keys(pattern string) ([]string, error) {
 }
 
 // Get object.
-func (client *Tile38Client) Get(key, objectID string, withFields bool) (*Object, error) {
+func (client *Tile38Client) Get(key, objectID string, withFields bool) (*GetObjectResponse, error) {
 	return client.GetObject(key, objectID, withFields)
 }
 
 // GetObject returns object of an id.
-func (client *Tile38Client) GetObject(key, objectID string, withFields bool) (*Object, error) {
-	var resp struct {
-		Object json.RawMessage    `json:"object"`
-		Fields map[string]float64 `json:"fields"`
-	}
+func (client *Tile38Client) GetObject(key, objectID string, withFields bool) (*GetObjectResponse, error) {
+	var resp *GetObjectResponse
 
 	var args []string
 	args = append(args, key)
@@ -95,34 +91,17 @@ func (client *Tile38Client) GetObject(key, objectID string, withFields bool) (*O
 		return nil, err
 	}
 
-	if err := json.Unmarshal(b, &resp); err != nil {
-		return nil, err
-	}
-
-	ob, err := unmarshalObject(resp.Object)
-	if err != nil {
-		return nil, err
-	}
-
-	obj := &Object{
-		BaseObject: BaseObject{
-			Tile38ID: key,
-			Fields:   resp.Fields,
-		},
-		Object: ob,
-	}
-	return obj, nil
+	err = json.Unmarshal(b, &resp)
+	return resp, err
 }
 
 // GetPoint get latitude, longitude point.
-func (client *Tile38Client) GetPoint(key, objectID string, withFields bool) (*PointObject, error) {
-	var resp struct {
-		Point  Point              `json:"point"`
-		Fields map[string]float64 `json:"fields,omitempty"`
-	}
-	args := []string{
-		key, objectID,
-	}
+func (client *Tile38Client) GetPoint(key, objectID string, withFields bool) (*GetPointResponse, error) {
+	var resp *GetPointResponse
+
+	var args []string
+	args = append(args, key)
+	args = append(args, objectID)
 	if withFields {
 		args = append(args, "WITHFIELDS")
 	}
@@ -133,28 +112,17 @@ func (client *Tile38Client) GetPoint(key, objectID string, withFields bool) (*Po
 		return nil, err
 	}
 
-	if err := json.Unmarshal(b, &resp); err != nil {
-		return nil, err
-	}
-
-	return &PointObject{
-		Point: resp.Point,
-		BaseObject: BaseObject{
-			Tile38ID: objectID,
-			Fields:   resp.Fields,
-		},
-	}, nil
+	err = json.Unmarshal(b, &resp)
+	return resp, err
 }
 
 // GetBounds get bounding rectangle.
-func (client *Tile38Client) GetBounds(key, objectID string, withFields bool) (*BoundsObject, error) {
-	var resp struct {
-		Bounds Bounds             `json:"bounds"`
-		Fields map[string]float64 `json:"fields,omitempty"`
-	}
-	args := []string{
-		key, objectID,
-	}
+func (client *Tile38Client) GetBounds(key, objectID string, withFields bool) (*GetBoundsResponse, error) {
+	var resp *GetBoundsResponse
+
+	var args []string
+	args = append(args, key)
+	args = append(args, objectID)
 	if withFields {
 		args = append(args, "WITHFIELDS")
 	}
@@ -165,48 +133,27 @@ func (client *Tile38Client) GetBounds(key, objectID string, withFields bool) (*B
 		return nil, err
 	}
 
-	if err := json.Unmarshal(b, &resp); err != nil {
-		return nil, err
-	}
-
-	return &BoundsObject{
-		BaseObject: BaseObject{
-			Tile38ID: objectID,
-			Fields:   resp.Fields,
-		},
-		Bounds: resp.Bounds,
-	}, nil
+	err = json.Unmarshal(b, &resp)
+	return resp, err
 }
 
 // GetHash returns Geohash of object. Requires a precision of 1 to 22.
-func (client *Tile38Client) GetHash(key, objectID string, precision int, withFields bool) (*HashObject, error) {
-	var resp struct {
-		Hash   string             `json:"hash"`
-		Fields map[string]float64 `json:"fields,omitempty"`
-	}
-	args := []string{
-		key, objectID,
-	}
+func (client *Tile38Client) GetHash(key, objectID string, precision int, withFields bool) (*GetHashResponse, error) {
+	var resp *GetHashResponse
+
+	var args []string
+	args = append(args, key)
+	args = append(args, objectID)
 	if withFields {
 		args = append(args, "WITHFIELDS")
 	}
 
 	args = append(args, "HASH")
-	args = append(args, strconv.Itoa(precision))
 	b, err := client.Execute("GET", args...)
 	if err != nil {
 		return nil, err
 	}
 
-	if err := json.Unmarshal(b, &resp); err != nil {
-		return nil, err
-	}
-
-	return &HashObject{
-		BaseObject: BaseObject{
-			Tile38ID: objectID,
-			Fields:   resp.Fields,
-		},
-		Hash: resp.Hash,
-	}, nil
+	err = json.Unmarshal(b, &resp)
+	return resp, err
 }
