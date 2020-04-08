@@ -13,20 +13,17 @@ type searchResponse struct {
 // SearchObjectsResponse struct
 type SearchObjectsResponse struct {
 	searchResponse
-	Objects []*Object
+	Fields  []string `json:"fields,omitempty"`
+	Objects []struct {
+		ID       string    `json:"ID"`
+		Object   Object    `json:"object"`
+		Fields   []float64 `json:"fields"`
+		Distance *float64  `json:"distance"`
+	} `json:"objects"`
 }
 
 func (client *Tile38Client) searchObjects(cmd, key string, area Command, opts []SearchOption) (*SearchObjectsResponse, error) {
-	var resp struct {
-		searchResponse
-		Fields  []string `json:"fields"`
-		Objects []struct {
-			ID       string          `json:"id"`
-			Object   json.RawMessage `json:"object"`
-			Fields   []float64       `json:"fields"`
-			Distance *float64        `json:"distance,omitempty"`
-		} `json:"objects"`
-	}
+	var resp *SearchObjectsResponse
 
 	args := buildArgs(key, area, opts)
 	b, err := client.Execute(cmd, args...)
@@ -34,101 +31,43 @@ func (client *Tile38Client) searchObjects(cmd, key string, area Command, opts []
 		return nil, err
 	}
 
-	if err := json.Unmarshal(b, &resp); err != nil {
-		return nil, err
-	}
-
-	objects := make([]*Object, len(resp.Objects))
-	haveFields := len(resp.Fields) > 0
-	for idx, obj := range resp.Objects {
-		geoObj := &Object{}
-		geoObj.Tile38ID = obj.ID
-		geoObj.Distance = obj.Distance
-		ob, err := unmarshalObject(obj.Object)
-		if err != nil {
-			return nil, err
-		}
-
-		geoObj.Object = ob
-		if haveFields {
-			geoObj.Fields = make(map[string]float64)
-			for fieldIdx, field := range resp.Fields {
-				geoObj.Fields[field] = obj.Fields[fieldIdx]
-			}
-		}
-
-		objects[idx] = geoObj
-	}
-
-	return &SearchObjectsResponse{
-		searchResponse: resp.searchResponse,
-		Objects:        objects,
-	}, nil
+	err = json.Unmarshal(b, &resp)
+	return resp, nil
 }
 
 // SearchPointsResponse struct
 type SearchPointsResponse struct {
 	searchResponse
-	Points []*PointObject
+	Fields []string `json:"fields,omitempty"`
+	Points []struct {
+		ID       string    `json:"ID"`
+		Point    Point     `json:"point"`
+		Fields   []float64 `json:"fields,omitempty"`
+		Distance *float64  `json:"distance,omitempty"`
+	} `json:"points"`
 }
 
 func (client *Tile38Client) searchPoints(cmd, key string, area Command, opts []SearchOption) (*SearchPointsResponse, error) {
-	var resp struct {
-		searchResponse
-		Fields []string `json:"fields"`
-		Points []struct {
-			ID       string    `json:"id"`
-			Point    Point     `json:"point"`
-			Fields   []float64 `json:"fields"`
-			Distance *float64  `json:"distance,omitempty"`
-		} `json:"points"`
-	}
+	var resp *SearchPointsResponse
 
-	opts = append(opts, SearchOption(NewCommand("POINTS")))
 	args := buildArgs(key, area, opts)
 	b, err := client.Execute(cmd, args...)
 	if err != nil {
 		return nil, err
 	}
 
-	if err := json.Unmarshal(b, &resp); err != nil {
-		return nil, err
-	}
-
-	points := make([]*PointObject, len(resp.Points))
-	haveFields := len(resp.Fields) > 0
-	for idx, point := range resp.Points {
-		pointObj := &PointObject{}
-		pointObj.Tile38ID = point.ID
-		pointObj.Distance = point.Distance
-		pointObj.Point = point.Point
-		if haveFields {
-			pointObj.Fields = make(map[string]float64)
-			for fieldIdx, field := range resp.Fields {
-				pointObj.Fields[field] = point.Fields[fieldIdx]
-			}
-		}
-
-		points[idx] = pointObj
-	}
-
-	return &SearchPointsResponse{
-		searchResponse: resp.searchResponse,
-		Points:         points,
-	}, nil
+	err = json.Unmarshal(b, &resp)
+	return resp, nil
 }
 
 // SearchIDsResponse struct
 type SearchIDsResponse struct {
 	searchResponse
-	IDs []string
+	IDs []string `json:"ids"`
 }
 
 func (client *Tile38Client) searchIDs(cmd, key string, area Command, opts []SearchOption) (*SearchIDsResponse, error) {
-	var resp struct {
-		searchResponse
-		IDs []string `json:"ids"`
-	}
+	var resp *SearchIDsResponse
 
 	opts = append(opts, SearchOption(NewCommand("IDS")))
 	args := buildArgs(key, area, opts)
@@ -137,33 +76,24 @@ func (client *Tile38Client) searchIDs(cmd, key string, area Command, opts []Sear
 		return nil, err
 	}
 
-	if err := json.Unmarshal(b, &resp); err != nil {
-		return nil, err
-	}
-
-	return &SearchIDsResponse{
-		searchResponse: resp.searchResponse,
-		IDs:            resp.IDs,
-	}, nil
+	err = json.Unmarshal(b, &resp)
+	return resp, err
 }
 
 // SearchBoundsResponse struct
 type SearchBoundsResponse struct {
 	searchResponse
-	Bounds []*BoundsObject
+	Fields []string `json:"fields,omitempty"`
+	Bounds []struct {
+		ID       string    `json:"ID"`
+		Bounds   Bounds    `json:"bounds"`
+		Fields   []float64 `json:"fields,omitempty"`
+		Distance *float64  `json:"distance,omitempty"`
+	} `json:"bounds"`
 }
 
 func (client *Tile38Client) searchBounds(cmd, key string, area Command, opts []SearchOption) (*SearchBoundsResponse, error) {
-	var resp struct {
-		searchResponse
-		Fields []string `json:"fields"`
-		Bounds []struct {
-			ID       string    `json:"id"`
-			Bounds   Bounds    `json:"bounds"`
-			Fields   []float64 `json:"fields"`
-			Distance *float64  `json:"distance,omitempty"`
-		} `json:"bounds"`
-	}
+	var resp *SearchBoundsResponse
 
 	opts = append(opts, SearchOption(NewCommand("BOUNDS")))
 	args := buildArgs(key, area, opts)
@@ -172,50 +102,24 @@ func (client *Tile38Client) searchBounds(cmd, key string, area Command, opts []S
 		return nil, err
 	}
 
-	if err := json.Unmarshal(b, &resp); err != nil {
-		return nil, err
-	}
-
-	objects := make([]*BoundsObject, len(resp.Bounds))
-	haveFields := len(resp.Fields) > 0
-	for idx, obj := range resp.Bounds {
-		boundObj := &BoundsObject{}
-		boundObj.Tile38ID = obj.ID
-		boundObj.Distance = obj.Distance
-		boundObj.Bounds = obj.Bounds
-		if haveFields {
-			boundObj.Fields = make(map[string]float64)
-			for fieldIdx, field := range resp.Fields {
-				boundObj.Fields[field] = obj.Fields[fieldIdx]
-			}
-		}
-
-		objects[idx] = boundObj
-	}
-
-	return &SearchBoundsResponse{
-		searchResponse: resp.searchResponse,
-		Bounds:         objects,
-	}, nil
+	err = json.Unmarshal(b, &resp)
+	return resp, err
 }
 
 // SearchHashesResponse struct
 type SearchHashesResponse struct {
 	searchResponse
-	Hashes []*HashObject
+	Fields []string `json:"fields,omitempty"`
+	Hashes []struct {
+		ID       string    `json:"id"`
+		Hash     string    `json:"hash"`
+		Fields   []float64 `json:"fields,omitempty"`
+		Distance *float64  `json:"distance,omitempty"`
+	} `json:"hashes"`
 }
 
 func (client *Tile38Client) searchHashes(cmd, key string, area Command, precision int, opts []SearchOption) (*SearchHashesResponse, error) {
-	var resp struct {
-		searchResponse
-		Fields []string `json:"fields"`
-		Hashes []struct {
-			ID       string    `json:"id"`
-			Hash     string    `json:"hash"`
-			Fields   []float64 `json:"fields"`
-			Distance *float64  `json:"distance,omitempty"`
-		} `json:"hashes"`
-	}
+	var resp *SearchHashesResponse
 
 	opts = append(opts, SearchOption(NewCommand("HASHES", strconv.Itoa(precision))))
 	args := buildArgs(key, area, opts)
@@ -224,31 +128,8 @@ func (client *Tile38Client) searchHashes(cmd, key string, area Command, precisio
 		return nil, err
 	}
 
-	if err := json.Unmarshal(b, &resp); err != nil {
-		return nil, err
-	}
-
-	objects := make([]*HashObject, len(resp.Hashes))
-	haveFields := len(resp.Fields) > 0
-	for idx, obj := range resp.Hashes {
-		hashObj := &HashObject{}
-		hashObj.Tile38ID = obj.ID
-		hashObj.Distance = obj.Distance
-		hashObj.Hash = obj.Hash
-		if haveFields {
-			hashObj.Fields = make(map[string]float64)
-			for fieldIdx, field := range resp.Fields {
-				hashObj.Fields[field] = obj.Fields[fieldIdx]
-			}
-		}
-
-		objects[idx] = hashObj
-	}
-
-	return &SearchHashesResponse{
-		searchResponse: resp.searchResponse,
-		Hashes:         objects,
-	}, nil
+	err = json.Unmarshal(b, &resp)
+	return resp, err
 }
 
 // SearchCountResponse struct
@@ -257,9 +138,7 @@ type SearchCountResponse struct {
 }
 
 func (client *Tile38Client) searchCount(cmd, key string, area Command, opts []SearchOption) (*SearchCountResponse, error) {
-	var resp struct {
-		searchResponse
-	}
+	var resp *SearchCountResponse
 
 	opts = append(opts, SearchOption(NewCommand("COUNT")))
 	args := buildArgs(key, area, opts)
@@ -268,13 +147,8 @@ func (client *Tile38Client) searchCount(cmd, key string, area Command, opts []Se
 		return &SearchCountResponse{}, err
 	}
 
-	if err := json.Unmarshal(b, &resp); err != nil {
-		return &SearchCountResponse{}, err
-	}
-
-	return &SearchCountResponse{
-		searchResponse: resp.searchResponse,
-	}, nil
+	err = json.Unmarshal(b, &resp)
+	return resp, err
 }
 
 func buildArgs(key string, area Command, opts []SearchOption) []string {
