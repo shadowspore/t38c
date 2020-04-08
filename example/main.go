@@ -6,13 +6,13 @@ import (
 )
 
 func main() {
-	fencer, err := t38c.NewFence(t38c.NewRedisFencer("localhost:9851"))
+	fencer, err := t38c.NewFence(t38c.NewRedisFencer("localhost:9851"), true)
 	if err != nil {
 		panic(err)
 	}
 
-	ch, err := fencer.FenceRoam("people", "people", "*", 10000,
-		nil,
+	ch, err := fencer.FenceRoam(
+		t38c.NewFenceRequest("people", "people", "*", 10000).WithOptions(t38c.Match("kekka*")),
 	)
 	if err != nil {
 		panic(err)
