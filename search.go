@@ -15,7 +15,7 @@ type SearchObjectsResponse struct {
 	searchResponse
 	Fields  []string `json:"fields,omitempty"`
 	Objects []struct {
-		ID       string    `json:"ID"`
+		ID       string    `json:"id"`
 		Object   Object    `json:"object"`
 		Fields   []float64 `json:"fields"`
 		Distance *float64  `json:"distance"`
@@ -40,7 +40,7 @@ type SearchPointsResponse struct {
 	searchResponse
 	Fields []string `json:"fields,omitempty"`
 	Points []struct {
-		ID       string    `json:"ID"`
+		ID       string    `json:"id"`
 		Point    Point     `json:"point"`
 		Fields   []float64 `json:"fields,omitempty"`
 		Distance *float64  `json:"distance,omitempty"`
@@ -85,7 +85,7 @@ type SearchBoundsResponse struct {
 	searchResponse
 	Fields []string `json:"fields,omitempty"`
 	Bounds []struct {
-		ID       string    `json:"ID"`
+		ID       string    `json:"id"`
 		Bounds   Bounds    `json:"bounds"`
 		Fields   []float64 `json:"fields,omitempty"`
 		Distance *float64  `json:"distance,omitempty"`
