@@ -1,4 +1,4 @@
-package t38c
+package geofence
 
 import (
 	"fmt"
@@ -8,7 +8,7 @@ import (
 	"github.com/tidwall/gjson"
 )
 
-var _ GeofenceExecutor = (*RedisFencer)(nil)
+var _ Executor = (*RedisFencer)(nil)
 
 // RedisFencer struct
 type RedisFencer struct {
@@ -34,7 +34,7 @@ func NewRedisFencer(addr string, debug bool) (*RedisFencer, error) {
 }
 
 // Fence ...
-func (fencer *RedisFencer) Fence(command string, args ...string) (ch GeofenceChan, err error) {
+func (fencer *RedisFencer) Fence(command string, args ...string) (ch chan []byte, err error) {
 	conn, err := dialRedis(fencer.addr)
 	if err != nil {
 		return nil, err
@@ -72,7 +72,7 @@ func (fencer *RedisFencer) Fence(command string, args ...string) (ch GeofenceCha
 		return nil, fmt.Errorf("not live: %v", resp)
 	}
 
-	ch = make(GeofenceChan, 10)
+	ch = make(chan []byte, 10)
 	go func() {
 		defer close(ch)
 		for {
