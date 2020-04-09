@@ -32,7 +32,7 @@ func (client *Tile38Client) searchObjects(cmd, key string, area Command, opts []
 	}
 
 	err = json.Unmarshal(b, &resp)
-	return resp, nil
+	return resp, err
 }
 
 // SearchPointsResponse struct
@@ -57,7 +57,7 @@ func (client *Tile38Client) searchPoints(cmd, key string, area Command, opts []S
 	}
 
 	err = json.Unmarshal(b, &resp)
-	return resp, nil
+	return resp, err
 }
 
 // SearchIDsResponse struct
