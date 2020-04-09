@@ -1,22 +1,26 @@
-package t38c
+package geofence
 
-import "strconv"
+import (
+	"strconv"
 
-var _ GeofenceRequestable = (*GeofenceRoamRequest)(nil)
+	t38c "github.com/zerobounty/tile38-client"
+)
 
-// GeofenceRoamRequest struct
-type GeofenceRoamRequest struct {
+var _ Requestable = (*RoamRequest)(nil)
+
+// RoamRequest struct
+type RoamRequest struct {
 	Key           string
 	Target        string
 	Pattern       string
 	Meters        int
-	ObjectType    Command
-	DetectActions []GeofenceDetectAction
-	Options       []SearchOption
+	ObjectType    t38c.Command
+	DetectActions []DetectAction
+	Options       []t38c.SearchOption
 }
 
-// GeofenceCommand ...
-func (req *GeofenceRoamRequest) GeofenceCommand() Command {
+// Command ...
+func (req *RoamRequest) GeofenceCommand() t38c.Command {
 	var args []string
 	args = append(args, req.Key)
 
@@ -50,12 +54,12 @@ func (req *GeofenceRoamRequest) GeofenceCommand() Command {
 		"ROAM", req.Target, req.Pattern, strconv.Itoa(req.Meters),
 	}...)
 
-	return NewCommand("NEARBY", args...)
+	return t38c.NewCommand("NEARBY", args...)
 }
 
 // NewFenceRoam ...
-func NewFenceRoam(key, target, pattern string, meters int) *GeofenceRoamRequest {
-	return &GeofenceRoamRequest{
+func NewFenceRoam(key, target, pattern string, meters int) *RoamRequest {
+	return &RoamRequest{
 		Key:     key,
 		Target:  target,
 		Pattern: pattern,
@@ -64,13 +68,13 @@ func NewFenceRoam(key, target, pattern string, meters int) *GeofenceRoamRequest 
 }
 
 // Actions ...
-func (req *GeofenceRoamRequest) Actions(actions ...GeofenceDetectAction) *GeofenceRoamRequest {
+func (req *RoamRequest) Actions(actions ...DetectAction) *RoamRequest {
 	req.DetectActions = actions
 	return req
 }
 
 // WithOptions ...
-func (req *GeofenceRoamRequest) WithOptions(opts ...SearchOption) *GeofenceRoamRequest {
+func (req *RoamRequest) WithOptions(opts ...t38c.SearchOption) *RoamRequest {
 	req.Options = opts
 	return req
 }

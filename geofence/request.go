@@ -1,25 +1,27 @@
-package t38c
+package geofence
 
-// GeofenceRequestable interface
+import t38c "github.com/zerobounty/tile38-client"
+
+// Requestable interface
 // TODO: rename?
-type GeofenceRequestable interface {
-	GeofenceCommand() Command
+type Requestable interface {
+	GeofenceCommand() t38c.Command
 }
 
-var _ GeofenceRequestable = (*GeofenceRequest)(nil)
+var _ Requestable = (*Request)(nil)
 
-// GeofenceRequest struct
-type GeofenceRequest struct {
+// Request struct
+type Request struct {
 	Cmd           string
 	Key           string
-	Area          SearchArea
-	ObjectType    Command
-	DetectActions []GeofenceDetectAction
-	Options       []SearchOption
+	Area          t38c.SearchArea
+	ObjectType    t38c.Command
+	DetectActions []DetectAction
+	Options       []t38c.SearchOption
 }
 
-// GeofenceCommand ...
-func (req *GeofenceRequest) GeofenceCommand() Command {
+// Command ...
+func (req *Request) GeofenceCommand() t38c.Command {
 	var args []string
 	args = append(args, req.Key)
 
@@ -52,24 +54,24 @@ func (req *GeofenceRequest) GeofenceCommand() Command {
 	args = append(args, req.Area.Name)
 	args = append(args, req.Area.Args...)
 
-	return NewCommand(req.Cmd, args...)
+	return t38c.NewCommand(req.Cmd, args...)
 }
 
 // Actions ...
-func (req *GeofenceRequest) Actions(actions ...GeofenceDetectAction) *GeofenceRequest {
+func (req *Request) Actions(actions ...DetectAction) *Request {
 	req.DetectActions = actions
 	return req
 }
 
 // WithOptions ...
-func (req *GeofenceRequest) WithOptions(opts ...SearchOption) *GeofenceRequest {
+func (req *Request) WithOptions(opts ...t38c.SearchOption) *Request {
 	req.Options = opts
 	return req
 }
 
 // NewFenceReq ...
-func NewFenceReq(cmd string, key string, area SearchArea) *GeofenceRequest {
-	return &GeofenceRequest{
+func NewFenceReq(cmd string, key string, area t38c.SearchArea) *Request {
+	return &Request{
 		Cmd:  cmd,
 		Key:  key,
 		Area: area,
