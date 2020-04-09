@@ -2,11 +2,40 @@ package t38c
 
 type geofenceBaseObject struct {
 	Command string `json:"command"`
-	Hook    string `json:"hook"`
+	Hook    string `json:"hook,omitempty"`
 	Group   string `json:"group"`
 	Detect  string `json:"detect"`
 	Key     string `json:"key"`
-	Time    string `json:"time"`
+	// TODO: custom time unmarshal
+	Time string `json:"time"`
+}
+
+// GeofenceObject struct
+type GeofenceObject struct {
+	geofenceBaseObject
+	ID     string `json:"id"`
+	Object Object `json:"object"`
+}
+
+// GeofencePoint struct
+type GeofencePoint struct {
+	geofenceBaseObject
+	ID    string `json:"id"`
+	Point Point  `json:"point"`
+}
+
+// GeofenceBounds struct
+type GeofenceBounds struct {
+	geofenceBaseObject
+	Bounds Bounds `json:"bounds"`
+	Object Object `json:"object"`
+}
+
+// GeofenceHash struct
+type GeofenceHash struct {
+	geofenceBaseObject
+	Hash   string `json:"hash"`
+	Object Object `json:"object"`
 }
 
 type geofenceRoamNearbyFarawayObject struct {
@@ -22,46 +51,51 @@ type geofenceRoamBaseObject struct {
 	Faraway *geofenceRoamNearbyFarawayObject `json:"faraway,omitempty"`
 }
 
-// GeofenceRoamObjectChan ...
-type GeofenceRoamObjectChan chan GeofenceRoamObject
-
 // GeofenceRoamObject struct
 type GeofenceRoamObject struct {
 	geofenceRoamBaseObject
+	ID     string             `json:"id"`
 	Object Object             `json:"object"`
 	Fields map[string]float64 `json:"fields,omitempty"`
 }
 
-// GeofenceRoamPointChan ...
-type GeofenceRoamPointChan chan GeofenceRoamPoint
-
 // GeofenceRoamPoint struct
 type GeofenceRoamPoint struct {
 	geofenceRoamBaseObject
+	ID     string             `json:"id"`
 	Point  Point              `json:"point"`
 	Fields map[string]float64 `json:"fields,omitempty"`
 }
 
-// GeofenceRoamBoundsChan ...
-type GeofenceRoamBoundsChan chan GeofenceRoamBounds
-
 // GeofenceRoamBounds struct
 type GeofenceRoamBounds struct {
 	geofenceRoamBaseObject
+	ID     string             `json:"id"`
 	Bounds Bounds             `json:"bounds"`
 	Fields map[string]float64 `json:"fields,omitempty"`
 }
 
+type (
+	GeofenceObjectChan     chan GeofenceObject
+	GeofencePointChan      chan GeofencePoint
+	GeofenceBoundsChan     chan GeofenceBounds
+	GeofenceRoamObjectChan chan GeofenceRoamObject
+	GeofenceRoamPointChan  chan GeofenceRoamPoint
+	GeofenceRoamBoundsChan chan GeofenceBounds
+)
+
+// GeofenceDetectAction ...
 type GeofenceDetectAction string
 
 const (
-	Inside  GeofenceDetectAction = "inside"
+	// Inside action
+	Inside GeofenceDetectAction = "inside"
+	// Outside action
 	Outside GeofenceDetectAction = "outside"
-	Enter   GeofenceDetectAction = "enter"
-	Exit    GeofenceDetectAction = "exit"
-	Cross   GeofenceDetectAction = "cross"
+	// Enter action
+	Enter GeofenceDetectAction = "enter"
+	// Exit action
+	Exit GeofenceDetectAction = "exit"
+	// Cross action
+	Cross GeofenceDetectAction = "cross"
 )
-
-func Detect(actions ...GeofenceDetectAction) []GeofenceDetectAction {
-	return actions
-}
