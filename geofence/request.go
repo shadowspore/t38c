@@ -20,7 +20,7 @@ type Request struct {
 	Options       []t38c.SearchOption
 }
 
-// Command ...
+// GeofenceCommand ...
 func (req *Request) GeofenceCommand() t38c.Command {
 	var args []string
 	args = append(args, req.Key)
@@ -70,9 +70,8 @@ func (req *Request) WithOptions(opts ...t38c.SearchOption) *Request {
 }
 
 // NewFenceReq ...
-func NewFenceReq(cmd string, key string, area t38c.SearchArea) *Request {
+func NewFenceReq(key string, area t38c.SearchArea) *Request {
 	return &Request{
-		Cmd:  cmd,
 		Key:  key,
 		Area: area,
 	}

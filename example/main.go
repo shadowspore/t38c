@@ -1,6 +1,8 @@
 package main
 
 import (
+	"log"
+
 	"github.com/k0kubun/pp"
 
 	t38c "github.com/zerobounty/tile38-client"
@@ -8,13 +10,19 @@ import (
 )
 
 func main() {
-	fencer, err := geofence.NewRedisFencer("localhost:9851", true)
+	geo, err := geofence.New(geofence.NewRedisFencer("localhost:9851"), true)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 
-	req := geofence.NewFenceReq("WITHIN", "fleet", t38c.AreaCircle(0, 0, 1000)).Actions(geofence.Inside)
-	ch, err := geofence.FenceObject(fencer, req)
+	ch, err := geo.FenceIntersectsObjects(
+		geofence.NewFenceReq("fleet", t38c.AreaCircle(0, 0, 1000)).
+			Actions(geofence.Enter, geofence.Exit).
+			WithOptions(t38c.Where("speed", 10, 20)),
+	)
+	if err != nil {
+		log.Fatal(err)
+	}
 	for event := range ch {
 		pp.Println(event)
 	}
