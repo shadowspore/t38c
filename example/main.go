@@ -16,7 +16,7 @@ func main() {
 	}
 
 	ch, err := geo.FenceIntersectsObjects(
-		geofence.NewFenceReq("fleet", t38c.AreaCircle(0, 0, 1000)).
+		geofence.NewRequest("fleet", t38c.AreaCircle(0, 0, 1000)).
 			Actions(geofence.Enter, geofence.Exit).
 			WithOptions(t38c.Where("speed", 10, 20)),
 	)
