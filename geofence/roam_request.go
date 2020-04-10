@@ -57,8 +57,8 @@ func (req *RoamRequest) GeofenceCommand() t38c.Command {
 	return t38c.NewCommand("NEARBY", args...)
 }
 
-// NewFenceRoam ...
-func NewFenceRoam(key, target, pattern string, meters int) *RoamRequest {
+// NewRoamRequest ...
+func NewRoamRequest(key, target, pattern string, meters int) *RoamRequest {
 	return &RoamRequest{
 		Key:     key,
 		Target:  target,

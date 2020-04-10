@@ -69,8 +69,8 @@ func (req *Request) WithOptions(opts ...t38c.SearchOption) *Request {
 	return req
 }
 
-// NewFenceReq ...
-func NewFenceReq(key string, area t38c.SearchArea) *Request {
+// NewRequest ...
+func NewRequest(key string, area t38c.SearchArea) *Request {
 	return &Request{
 		Key:  key,
 		Area: area,
