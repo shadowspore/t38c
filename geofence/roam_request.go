@@ -19,7 +19,7 @@ type RoamRequest struct {
 	Options       []t38c.SearchOption
 }
 
-// Command ...
+// GeofenceCommand ...
 func (req *RoamRequest) GeofenceCommand() t38c.Command {
 	var args []string
 	args = append(args, req.Key)

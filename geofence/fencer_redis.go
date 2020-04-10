@@ -2,7 +2,9 @@ package geofence
 
 import (
 	"fmt"
+	"io"
 	"log"
+	"time"
 
 	"github.com/garyburd/redigo/redis"
 	"github.com/tidwall/gjson"
@@ -12,25 +14,24 @@ var _ Executor = (*RedisFencer)(nil)
 
 // RedisFencer struct
 type RedisFencer struct {
-	debug bool
-	addr  string
+	addr string
 }
 
 // NewRedisFencer ...
-func NewRedisFencer(addr string, debug bool) (*RedisFencer, error) {
-	// just ping
-	conn, err := dialRedis(addr)
-	if err != nil {
-		return nil, err
-	}
-	defer conn.Close()
+func NewRedisFencer(addr string) ExecutorDialer {
+	return func() (Executor, error) {
+		conn, err := dialRedis(addr)
+		if err != nil {
+			return nil, err
+		}
+		defer conn.Close()
 
-	fencer := &RedisFencer{
-		debug: debug,
-		addr:  addr,
-	}
+		fencer := &RedisFencer{
+			addr: addr,
+		}
 
-	return fencer, nil
+		return fencer, nil
+	}
 }
 
 // Fence ...
@@ -39,11 +40,6 @@ func (fencer *RedisFencer) Fence(command string, args ...string) (ch chan []byte
 	if err != nil {
 		return nil, err
 	}
-	defer func() {
-		if err != nil {
-			conn.Close()
-		}
-	}()
 
 	var ifaceArgs []interface{}
 	for _, arg := range args {
@@ -52,11 +48,8 @@ func (fencer *RedisFencer) Fence(command string, args ...string) (ch chan []byte
 
 	resp, err := conn.Do(command, ifaceArgs...)
 	if err != nil {
+		conn.Close()
 		return nil, err
-	}
-
-	if fencer.debug {
-		log.Printf("[%s %v]: %s\n", command, args, resp)
 	}
 
 	body, ok := resp.([]byte)
@@ -74,10 +67,18 @@ func (fencer *RedisFencer) Fence(command string, args ...string) (ch chan []byte
 
 	ch = make(chan []byte, 10)
 	go func() {
-		defer close(ch)
+		defer func() {
+			close(ch)
+			conn.Close()
+		}()
+
 		for {
 			resp, err = conn.Receive()
 			if err != nil {
+				if err == io.EOF {
+					break
+				}
+
 				log.Printf("receive: %v\n", err)
 				break
 			}
@@ -88,9 +89,6 @@ func (fencer *RedisFencer) Fence(command string, args ...string) (ch chan []byte
 				break
 			}
 
-			if fencer.debug {
-				log.Printf("%s\n", body)
-			}
 			ch <- body
 		}
 	}()
@@ -99,7 +97,7 @@ func (fencer *RedisFencer) Fence(command string, args ...string) (ch chan []byte
 }
 
 func dialRedis(addr string) (redis.Conn, error) {
-	conn, err := redis.Dial("tcp", addr)
+	conn, err := redis.Dial("tcp", addr, redis.DialConnectTimeout(time.Second*10))
 	if err != nil {
 		return nil, err
 	}

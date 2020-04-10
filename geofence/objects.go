@@ -2,7 +2,7 @@ package geofence
 
 import t38c "github.com/lostpeer/tile38-client"
 
-type BaseObject struct {
+type baseObject struct {
 	Command string `json:"command"`
 	Hook    string `json:"hook,omitempty"`
 	Group   string `json:"group"`
@@ -14,48 +14,48 @@ type BaseObject struct {
 
 // Object struct
 type Object struct {
-	BaseObject
+	baseObject
 	ID     string      `json:"id"`
 	Object t38c.Object `json:"object"`
 }
 
 // Point struct
 type Point struct {
-	BaseObject
+	baseObject
 	ID    string     `json:"id"`
 	Point t38c.Point `json:"point"`
 }
 
 // Bounds struct
 type Bounds struct {
-	BaseObject
+	baseObject
 	ID     string      `json:"id"`
 	Bounds t38c.Bounds `json:"bounds"`
 }
 
 // Hash struct
 type Hash struct {
-	BaseObject
+	baseObject
 	ID   string `json:"id"`
 	Hash string `json:"hash"`
 }
 
-type RoamNearbyFarawayObject struct {
+type roamNearbyFarawayObject struct {
 	Key    string      `json:"key"`
 	ID     string      `json:"id"`
 	Object t38c.Object `json:"object"`
 	Meters float64     `json:"meters"`
 }
 
-type RoamBaseObject struct {
-	BaseObject
-	Nearby  *RoamNearbyFarawayObject `json:"nearby,omitempty"`
-	Faraway *RoamNearbyFarawayObject `json:"faraway,omitempty"`
+type roamBaseObject struct {
+	baseObject
+	Nearby  *roamNearbyFarawayObject `json:"nearby,omitempty"`
+	Faraway *roamNearbyFarawayObject `json:"faraway,omitempty"`
 }
 
 // RoamObject struct
 type RoamObject struct {
-	RoamBaseObject
+	roamBaseObject
 	ID     string             `json:"id"`
 	Object t38c.Object        `json:"object"`
 	Fields map[string]float64 `json:"fields,omitempty"`
@@ -63,7 +63,7 @@ type RoamObject struct {
 
 // RoamPoint struct
 type RoamPoint struct {
-	RoamBaseObject
+	roamBaseObject
 	ID     string             `json:"id"`
 	Point  t38c.Point         `json:"point"`
 	Fields map[string]float64 `json:"fields,omitempty"`
@@ -71,20 +71,11 @@ type RoamPoint struct {
 
 // RoamBounds struct
 type RoamBounds struct {
-	RoamBaseObject
+	roamBaseObject
 	ID     string             `json:"id"`
 	Bounds t38c.Bounds        `json:"bounds"`
 	Fields map[string]float64 `json:"fields,omitempty"`
 }
-
-type (
-	ObjectChan     chan Object
-	PointChan      chan Point
-	BoundsChan     chan Bounds
-	RoamObjectChan chan RoamObject
-	RoamPointChan  chan RoamPoint
-	RoamBoundsChan chan Bounds
-)
 
 // DetectAction ...
 type DetectAction string
