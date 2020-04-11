@@ -1,5 +1,6 @@
 package t38c
 
+// SearchRequest struct
 type SearchRequest struct {
 	Cmd           string
 	Key           string
@@ -8,6 +9,7 @@ type SearchRequest struct {
 	SearchOptions []SearchOption
 }
 
+// BuildCommand ...
 func (req *SearchRequest) BuildCommand() Command {
 	var args []string
 	args = append(args, req.Key)
@@ -28,16 +30,19 @@ func (req *SearchRequest) BuildCommand() Command {
 	return NewCommand(req.Cmd, args...)
 }
 
+// Format ...
 func (req *SearchRequest) Format(fmt OutputFormat) *SearchRequest {
 	req.OutputFormat = fmt
 	return req
 }
 
+// WithOptions ...
 func (req *SearchRequest) WithOptions(opts ...SearchOption) *SearchRequest {
 	req.SearchOptions = opts
 	return req
 }
 
+// Within ...
 func Within(key string, area SearchArea) *SearchRequest {
 	return &SearchRequest{
 		Cmd:  "WITHIN",
@@ -46,6 +51,7 @@ func Within(key string, area SearchArea) *SearchRequest {
 	}
 }
 
+// Intersects ...
 func Intersects(key string, area SearchArea) *SearchRequest {
 	return &SearchRequest{
 		Cmd:  "INTERSECTS",
@@ -54,6 +60,7 @@ func Intersects(key string, area SearchArea) *SearchRequest {
 	}
 }
 
+// Nearby ...
 func Nearby(key string, area NearbyArea) *SearchRequest {
 	return &SearchRequest{
 		Cmd:  "NEARBY",
@@ -62,6 +69,7 @@ func Nearby(key string, area NearbyArea) *SearchRequest {
 	}
 }
 
+// Search ...
 func Search(key string) *SearchRequest {
 	return &SearchRequest{
 		Cmd: "SEARCH",
@@ -69,6 +77,7 @@ func Search(key string) *SearchRequest {
 	}
 }
 
+// Scan ...
 func Scan(key string) *SearchRequest {
 	return &SearchRequest{
 		Cmd: "SCAN",
