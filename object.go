@@ -98,10 +98,15 @@ type SearchResponse struct {
 type OutputFormat Command
 
 var (
-	OutputCount  = OutputFormat(NewCommand("COUNT"))
-	OutputIDs    = OutputFormat(NewCommand("IDS"))
+	// OutputCount ...
+	OutputCount = OutputFormat(NewCommand("COUNT"))
+	// OutputIDs ...
+	OutputIDs = OutputFormat(NewCommand("IDS"))
+	// OutputPoints ...
 	OutputPoints = OutputFormat(NewCommand("POINTS"))
+	// OutputBounds ...
 	OutputBounds = OutputFormat(NewCommand("BOUNDS"))
+	// OutputHashes ...
 	OutputHashes = func(precision int) OutputFormat {
 		return OutputFormat(NewCommand("HASHES", strconv.Itoa(precision)))
 	}
