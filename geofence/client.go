@@ -1,6 +1,9 @@
 package geofence
 
-import "log"
+import (
+	"context"
+	"log"
+)
 
 // Client struct
 type Client struct {
@@ -24,12 +27,9 @@ func New(dialer FencerDialer, debug bool) (*Client, error) {
 }
 
 // Fence ...
-func (client *Client) execRequest(req Requestable) (chan []byte, error) {
+func (client *Client) execRequest(ctx context.Context, req Requestable) (chan []byte, error) {
 	cmd := req.GeofenceCommand()
-	if client.debug {
-
-	}
-	ch, err := client.fencer.Fence(cmd.Name, cmd.Args...)
+	ch, err := client.fencer.Fence(ctx, cmd)
 	if client.debug {
 		if err != nil {
 			log.Printf("geofence request: [%s]: %v", cmd, err)

@@ -1,6 +1,7 @@
 package geofence
 
 import (
+	"context"
 	"fmt"
 	"time"
 
@@ -11,6 +12,8 @@ import (
 	"github.com/tidwall/gjson"
 	t38c "github.com/lostpeer/tile38-client"
 )
+
+var _ Fencer = (*RadixFencer)(nil)
 
 // RadixFencer struct
 type RadixFencer struct {
@@ -33,7 +36,7 @@ func NewRadixFencer(addr string) FencerDialer {
 }
 
 // Fence ...
-func (fencer *RadixFencer) Fence(command string, args ...string) (ch chan []byte, err error) {
+func (fencer *RadixFencer) Fence(ctx context.Context, cmd t38c.Command) (ch chan []byte, err error) {
 	conn, err := radix.Dial("tcp", fencer.addr,
 		radix.DialConnectTimeout(time.Second*10),
 		radix.DialReadTimeout(0),
@@ -54,7 +57,7 @@ func (fencer *RadixFencer) Fence(command string, args ...string) (ch chan []byte
 		}
 
 		var resp []byte
-		if err := conn.Do(radix.Cmd(&resp, command, args...)); err != nil {
+		if err := conn.Do(radix.Cmd(&resp, cmd.Name, cmd.Args...)); err != nil {
 			return nil, err
 		}
 
@@ -70,20 +73,24 @@ func (fencer *RadixFencer) Fence(command string, args ...string) (ch chan []byte
 	ch = make(chan []byte, 10)
 	go func() {
 		defer func() {
-			close(ch)
 			conn.Close()
+			close(ch)
 		}()
 
-		resp := &resp2.BulkStringBytes{}
 		for {
-			if err := conn.Decode(resp); err != nil {
-				log.Printf("resp decode: %v\n", err)
-				break
+			select {
+			case <-ctx.Done():
+				return
+			default:
+				resp := &resp2.BulkStringBytes{}
+				if err := conn.Decode(resp); err != nil {
+					log.Printf("resp decode: %v\n", err)
+					return
+				}
+
+				ch <- resp.B
 			}
-
-			ch <- resp.B
 		}
-
 	}()
 
 	return ch, nil

@@ -1,8 +1,14 @@
 package geofence
 
+import (
+	"context"
+
+	t38c "github.com/lostpeer/tile38-client"
+)
+
 // Fencer interface
 type Fencer interface {
-	Fence(command string, args ...string) (chan []byte, error)
+	Fence(ctx context.Context, cmd t38c.Command) (chan []byte, error)
 }
 
 // FencerDialer ...
