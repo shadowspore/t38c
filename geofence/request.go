@@ -14,7 +14,7 @@ var _ Requestable = (*Request)(nil)
 type Request struct {
 	Cmd           string
 	Key           string
-	Area          t38c.SearchArea
+	Area          t38c.Command
 	ObjectType    t38c.Command
 	DetectActions []DetectAction
 	Options       []t38c.SearchOption
@@ -69,10 +69,32 @@ func (req *Request) WithOptions(opts ...t38c.SearchOption) *Request {
 	return req
 }
 
+func (req *Request) ResponseFormat(cmd t38c.Command) *Request {
+	req.ObjectType = cmd
+	return req
+}
+
 // NewRequest ...
-func NewRequest(key string, area t38c.SearchArea) *Request {
+func Within(key string, area t38c.SearchArea) *Request {
 	return &Request{
+		Cmd:  "WITHIN",
 		Key:  key,
-		Area: area,
+		Area: t38c.Command(area),
+	}
+}
+
+func Intersects(key string, area t38c.SearchArea) *Request {
+	return &Request{
+		Cmd:  "INTERSECTS",
+		Key:  key,
+		Area: t38c.Command(area),
+	}
+}
+
+func Nearby(key string, area t38c.NearbyArea) *Request {
+	return &Request{
+		Cmd:  "NEARBY",
+		Key:  key,
+		Area: t38c.Command(area),
 	}
 }

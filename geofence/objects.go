@@ -2,42 +2,22 @@ package geofence
 
 import t38c "github.com/lostpeer/tile38-client"
 
-type baseObject struct {
+type Response struct {
 	Command string `json:"command"`
 	Hook    string `json:"hook,omitempty"`
 	Group   string `json:"group"`
 	Detect  string `json:"detect"`
 	Key     string `json:"key"`
 	// TODO: custom time unmarshal
-	Time string `json:"time"`
-}
-
-// Object struct
-type Object struct {
-	baseObject
-	ID     string      `json:"id"`
-	Object t38c.Object `json:"object"`
-}
-
-// Point struct
-type Point struct {
-	baseObject
-	ID    string     `json:"id"`
-	Point t38c.Point `json:"point"`
-}
-
-// Bounds struct
-type Bounds struct {
-	baseObject
-	ID     string      `json:"id"`
-	Bounds t38c.Bounds `json:"bounds"`
-}
-
-// Hash struct
-type Hash struct {
-	baseObject
-	ID   string `json:"id"`
-	Hash string `json:"hash"`
+	Time    string                   `json:"time"`
+	ID      string                   `json:"id"`
+	Object  *t38c.Object             `json:"object,omitempty"`
+	Point   *t38c.Point              `json:"point,omitempty"`
+	Bounds  *t38c.Bounds             `json:"bounds,omitempty"`
+	Hash    *string                  `json:"hash,omitempty"`
+	Nearby  *roamNearbyFarawayObject `json:"nearby,omitempty"`
+	Faraway *roamNearbyFarawayObject `json:"faraway,omitempty"`
+	Fields  map[string]float64       `json:"fields,omitempty"`
 }
 
 type roamNearbyFarawayObject struct {
@@ -45,36 +25,6 @@ type roamNearbyFarawayObject struct {
 	ID     string      `json:"id"`
 	Object t38c.Object `json:"object"`
 	Meters float64     `json:"meters"`
-}
-
-type roamBaseObject struct {
-	baseObject
-	Nearby  *roamNearbyFarawayObject `json:"nearby,omitempty"`
-	Faraway *roamNearbyFarawayObject `json:"faraway,omitempty"`
-}
-
-// RoamObject struct
-type RoamObject struct {
-	roamBaseObject
-	ID     string             `json:"id"`
-	Object t38c.Object        `json:"object"`
-	Fields map[string]float64 `json:"fields,omitempty"`
-}
-
-// RoamPoint struct
-type RoamPoint struct {
-	roamBaseObject
-	ID     string             `json:"id"`
-	Point  t38c.Point         `json:"point"`
-	Fields map[string]float64 `json:"fields,omitempty"`
-}
-
-// RoamBounds struct
-type RoamBounds struct {
-	roamBaseObject
-	ID     string             `json:"id"`
-	Bounds t38c.Bounds        `json:"bounds"`
-	Fields map[string]float64 `json:"fields,omitempty"`
 }
 
 // DetectAction ...
