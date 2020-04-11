@@ -70,8 +70,8 @@ type SearchResponse struct {
 	Objects []struct {
 		ID       string    `json:"ID"`
 		Object   Object    `json:"object"`
-		Fields   []float64 `json:"fields"`
-		Distance *float64  `json:"distance"`
+		Fields   []float64 `json:"fields,omitempty"`
+		Distance *float64  `json:"distance,omitempty"`
 	} `json:"objects,omitempty"`
 	Points []struct {
 		ID       string    `json:"ID"`
