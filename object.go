@@ -1,6 +1,8 @@
 package t38c
 
 import (
+	"strconv"
+
 	geojson "github.com/paulmach/go.geojson"
 	"github.com/tidwall/gjson"
 )
@@ -51,26 +53,56 @@ func (ob *Object) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// GetObjectResponse struct
-type GetObjectResponse struct {
-	Object Object             `json:"object"`
+// GetResponse struct
+type GetResponse struct {
+	Object *Object            `json:"object,omitempty"`
+	Point  *Point             `json:"point,omitempty"`
+	Bounds *Bounds            `json:"bounds,omitempty"`
+	Hash   *string            `json:"hash,omitempty"`
 	Fields map[string]float64 `json:"fields,omitempty"`
 }
 
-// GetPointResponse struct
-type GetPointResponse struct {
-	Point  Point              `json:"point"`
-	Fields map[string]float64 `json:"fields,omitempty"`
+// SearchResponse struct
+type SearchResponse struct {
+	Cursor  int      `json:"cursor"`
+	Count   int      `json:"count"`
+	Fields  []string `json:"fields,omitempty"`
+	Objects []struct {
+		ID       string    `json:"ID"`
+		Object   Object    `json:"object"`
+		Fields   []float64 `json:"fields"`
+		Distance *float64  `json:"distance"`
+	} `json:"objects,omitempty"`
+	Points []struct {
+		ID       string    `json:"ID"`
+		Point    Point     `json:"point"`
+		Fields   []float64 `json:"fields,omitempty"`
+		Distance *float64  `json:"distance,omitempty"`
+	} `json:"points,omitempty"`
+	Bounds []struct {
+		ID       string    `json:"ID"`
+		Bounds   Bounds    `json:"bounds"`
+		Fields   []float64 `json:"fields,omitempty"`
+		Distance *float64  `json:"distance,omitempty"`
+	} `json:"bounds,omitempty"`
+	Hashes []struct {
+		ID       string    `json:"id"`
+		Hash     string    `json:"hash"`
+		Fields   []float64 `json:"fields,omitempty"`
+		Distance *float64  `json:"distance,omitempty"`
+	} `json:"hashes,omitempty"`
+	IDs []string `json:"ids,omitempty"`
 }
 
-// GetBoundsResponse struct
-type GetBoundsResponse struct {
-	Bounds Bounds             `json:"bounds"`
-	Fields map[string]float64 `json:"fields,omitempty"`
-}
+// OutputFormat ...
+type OutputFormat Command
 
-// GetHashResponse struct
-type GetHashResponse struct {
-	Hash   string             `json:"hash"`
-	Fields map[string]float64 `json:"fields,omitempty"`
-}
+var (
+	OutputCount  = OutputFormat(NewCommand("COUNT"))
+	OutputIDs    = OutputFormat(NewCommand("IDS"))
+	OutputPoints = OutputFormat(NewCommand("POINTS"))
+	OutputBounds = OutputFormat(NewCommand("BOUNDS"))
+	OutputHashes = func(precision int) OutputFormat {
+		return OutputFormat(NewCommand("HASHES", strconv.Itoa(precision)))
+	}
+)
