@@ -3,6 +3,7 @@ package t38c
 import (
 	"encoding/json"
 	"fmt"
+	"time"
 
 	"github.com/mediocregopher/radix/v3"
 )
@@ -17,7 +18,20 @@ type RadixPoolExecutor struct {
 // NewRadixPool ...
 func NewRadixPool(addr string, size int) ExecutorDialer {
 	return func() (Executor, error) {
-		pool, err := radix.NewPool("tcp", addr, size, radix.PoolConnFunc(RadixJSONDialer))
+		pool, err := radix.NewPool("tcp", addr, size, radix.PoolConnFunc(func(net, addr string) (conn radix.Conn, err error) {
+			conn, err = radix.Dial(net, addr,
+				radix.DialConnectTimeout(time.Second*10),
+			)
+			if err != nil {
+				return
+			}
+
+			err = RadixJSONifyConn(conn)
+			if err != nil {
+				conn.Close()
+			}
+			return
+		}))
 		if err != nil {
 			return nil, err
 		}
@@ -39,31 +53,23 @@ func (rad *RadixPoolExecutor) Execute(command string, args ...string) ([]byte, e
 	return resp, nil
 }
 
-// RadixJSONDialer ...
-func RadixJSONDialer(net, addr string) (radix.Conn, error) {
-	conn, err := radix.Dial(net, addr)
-	if err != nil {
-		return nil, err
-	}
-
+// RadixJSONifyConn ...
+func RadixJSONifyConn(conn radix.Conn) (err error) {
 	var b []byte
 	if err := conn.Do(radix.Cmd(&b, "OUTPUT", "json")); err != nil {
-		conn.Close()
-		return nil, err
+		return err
 	}
 
 	var resp struct {
 		Ok bool `json:"ok"`
 	}
 	if err := json.Unmarshal(b, &resp); err != nil {
-		conn.Close()
-		return nil, err
+		return err
 	}
 
 	if !resp.Ok {
-		conn.Close()
-		return nil, fmt.Errorf("bad response: %s", b)
+		return fmt.Errorf("bad response: %s", b)
 	}
 
-	return conn, nil
+	return nil
 }
