@@ -43,9 +43,9 @@
 - [ ] (arg) [WHEREEVAL script numargs arg [arg ...] ...]
 - [ ] (arg) [WHEREEVALSHA sha1 numargs arg [arg ...] ...]
 - [x] (arg) [NOFIELDS]
-- [ ] (arg) [FENCE]
-- [ ] (arg) [DETECT what]
-- [ ] (arg) [COMMANDS which]
+- [x] (arg) [FENCE]
+- [x] (arg) [DETECT what]
+- [x] (arg) [COMMANDS which]
 - [x] (arg) COUNT
 - [x] (arg) IDS
 - [x] (arg) OBJECTS
@@ -65,9 +65,9 @@
 - [ ] (arg) [WHEREEVAL script numargs arg [arg ...] ...]
 - [ ] (arg) [WHEREEVALSHA sha1 numargs arg [arg ...] ...]
 - [x] (arg) [NOFIELDS]
-- [ ] (arg) [FENCE]
-- [ ] (arg) [DETECT what]
-- [ ] (arg) [COMMANDS which]
+- [x] (arg) [FENCE]
+- [x] (arg) [DETECT what]
+- [x] (arg) [COMMANDS which]
 - [x] (arg) COUNT
 - [x] (arg) IDS
 - [x] (arg) OBJECTS
@@ -93,9 +93,9 @@
 - [ ] (arg) [WHEREEVALSHA sha1 numargs arg [arg ...] ...]
 - [x] (arg) [CLIP]
 - [x] (arg) [NOFIELDS]
-- [ ] (arg) [FENCE]
-- [ ] (arg) [DETECT what]
-- [ ] (arg) [COMMANDS which]
+- [x] (arg) [FENCE]
+- [x] (arg) [DETECT what]
+- [x] (arg) [COMMANDS which]
 - [x] (arg) COUNT
 - [x] (arg) IDS
 - [x] (arg) OBJECTS
