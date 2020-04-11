@@ -18,20 +18,9 @@ type RadixPoolExecutor struct {
 // NewRadixPool ...
 func NewRadixPool(addr string, size int) ExecutorDialer {
 	return func() (Executor, error) {
-		pool, err := radix.NewPool("tcp", addr, size, radix.PoolConnFunc(func(net, addr string) (conn radix.Conn, err error) {
-			conn, err = radix.Dial(net, addr,
-				radix.DialConnectTimeout(time.Second*10),
-			)
-			if err != nil {
-				return
-			}
-
-			err = RadixJSONifyConn(conn)
-			if err != nil {
-				conn.Close()
-			}
-			return
-		}))
+		pool, err := radix.NewPool("tcp", addr, size,
+			radix.PoolConnFunc(poolConnFn),
+		)
 		if err != nil {
 			return nil, err
 		}
@@ -51,6 +40,21 @@ func (rad *RadixPoolExecutor) Execute(command string, args ...string) ([]byte, e
 	}
 
 	return resp, nil
+}
+
+func poolConnFn(net, addr string) (conn radix.Conn, err error) {
+	conn, err = radix.Dial(net, addr,
+		radix.DialConnectTimeout(time.Second*10),
+	)
+	if err != nil {
+		return
+	}
+
+	err = RadixJSONifyConn(conn)
+	if err != nil {
+		conn.Close()
+	}
+	return
 }
 
 // RadixJSONifyConn ...
