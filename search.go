@@ -5,7 +5,7 @@ import "encoding/json"
 // Search ...
 func (client *Tile38Client) Search(req *SearchRequest) (*SearchResponse, error) {
 	cmd := req.BuildCommand()
-	b, err := client.Execute(cmd.Name, cmd.Args...)
+	b, err := client.ExecuteCmd(cmd)
 	if err != nil {
 		return nil, err
 	}

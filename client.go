@@ -3,7 +3,6 @@ package t38c
 import (
 	"fmt"
 	"log"
-	"strings"
 
 	"github.com/tidwall/gjson"
 )
@@ -44,14 +43,10 @@ func New(dialer ExecutorDialer, opts ...ClientOption) (*Tile38Client, error) {
 	return client, nil
 }
 
-// Execute command
-func (client *Tile38Client) Execute(command string, args ...string) ([]byte, error) {
-	resp, err := client.executor.Execute(command, args...)
+// ExecuteCmd ...
+func (client *Tile38Client) ExecuteCmd(cmd Command) ([]byte, error) {
+	resp, err := client.executor.Execute(cmd.Name, cmd.Args...)
 	if client.debug {
-		cmd := command
-		if len(args) > 0 {
-			cmd += " " + strings.Join(args, " ")
-		}
 		log.Printf("[%s]: %s", cmd, resp)
 	}
 
@@ -60,13 +55,13 @@ func (client *Tile38Client) Execute(command string, args ...string) ([]byte, err
 	}
 
 	if !gjson.GetBytes(resp, "ok").Bool() {
-		cmd := command
-		if len(args) > 0 {
-			cmd += " " + strings.Join(args, " ")
-		}
-
-		return nil, fmt.Errorf("command '%s': %s", cmd, gjson.GetBytes(resp, "err").String())
+		return nil, fmt.Errorf("command: %s: %s", cmd, gjson.GetBytes(resp, "err").String())
 	}
 
 	return resp, nil
+}
+
+// Execute command
+func (client *Tile38Client) Execute(name string, args ...string) ([]byte, error) {
+	return client.ExecuteCmd(NewCommand(name, args...))
 }
