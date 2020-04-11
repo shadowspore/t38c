@@ -18,8 +18,8 @@ type RadixFencer struct {
 }
 
 // NewRadixFencer ...
-func NewRadixFencer(addr string) ExecutorDialer {
-	return func() (Executor, error) {
+func NewRadixFencer(addr string) FencerDialer {
+	return func() (Fencer, error) {
 		conn, err := radix.Dial("tcp", addr,
 			radix.DialConnectTimeout(time.Second*10),
 		)
@@ -63,7 +63,7 @@ func (fencer *RadixFencer) Fence(command string, args ...string) (ch chan []byte
 		}
 
 		if !gjson.GetBytes(resp, "live").Bool() {
-			return nil, fmt.Errorf("not live: %s", resp)
+			return nil, fmt.Errorf("bad response: %s", resp)
 		}
 	}
 
@@ -73,8 +73,9 @@ func (fencer *RadixFencer) Fence(command string, args ...string) (ch chan []byte
 			close(ch)
 			conn.Close()
 		}()
+
+		resp := &resp2.BulkStringBytes{}
 		for {
-			resp := &resp2.BulkStringBytes{}
 			if err := conn.Decode(resp); err != nil {
 				log.Printf("resp decode: %v\n", err)
 				break

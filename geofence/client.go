@@ -4,20 +4,20 @@ import "log"
 
 // Client struct
 type Client struct {
-	debug bool
-	exec  Executor
+	debug  bool
+	fencer Fencer
 }
 
 // New ...
-func New(dialer ExecutorDialer, debug bool) (*Client, error) {
-	exec, err := dialer()
+func New(dialer FencerDialer, debug bool) (*Client, error) {
+	fencer, err := dialer()
 	if err != nil {
 		return nil, err
 	}
 
 	client := &Client{
-		exec:  exec,
-		debug: debug,
+		fencer: fencer,
+		debug:  debug,
 	}
 
 	return client, nil
@@ -29,6 +29,6 @@ func (client *Client) Fence(req Requestable) (chan []byte, error) {
 	if client.debug {
 		log.Printf("geofence request: [%s %s]", cmd.Name, cmd.Args)
 	}
-	ch, err := client.exec.Fence(cmd.Name, cmd.Args...)
+	ch, err := client.fencer.Fence(cmd.Name, cmd.Args...)
 	return ch, err
 }
