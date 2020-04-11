@@ -24,7 +24,7 @@ func New(dialer FencerDialer, debug bool) (*Client, error) {
 }
 
 // Fence ...
-func (client *Client) Fence(req Requestable) (chan []byte, error) {
+func (client *Client) execRequest(req Requestable) (chan []byte, error) {
 	cmd := req.GeofenceCommand()
 	if client.debug {
 
