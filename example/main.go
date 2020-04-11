@@ -13,17 +13,13 @@ func main() {
 		log.Fatal(err)
 	}
 
-	res, err := tile38.Nearby("fleet", t38c.NearbyPoint(0, 0, 9999999))
+	req := t38c.Nearby("fleet", t38c.NearbyPoint(0, 0, 999999)).
+		WithOptions(t38c.Distance()).Format(t38c.OutputPoints)
+
+	resp, err := tile38.Search(req)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	pp.Println(res)
-
-	res1, err := tile38.Get("fleet", "truck1", true)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	pp.Println(res1)
+	pp.Println(resp)
 }
