@@ -18,7 +18,7 @@ func main() {
 	req := geofence.Within("people", t38c.AreaCircle(0, 0, 10000)).
 		WithOptions(t38c.Where("speed", 0, 60)).
 		Actions(geofence.Enter, geofence.Exit).
-		ResponseFormat(t38c.NewCommand("BOUNDS"))
+		Format(t38c.OutputBounds)
 
 	ch, err := geo.Fence(req)
 	if err != nil {

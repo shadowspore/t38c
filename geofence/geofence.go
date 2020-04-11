@@ -5,6 +5,7 @@ import (
 	"log"
 )
 
+// Fence ...
 func (client *Client) Fence(req Requestable) (chan Response, error) {
 	events, err := client.execRequest(req)
 	if err != nil {
@@ -29,4 +30,3 @@ func (client *Client) Fence(req Requestable) (chan Response, error) {
 
 	return ch, nil
 }
-

@@ -2,6 +2,7 @@ package t38c
 
 import "encoding/json"
 
+// Search ...
 func (client *Tile38Client) Search(req *SearchRequest) (*SearchResponse, error) {
 	resp := &SearchResponse{}
 	cmd := req.BuildCommand()
