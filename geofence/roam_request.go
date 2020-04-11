@@ -14,7 +14,7 @@ type RoamRequest struct {
 	Target        string
 	Pattern       string
 	Meters        int
-	ObjectType    t38c.Command
+	OutputFormat  t38c.OutputFormat
 	DetectActions []DetectAction
 	Options       []t38c.SearchOption
 }
@@ -45,9 +45,9 @@ func (req *RoamRequest) GeofenceCommand() t38c.Command {
 		args = append(args, actions)
 	}
 
-	if len(req.ObjectType.Name) > 0 {
-		args = append(args, req.ObjectType.Name)
-		args = append(args, req.ObjectType.Args...)
+	if len(req.OutputFormat.Name) > 0 {
+		args = append(args, req.OutputFormat.Name)
+		args = append(args, req.OutputFormat.Args...)
 	}
 
 	args = append(args, []string{
@@ -55,16 +55,6 @@ func (req *RoamRequest) GeofenceCommand() t38c.Command {
 	}...)
 
 	return t38c.NewCommand("NEARBY", args...)
-}
-
-// NewRoamRequest ...
-func NewRoamRequest(key, target, pattern string, meters int) *RoamRequest {
-	return &RoamRequest{
-		Key:     key,
-		Target:  target,
-		Pattern: pattern,
-		Meters:  meters,
-	}
 }
 
 // Actions ...
@@ -77,4 +67,20 @@ func (req *RoamRequest) Actions(actions ...DetectAction) *RoamRequest {
 func (req *RoamRequest) WithOptions(opts ...t38c.SearchOption) *RoamRequest {
 	req.Options = opts
 	return req
+}
+
+// Format ...
+func (req *RoamRequest) Format(fmt t38c.OutputFormat) *RoamRequest {
+	req.OutputFormat = fmt
+	return req
+}
+
+// Roam ...
+func Roam(key, target, pattern string, meters int) *RoamRequest {
+	return &RoamRequest{
+		Key:     key,
+		Target:  target,
+		Pattern: pattern,
+		Meters:  meters,
+	}
 }
