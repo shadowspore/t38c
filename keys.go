@@ -70,14 +70,9 @@ func (client *Tile38Client) Keys(pattern string) ([]string, error) {
 	return resp.Keys, nil
 }
 
-// Get object.
-func (client *Tile38Client) Get(key, objectID string, withFields bool) (*GetObjectResponse, error) {
-	return client.GetObject(key, objectID, withFields)
-}
-
-// GetObject returns object of an id.
-func (client *Tile38Client) GetObject(key, objectID string, withFields bool) (*GetObjectResponse, error) {
-	var resp *GetObjectResponse
+// Get returns object of an id.
+func (client *Tile38Client) Get(key, objectID string, withFields bool) (*GetResponse, error) {
+	var resp *GetResponse
 
 	var args []string
 	args = append(args, key)
@@ -86,69 +81,6 @@ func (client *Tile38Client) GetObject(key, objectID string, withFields bool) (*G
 		args = append(args, "WITHFIELDS")
 	}
 
-	b, err := client.Execute("GET", args...)
-	if err != nil {
-		return nil, err
-	}
-
-	err = json.Unmarshal(b, &resp)
-	return resp, err
-}
-
-// GetPoint get latitude, longitude point.
-func (client *Tile38Client) GetPoint(key, objectID string, withFields bool) (*GetPointResponse, error) {
-	var resp *GetPointResponse
-
-	var args []string
-	args = append(args, key)
-	args = append(args, objectID)
-	if withFields {
-		args = append(args, "WITHFIELDS")
-	}
-
-	args = append(args, "POINT")
-	b, err := client.Execute("GET", args...)
-	if err != nil {
-		return nil, err
-	}
-
-	err = json.Unmarshal(b, &resp)
-	return resp, err
-}
-
-// GetBounds get bounding rectangle.
-func (client *Tile38Client) GetBounds(key, objectID string, withFields bool) (*GetBoundsResponse, error) {
-	var resp *GetBoundsResponse
-
-	var args []string
-	args = append(args, key)
-	args = append(args, objectID)
-	if withFields {
-		args = append(args, "WITHFIELDS")
-	}
-
-	args = append(args, "BOUNDS")
-	b, err := client.Execute("GET", args...)
-	if err != nil {
-		return nil, err
-	}
-
-	err = json.Unmarshal(b, &resp)
-	return resp, err
-}
-
-// GetHash returns Geohash of object. Requires a precision of 1 to 22.
-func (client *Tile38Client) GetHash(key, objectID string, precision int, withFields bool) (*GetHashResponse, error) {
-	var resp *GetHashResponse
-
-	var args []string
-	args = append(args, key)
-	args = append(args, objectID)
-	if withFields {
-		args = append(args, "WITHFIELDS")
-	}
-
-	args = append(args, "HASH")
 	b, err := client.Execute("GET", args...)
 	if err != nil {
 		return nil, err
