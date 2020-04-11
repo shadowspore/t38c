@@ -13,3 +13,11 @@ func NewCommand(name string, args ...string) Command {
 		Args: args,
 	}
 }
+
+func (cmd Command) String() string {
+	str := cmd.Name
+	for _, arg := range cmd.Args {
+		str += " " + arg
+	}
+	return str
+}
