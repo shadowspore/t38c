@@ -2,14 +2,14 @@ package geofence
 
 import t38c "github.com/lostpeer/tile38-client"
 
+// Response struct
 type Response struct {
-	Command string `json:"command"`
-	Hook    string `json:"hook,omitempty"`
-	Group   string `json:"group"`
-	Detect  string `json:"detect"`
-	Key     string `json:"key"`
-	// TODO: custom time unmarshal
-	Time    string                   `json:"time"`
+	Command string                   `json:"command"`
+	Hook    string                   `json:"hook,omitempty"`
+	Group   string                   `json:"group"`
+	Detect  string                   `json:"detect"`
+	Key     string                   `json:"key"`
+	Time    string                   `json:"time"` // TODO: custom time unmarshal
 	ID      string                   `json:"id"`
 	Object  *t38c.Object             `json:"object,omitempty"`
 	Point   *t38c.Point              `json:"point,omitempty"`

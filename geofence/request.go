@@ -15,7 +15,7 @@ type Request struct {
 	Cmd           string
 	Key           string
 	Area          t38c.Command
-	ObjectType    t38c.Command
+	OutputFormat  t38c.OutputFormat
 	DetectActions []DetectAction
 	Options       []t38c.SearchOption
 }
@@ -46,9 +46,9 @@ func (req *Request) GeofenceCommand() t38c.Command {
 		args = append(args, actions)
 	}
 
-	if len(req.ObjectType.Name) > 0 {
-		args = append(args, req.ObjectType.Name)
-		args = append(args, req.ObjectType.Args...)
+	if len(req.OutputFormat.Name) > 0 {
+		args = append(args, req.OutputFormat.Name)
+		args = append(args, req.OutputFormat.Args...)
 	}
 
 	args = append(args, req.Area.Name)
@@ -69,12 +69,13 @@ func (req *Request) WithOptions(opts ...t38c.SearchOption) *Request {
 	return req
 }
 
-func (req *Request) ResponseFormat(cmd t38c.Command) *Request {
-	req.ObjectType = cmd
+// Format ...
+func (req *Request) Format(fmt t38c.OutputFormat) *Request {
+	req.OutputFormat = fmt
 	return req
 }
 
-// NewRequest ...
+// Within ...
 func Within(key string, area t38c.SearchArea) *Request {
 	return &Request{
 		Cmd:  "WITHIN",
@@ -83,6 +84,7 @@ func Within(key string, area t38c.SearchArea) *Request {
 	}
 }
 
+// Intersects ...
 func Intersects(key string, area t38c.SearchArea) *Request {
 	return &Request{
 		Cmd:  "INTERSECTS",
@@ -91,6 +93,7 @@ func Intersects(key string, area t38c.SearchArea) *Request {
 	}
 }
 
+// Nearby ...
 func Nearby(key string, area t38c.NearbyArea) *Request {
 	return &Request{
 		Cmd:  "NEARBY",
