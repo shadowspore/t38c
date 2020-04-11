@@ -27,8 +27,27 @@ func New(dialer FencerDialer, debug bool) (*Client, error) {
 func (client *Client) Fence(req Requestable) (chan []byte, error) {
 	cmd := req.GeofenceCommand()
 	if client.debug {
-		log.Printf("geofence request: [%s %s]", cmd.Name, cmd.Args)
+
 	}
 	ch, err := client.fencer.Fence(cmd.Name, cmd.Args...)
+	if client.debug {
+		if err != nil {
+			log.Printf("geofence request: [%s]: %v", cmd, err)
+			return nil, err
+		}
+
+		log.Printf("geofence request: [%s]: ok", cmd)
+		proxyCh := make(chan []byte, 10)
+		go func() {
+			defer close(proxyCh)
+
+			for event := range ch {
+				log.Printf("[event]: %s", event)
+				proxyCh <- event
+			}
+		}()
+		return proxyCh, nil
+	}
+
 	return ch, err
 }
