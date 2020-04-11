@@ -10,15 +10,15 @@ import (
 )
 
 func main() {
-	geo, err := geofence.New(geofence.NewRedisFencer("localhost:9851"), true)
+	geo, err := geofence.New(geofence.NewRadixFencer("localhost:9851"), true)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	ch, err := geo.FenceIntersectsObjects(
 		geofence.NewRequest("fleet", t38c.AreaCircle(0, 0, 1000)).
-			Actions(geofence.Enter, geofence.Exit).
-			WithOptions(t38c.Where("speed", 10, 20)),
+			Actions(geofence.Enter, geofence.Exit),
+		//WithOptions(t38c.Where("speed", 10, 20)),
 	)
 	if err != nil {
 		log.Fatal(err)
