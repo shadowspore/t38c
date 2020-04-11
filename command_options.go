@@ -5,91 +5,81 @@ import "strconv"
 // SearchOption ...
 type SearchOption Command
 
-// Desc ...
-func Desc() SearchOption {
-	return SearchOption(NewCommand("DESC"))
-}
+var (
+	// Asc ...
+	Asc = SearchOption(NewCommand("ASC"))
 
-// Asc ...
-func Asc() SearchOption {
-	return SearchOption(NewCommand("ASC"))
-}
+	// Desc ...
+	Desc = SearchOption(NewCommand("DESC"))
 
-// Count ...
-func Count(count int) SearchOption {
-	return SearchOption(NewCommand("COUNT", strconv.Itoa(count)))
-}
-
-// NoFields ...
-func NoFields() SearchOption {
-	return SearchOption(NewCommand("NOFIELDS"))
-}
-
-// Clip ...
-func Clip() SearchOption {
-	return SearchOption(NewCommand("CLIP"))
-}
-
-// Cursor ...
-func Cursor(start int) SearchOption {
-	return SearchOption(NewCommand("CURSOR", strconv.Itoa(start)))
-}
-
-// Limit ...
-func Limit(count int) SearchOption {
-	return SearchOption(NewCommand("LIMIT", strconv.Itoa(count)))
-}
-
-// Sparse will distribute the results of a search evenly across the requested area.
-func Sparse(n int) SearchOption {
-	return SearchOption(NewCommand("SPARSE", strconv.Itoa(n)))
-}
-
-// Where allows for filtering out results based on field values.
-func Where(field string, min, max float64) SearchOption {
-	return SearchOption(NewCommand("WHERE", field, floatString(min), floatString(max)))
-}
-
-// Wherein is similar to Where except that it checks whether the object’s field value is in a given list.
-func Wherein(field string, values ...float64) SearchOption {
-	var args []string
-	args = append(args, strconv.Itoa(len(values)))
-	for _, val := range values {
-		args = append(args, floatString(val))
+	// Count ...
+	Count = func(count int) SearchOption {
+		return SearchOption(NewCommand("COUNT", strconv.Itoa(count)))
 	}
 
-	return SearchOption(NewCommand("WHEREIN", args...))
-}
+	// NoFields ...
+	NoFields = SearchOption(NewCommand("NOFIELDS"))
 
-// Match is similar to WHERE except that it works on the object id instead of fields.
-func Match(pattern string) SearchOption {
-	return SearchOption(NewCommand("MATCH", pattern))
-}
+	// Clip ...
+	Clip = SearchOption(NewCommand("CLIP"))
 
-// Distance ...
-func Distance() SearchOption {
-	return SearchOption(NewCommand("DISTANCE"))
-}
+	// Cursor ...
+	Cursor = func(start int) SearchOption {
+		return SearchOption(NewCommand("CURSOR", strconv.Itoa(start)))
+	}
+
+	// Limit ...
+	Limit = func(count int) SearchOption {
+		return SearchOption(NewCommand("LIMIT", strconv.Itoa(count)))
+	}
+
+	// Sparse will distribute the results of a search evenly across the requested area.
+	Sparse = func(n int) SearchOption {
+		return SearchOption(NewCommand("SPARSE", strconv.Itoa(n)))
+	}
+
+	// Where allows for filtering out results based on field values.
+	Where = func(field string, min, max float64) SearchOption {
+		return SearchOption(NewCommand("WHERE", field, floatString(min), floatString(max)))
+	}
+
+	// Wherein is similar to Where except that it checks whether the object’s field value is in a given list.
+	Wherein = func(field string, values ...float64) SearchOption {
+		var args []string
+		args = append(args, strconv.Itoa(len(values)))
+		for _, val := range values {
+			args = append(args, floatString(val))
+		}
+
+		return SearchOption(NewCommand("WHEREIN", args...))
+	}
+
+	// Match is similar to WHERE except that it works on the object id instead of fields.
+	Match = func(pattern string) SearchOption {
+		return SearchOption(NewCommand("MATCH", pattern))
+	}
+
+	// Distance ...
+	Distance = SearchOption(NewCommand("DISTANCE"))
+)
 
 // SetOption ...
 type SetOption Command
 
-// SetField ...
-func SetField(name string, value float64) SetOption {
-	return SetOption(NewCommand("FIELD", name, floatString(value)))
-}
+var (
+	// Field ...
+	Field = func(name string, value float64) SetOption {
+		return SetOption(NewCommand("FIELD", name, floatString(value)))
+	}
 
-// SetExpiration ...
-func SetExpiration(seconds int) SetOption {
-	return SetOption(NewCommand("EX", strconv.Itoa(seconds)))
-}
+	// Expiration ...
+	Expiration = func(seconds int) SetOption {
+		return SetOption(NewCommand("EX", strconv.Itoa(seconds)))
+	}
 
-// SetIfNotExists ...
-func SetIfNotExists() SetOption {
-	return SetOption(NewCommand("NX"))
-}
+	// IfNotExists ...
+	IfNotExists = SetOption(NewCommand("NX"))
 
-// SetIfExists ...
-func SetIfExists() SetOption {
-	return SetOption(NewCommand("XX"))
-}
+	// IfExists ...
+	IfExists = SetOption(NewCommand("XX"))
+)
