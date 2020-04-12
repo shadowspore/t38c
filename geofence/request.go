@@ -1,6 +1,10 @@
 package geofence
 
-import t38c "github.com/lostpeer/tile38-client"
+import (
+	"strconv"
+
+	t38c "github.com/lostpeer/tile38-client"
+)
 
 // Requestable interface
 // TODO: rename?
@@ -94,10 +98,14 @@ func Intersects(key string, area t38c.SearchArea) *Request {
 }
 
 // Nearby ...
-func Nearby(key string, area t38c.NearbyArea) *Request {
+func Nearby(key string, lat, lon, meters float64) *Request {
 	return &Request{
 		Cmd:  "NEARBY",
 		Key:  key,
-		Area: t38c.Command(area),
+		Area: t38c.NewCommand("POINT", floatString(lat), floatString(lon), floatString(meters)),
 	}
+}
+
+func floatString(val float64) string {
+	return strconv.FormatFloat(val, 'f', 10, 64)
 }
