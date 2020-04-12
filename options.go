@@ -68,7 +68,7 @@ type SetOption Command
 
 var (
 	// Field ...
-	Field = func(name string, value float64) SetOption {
+	SetField = func(name string, value float64) SetOption {
 		return SetOption(NewCommand("FIELD", name, floatString(value)))
 	}
 

@@ -7,6 +7,13 @@ import (
 	"github.com/tidwall/gjson"
 )
 
+// KeyStats struct
+type KeyStats struct {
+	InMemorySize int `json:"in_memory_size"`
+	NumObjects   int `json:"num_objects"`
+	NumPoints    int `json:"num_points"`
+}
+
 // Point struct
 type Point struct {
 	Lat float64 `json:"lat"`
