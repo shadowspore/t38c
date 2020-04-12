@@ -4,23 +4,24 @@ import t38c "github.com/lostpeer/tile38-client"
 
 // Response struct
 type Response struct {
-	Command string                   `json:"command"`
-	Hook    string                   `json:"hook,omitempty"`
-	Group   string                   `json:"group"`
-	Detect  string                   `json:"detect"`
-	Key     string                   `json:"key"`
-	Time    string                   `json:"time"` // TODO: custom time unmarshal
-	ID      string                   `json:"id"`
-	Object  *t38c.Object             `json:"object,omitempty"`
-	Point   *t38c.Point              `json:"point,omitempty"`
-	Bounds  *t38c.Bounds             `json:"bounds,omitempty"`
-	Hash    *string                  `json:"hash,omitempty"`
-	Nearby  *roamNearbyFarawayObject `json:"nearby,omitempty"`
-	Faraway *roamNearbyFarawayObject `json:"faraway,omitempty"`
-	Fields  map[string]float64       `json:"fields,omitempty"`
+	Command string             `json:"command"`
+	Hook    string             `json:"hook,omitempty"`
+	Group   string             `json:"group"`
+	Detect  string             `json:"detect"`
+	Key     string             `json:"key"`
+	Time    string             `json:"time"` // TODO: custom time unmarshal
+	ID      string             `json:"id"`
+	Object  *t38c.Object       `json:"object,omitempty"`
+	Point   *t38c.Point        `json:"point,omitempty"`
+	Bounds  *t38c.Bounds       `json:"bounds,omitempty"`
+	Hash    *string            `json:"hash,omitempty"`
+	Nearby  *RoamObject        `json:"nearby,omitempty"`
+	Faraway *RoamObject        `json:"faraway,omitempty"`
+	Fields  map[string]float64 `json:"fields,omitempty"`
 }
 
-type roamNearbyFarawayObject struct {
+// RoamObject struct
+type RoamObject struct {
 	Key    string      `json:"key"`
 	ID     string      `json:"id"`
 	Object t38c.Object `json:"object"`
