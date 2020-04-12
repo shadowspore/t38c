@@ -62,16 +62,6 @@ var (
 	}
 )
 
-// NearbyArea ...
-type NearbyArea Command
-
-var (
-	// NearbyPoint ...
-	NearbyPoint = func(lat, lon, meters float64) NearbyArea {
-		return NearbyArea(NewCommand("POINT", floatString(lat), floatString(lon), floatString(meters)))
-	}
-)
-
 // SetArea ...
 type SetArea Command
 
