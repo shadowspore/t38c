@@ -119,6 +119,12 @@ var (
 	}
 )
 
+// Meta struct
+type Meta struct {
+	Name  string
+	Value string
+}
+
 // Hook struct
 type Hook struct {
 	Name      string            `json:"name"`

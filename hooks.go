@@ -5,12 +5,6 @@ import (
 	"strings"
 )
 
-// Meta struct
-type Meta struct {
-	Name  string
-	Value string
-}
-
 // HookBuilder struct
 type HookBuilder struct {
 	Name      string
