@@ -1,6 +1,7 @@
 package t38c
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -74,4 +75,9 @@ func (client *Client) JExecute(resp interface{}, command string, args ...string)
 	}
 
 	return nil
+}
+
+// ExecuteStream ...
+func (client *Client) ExecuteStream(ctx context.Context, command string, args ...string) (chan []byte, error) {
+	return client.executor.ExecuteStream(ctx, command, args...)
 }

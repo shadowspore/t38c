@@ -118,3 +118,62 @@ var (
 		return OutputFormat(NewCommand("HASHES", strconv.Itoa(precision)))
 	}
 )
+
+// Hook struct
+type Hook struct {
+	Name      string            `json:"name"`
+	Key       string            `json:"key"`
+	Endpoints []string          `json:"endpoints"`
+	Command   []string          `json:"command"`
+	Meta      map[string]string `json:"meta"`
+}
+
+// Chan struct
+type Chan struct {
+	Name    string            `json:"name"`
+	Key     string            `json:"key"`
+	Command []string          `json:"command"`
+	Meta    map[string]string `json:"meta"`
+}
+
+// Response struct
+type Response struct {
+	Command string             `json:"command"`
+	Hook    string             `json:"hook,omitempty"`
+	Group   string             `json:"group"`
+	Detect  string             `json:"detect"`
+	Key     string             `json:"key"`
+	Time    string             `json:"time"` // TODO: custom time unmarshal
+	ID      string             `json:"id"`
+	Object  *Object            `json:"object,omitempty"`
+	Point   *Point             `json:"point,omitempty"`
+	Bounds  *Bounds            `json:"bounds,omitempty"`
+	Hash    *string            `json:"hash,omitempty"`
+	Nearby  *RoamObject        `json:"nearby,omitempty"`
+	Faraway *RoamObject        `json:"faraway,omitempty"`
+	Fields  map[string]float64 `json:"fields,omitempty"`
+}
+
+// RoamObject struct
+type RoamObject struct {
+	Key    string  `json:"key"`
+	ID     string  `json:"id"`
+	Object Object  `json:"object"`
+	Meters float64 `json:"meters"`
+}
+
+// DetectAction ...
+type DetectAction string
+
+const (
+	// Inside action
+	Inside DetectAction = "inside"
+	// Outside action
+	Outside DetectAction = "outside"
+	// Enter action
+	Enter DetectAction = "enter"
+	// Exit action
+	Exit DetectAction = "exit"
+	// Cross action
+	Cross DetectAction = "cross"
+)
