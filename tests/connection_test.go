@@ -10,7 +10,7 @@ import (
 func TestPing(t *testing.T) {
 	mock := NewMockExecutor()
 
-	tile38, err := t38c.New(mock.DialFunc(), t38c.Debug)
+	tile38, err := t38c.NewWithDialer(mock.DialFunc(), true)
 	assert.Nil(t, err)
 
 	err = tile38.Ping()

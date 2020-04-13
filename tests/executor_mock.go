@@ -1,6 +1,7 @@
 package tests
 
 import (
+	"context"
 	"fmt"
 	"sync"
 
@@ -57,4 +58,9 @@ func (m *MockExecutor) Execute(command string, args ...string) ([]byte, error) {
 	}
 
 	return []byte(resp), nil
+}
+
+// ExecuteStream ...
+func (m *MockExecutor) ExecuteStream(ctx context.Context, command string, args ...string) (chan []byte, error) {
+	return nil, fmt.Errorf("not implemented")
 }
