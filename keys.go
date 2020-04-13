@@ -8,7 +8,7 @@ import (
 )
 
 // Bounds returns the minimum bounding rectangle for all objects in a key.
-func (client *Tile38Client) Bounds(key string) ([][][]float64, error) {
+func (client *Client) Bounds(key string) ([][][]float64, error) {
 	var resp struct {
 		Bounds geojson.Geometry `json:"bounds"`
 	}
@@ -22,17 +22,17 @@ func (client *Tile38Client) Bounds(key string) ([][][]float64, error) {
 }
 
 // Del remove a specified object.
-func (client *Tile38Client) Del(key, objectID string) error {
+func (client *Client) Del(key, objectID string) error {
 	return client.JExecute(nil, "DEL", key)
 }
 
 // Drop remove all objects from specified key.
-func (client *Tile38Client) Drop(key string) error {
+func (client *Client) Drop(key string) error {
 	return client.JExecute(nil, "DROP", key)
 }
 
 // Expire set a timeout on an id.
-func (client *Tile38Client) Expire(key, objectID string, seconds int) error {
+func (client *Client) Expire(key, objectID string, seconds int) error {
 	return client.JExecute(nil, "EXPIRE", key, objectID, strconv.Itoa(seconds))
 }
 
@@ -41,7 +41,7 @@ func (client *Tile38Client) Expire(key, objectID string, seconds int) error {
 // However, the option XX can alter this behavior.
 // Specifically, if called with XX option, FSET will return 0 when called on a non-existend id.
 // Note that the non-existent key will still cause an error!
-func (client *Tile38Client) FSet(key, objectID string, opts ...SetOption) error {
+func (client *Client) FSet(key, objectID string, opts ...SetOption) error {
 	var args []string = []string{
 		key, objectID,
 	}
@@ -55,7 +55,7 @@ func (client *Tile38Client) FSet(key, objectID string, opts ...SetOption) error 
 }
 
 // Get returns object of an id.
-func (client *Tile38Client) Get(key, objectID string, withFields bool) (resp *GetResponse, err error) {
+func (client *Client) Get(key, objectID string, withFields bool) (resp *GetResponse, err error) {
 	var args []string
 	args = append(args, key)
 	args = append(args, objectID)
@@ -68,22 +68,22 @@ func (client *Tile38Client) Get(key, objectID string, withFields bool) (resp *Ge
 }
 
 // JDel delete a value from a JSON document.
-func (client *Tile38Client) JDel(key, objectID, path string) error {
+func (client *Client) JDel(key, objectID, path string) error {
 	return client.JExecute(nil, "JDEL", key, objectID, path)
 }
 
 // JGet get a value from a JSON document.
-func (client *Tile38Client) JGet(key, objectID, path string) (json.RawMessage, error) {
+func (client *Client) JGet(key, objectID, path string) (json.RawMessage, error) {
 	return client.Execute("JGET", key, objectID, path)
 }
 
 // JSet set a value in a JSON document.
-func (client *Tile38Client) JSet(key, objectID, path, value string) (json.RawMessage, error) {
+func (client *Client) JSet(key, objectID, path, value string) (json.RawMessage, error) {
 	return client.Execute("JSET", key, objectID, path, value)
 }
 
 // Keys returns all keys matching pattern.
-func (client *Tile38Client) Keys(pattern string) ([]string, error) {
+func (client *Client) Keys(pattern string) ([]string, error) {
 	var resp struct {
 		Keys []string `json:"keys"`
 	}
@@ -97,19 +97,19 @@ func (client *Tile38Client) Keys(pattern string) ([]string, error) {
 }
 
 // PDel removes objects that match a specified pattern.
-func (client *Tile38Client) PDel(key, pattern string) error {
+func (client *Client) PDel(key, pattern string) error {
 	return client.JExecute(nil, "PDEL", key, pattern)
 }
 
 // Persist remove an existing timeout of an id.
-func (client *Tile38Client) Persist(key, objectID string) error {
+func (client *Client) Persist(key, objectID string) error {
 	return client.JExecute(nil, "PERSIST", key, objectID)
 }
 
 // Rename renames collection key to newkey.
 // If newkey already exists, it will be deleted prior to renaming.
 // Returns “OK” for success or “ERR” when key or newkey are actively being used by a geofence or webhook.
-func (client *Tile38Client) Rename(key, newKey string) error {
+func (client *Client) Rename(key, newKey string) error {
 	return client.JExecute(nil, "RENAME", key, newKey)
 }
 
@@ -117,12 +117,12 @@ func (client *Tile38Client) Rename(key, newKey string) error {
 // If newkey already exists, this command does nothing.
 // Returns 1 if key was renamed to newkey, 0 if newkey already existed,
 // or “ERR” when key or newkey are actively being used by a geofence or webhook.
-func (client *Tile38Client) RenameNX(key, newKey string) error {
+func (client *Client) RenameNX(key, newKey string) error {
 	return client.JExecute(nil, "RENAMENX", key, newKey)
 }
 
 // Set the value of an id. If a value is already associated to that key/id, it’ll be overwritten.
-func (client *Tile38Client) Set(key, objectID string, area SetArea, opts ...SetOption) error {
+func (client *Client) Set(key, objectID string, area SetArea, opts ...SetOption) error {
 	var args []string
 	args = append(args, key)
 	args = append(args, objectID)
@@ -137,7 +137,7 @@ func (client *Tile38Client) Set(key, objectID string, area SetArea, opts ...SetO
 }
 
 // Stats return stats for one or more keys.
-func (client *Tile38Client) Stats(keys ...string) ([]KeyStats, error) {
+func (client *Client) Stats(keys ...string) ([]KeyStats, error) {
 	var resp struct {
 		Stats []KeyStats `json:"stats"`
 	}
@@ -151,7 +151,7 @@ func (client *Tile38Client) Stats(keys ...string) ([]KeyStats, error) {
 }
 
 // TTL get a timeout on an id.
-func (client *Tile38Client) TTL(key, objectID string) (int, error) {
+func (client *Client) TTL(key, objectID string) (int, error) {
 	var resp struct {
 		TTL int `json:"ttl"`
 	}

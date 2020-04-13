@@ -86,7 +86,7 @@ func Scan(key string) *SearchRequest {
 }
 
 // Search ...
-func (client *Tile38Client) Search(req *SearchRequest) (*SearchResponse, error) {
+func (client *Client) Search(req *SearchRequest) (*SearchResponse, error) {
 	cmd := req.BuildCommand()
 
 	resp := &SearchResponse{}

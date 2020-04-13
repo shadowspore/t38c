@@ -1,37 +1,35 @@
 package t38c
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 
 	"github.com/tidwall/gjson"
 )
 
-// Tile38Client struct
-type Tile38Client struct {
+// Client struct
+type Client struct {
 	debug    bool
 	executor Executor
 }
 
 // New ...
-func New(addr string, debug bool) (*Tile38Client, error) {
+func New(addr string, debug bool) (*Client, error) {
 	dialer := NewRadixPool(addr, 5)
 	return NewWithDialer(dialer, debug)
 }
 
 // NewWithDialer ...
-func NewWithDialer(dialer ExecutorDialer, debug bool) (*Tile38Client, error) {
+func NewWithDialer(dialer ExecutorDialer, debug bool) (*Client, error) {
 	executor, err := dialer()
 	if err != nil {
 		return nil, err
 	}
 
-	client := &Tile38Client{
+	client := &Client{
+		debug:    debug,
 		executor: executor,
-	}
-
-	for _, opt := range opts {
-		opt(client)
 	}
 
 	if err := client.Ping(); err != nil {
@@ -42,7 +40,7 @@ func NewWithDialer(dialer ExecutorDialer, debug bool) (*Tile38Client, error) {
 }
 
 // ExecuteCmd ...
-func (client *Tile38Client) ExecuteCmd(cmd Command) ([]byte, error) {
+func (client *Client) ExecuteCmd(cmd Command) ([]byte, error) {
 	resp, err := client.executor.Execute(cmd.Name, cmd.Args...)
 	if client.debug {
 		log.Printf("[%s]: %s", cmd, resp)
@@ -60,12 +58,12 @@ func (client *Tile38Client) ExecuteCmd(cmd Command) ([]byte, error) {
 }
 
 // Execute command
-func (client *Tile38Client) Execute(command string, args ...string) ([]byte, error) {
+func (client *Client) Execute(command string, args ...string) ([]byte, error) {
 	return client.ExecuteCmd(NewCommand(command, args...))
 }
 
 // JExecute ...
-func (client *Tile38Client) JExecute(resp interface{}, command string, args ...string) error {
+func (client *Client) JExecute(resp interface{}, command string, args ...string) error {
 	b, err := client.Execute(command, args...)
 	if err != nil {
 		return err

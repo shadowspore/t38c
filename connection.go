@@ -5,7 +5,7 @@ import (
 )
 
 // Ping the server.
-func (client *Tile38Client) Ping() error {
+func (client *Client) Ping() error {
 	var resp struct {
 		Ping string `json:"ping"`
 	}
