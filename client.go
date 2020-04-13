@@ -13,16 +13,14 @@ type Tile38Client struct {
 	executor Executor
 }
 
-// ClientOption func
-type ClientOption func(*Tile38Client)
-
-// Debug option
-var Debug = func(c *Tile38Client) {
-	c.debug = true
+// New ...
+func New(addr string, debug bool) (*Tile38Client, error) {
+	dialer := NewRadixPool(addr, 5)
+	return NewWithDialer(dialer, debug)
 }
 
-// New ...
-func New(dialer ExecutorDialer, opts ...ClientOption) (*Tile38Client, error) {
+// NewWithDialer ...
+func NewWithDialer(dialer ExecutorDialer, debug bool) (*Tile38Client, error) {
 	executor, err := dialer()
 	if err != nil {
 		return nil, err
