@@ -60,6 +60,20 @@ func (client *Tile38Client) ExecuteCmd(cmd Command) ([]byte, error) {
 }
 
 // Execute command
-func (client *Tile38Client) Execute(name string, args ...string) ([]byte, error) {
-	return client.ExecuteCmd(NewCommand(name, args...))
+func (client *Tile38Client) Execute(command string, args ...string) ([]byte, error) {
+	return client.ExecuteCmd(NewCommand(command, args...))
+}
+
+// JExecute ...
+func (client *Tile38Client) JExecute(resp interface{}, command string, args ...string) error {
+	b, err := client.Execute(command, args...)
+	if err != nil {
+		return err
+	}
+
+	if resp != nil {
+		return json.Unmarshal(b, &resp)
+	}
+
+	return nil
 }

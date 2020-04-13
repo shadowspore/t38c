@@ -1,7 +1,5 @@
 package t38c
 
-import "encoding/json"
-
 // SearchRequest struct
 type SearchRequest struct {
 	Cmd           string
@@ -90,13 +88,10 @@ func Scan(key string) *SearchRequest {
 // Search ...
 func (client *Tile38Client) Search(req *SearchRequest) (*SearchResponse, error) {
 	cmd := req.BuildCommand()
-	b, err := client.ExecuteCmd(cmd)
-	if err != nil {
-		return nil, err
-	}
 
 	resp := &SearchResponse{}
-	if err := json.Unmarshal(b, resp); err != nil {
+	err := client.JExecute(&resp, cmd.Name, cmd.Args...)
+	if err != nil {
 		return nil, err
 	}
 
