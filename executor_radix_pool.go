@@ -9,7 +9,6 @@ import (
 
 	"github.com/mediocregopher/radix/v3"
 	"github.com/mediocregopher/radix/v3/resp/resp2"
-	"github.com/tidwall/gjson"
 )
 
 var _ Executor = (*RadixPoolExecutor)(nil)
@@ -76,10 +75,6 @@ func (rad *RadixPoolExecutor) ExecuteStream(ctx context.Context, command string,
 
 		if err := checkResponseErr(resp); err != nil {
 			return nil, err
-		}
-
-		if !gjson.GetBytes(resp, "live").Bool() {
-			return nil, fmt.Errorf("bad response: %s", resp)
 		}
 	}
 
