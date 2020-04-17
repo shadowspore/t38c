@@ -85,17 +85,17 @@ func (client *Client) PDelChan(pattern string) error {
 }
 
 // PSubscribe subscribes the client to the given patterns.
-func (client *Client) PSubscribe(ctx context.Context, pattern string) (chan Response, error) {
+func (client *Client) PSubscribe(ctx context.Context, pattern string) (chan GeofenceResponse, error) {
 	events, err := client.executor.ExecuteStream(ctx, "PSUBSCRIBE", pattern)
 	if err != nil {
 		return nil, err
 	}
 
-	ch := make(chan Response, 10)
+	ch := make(chan GeofenceResponse, 10)
 	go func() {
 		defer close(ch)
 		for event := range events {
-			var resp Response
+			var resp GeofenceResponse
 			if err := json.Unmarshal(event, &resp); err != nil {
 				log.Printf("bad event: %v", err)
 				break
@@ -116,17 +116,17 @@ func (client *Client) SetChan(ch *ChanBuilder) error {
 }
 
 // Subscribe subscribes the client to the specified channels.
-func (client *Client) Subscribe(ctx context.Context, channels ...string) (chan Response, error) {
+func (client *Client) Subscribe(ctx context.Context, channels ...string) (chan GeofenceResponse, error) {
 	events, err := client.executor.ExecuteStream(ctx, "SUBSCRIBE", channels...)
 	if err != nil {
 		return nil, err
 	}
 
-	ch := make(chan Response, 10)
+	ch := make(chan GeofenceResponse, 10)
 	go func() {
 		defer close(ch)
 		for event := range events {
-			var resp Response
+			var resp GeofenceResponse
 			if err := json.Unmarshal(event, &resp); err != nil {
 				log.Printf("bad event: %v", err)
 				break

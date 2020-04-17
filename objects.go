@@ -142,8 +142,8 @@ type Chan struct {
 	Meta    map[string]string `json:"meta"`
 }
 
-// Response struct
-type Response struct {
+// GeofenceResponse struct
+type GeofenceResponse struct {
 	Command string             `json:"command"`
 	Hook    string             `json:"hook,omitempty"`
 	Group   string             `json:"group"`
