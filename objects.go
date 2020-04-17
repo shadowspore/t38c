@@ -172,14 +172,14 @@ type RoamObject struct {
 type DetectAction string
 
 const (
-	// Inside action
+	// Inside is when an object is inside the specified area.
 	Inside DetectAction = "inside"
-	// Outside action
+	// Outside is when an object is outside the specified area.
 	Outside DetectAction = "outside"
-	// Enter action
+	// Enter is when an object that was not previously in the fence has entered the area.
 	Enter DetectAction = "enter"
-	// Exit action
+	// Exit is when an object that was previously in the fence has exited the area.
 	Exit DetectAction = "exit"
-	// Cross action
+	// Cross is when an object that was not previously in the fence has entered and exited the area.
 	Cross DetectAction = "cross"
 )

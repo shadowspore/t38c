@@ -15,7 +15,7 @@ type ChanBuilder struct {
 	Ex      *int
 }
 
-// Args ...
+// Args build args for tile38 command.
 func (ch *ChanBuilder) Args() []string {
 	var args []string
 	args = append(args, ch.Name)
@@ -36,7 +36,7 @@ func (ch *ChanBuilder) Args() []string {
 	return args
 }
 
-// NewChan ...
+// NewChan return new channel builder
 func NewChan(name string, req GeofenceRequestable) *ChanBuilder {
 	return &ChanBuilder{
 		Name:    name,
@@ -54,7 +54,7 @@ func (ch *ChanBuilder) Meta(name, value string) *ChanBuilder {
 	return ch
 }
 
-// Expiration ...
+// Expiration set the specified expire time, in seconds.
 func (ch *ChanBuilder) Expiration(seconds int) *ChanBuilder {
 	ch.Ex = &seconds
 	return ch

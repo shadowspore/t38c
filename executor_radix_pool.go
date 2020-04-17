@@ -19,7 +19,7 @@ type RadixPoolExecutor struct {
 	pool *radix.Pool
 }
 
-// NewRadixPool ...
+// NewRadixPool return radix pool dialer with provided pool size.
 func NewRadixPool(addr string, size int) ExecutorDialer {
 	return func() (Executor, error) {
 		pool, err := radix.NewPool("tcp", addr, size,
@@ -47,7 +47,8 @@ func (rad *RadixPoolExecutor) Execute(command string, args ...string) ([]byte, e
 	return resp, nil
 }
 
-// ExecuteStream ...
+// ExecuteStream used for commands with streaming response.
+// Creates a new connection for each stream.
 func (rad *RadixPoolExecutor) ExecuteStream(ctx context.Context, command string, args ...string) (ch chan []byte, err error) {
 	conn, err := radix.Dial("tcp", rad.addr,
 		radix.DialConnectTimeout(time.Second*10),
@@ -119,7 +120,6 @@ func poolConnFn(net, addr string) (conn radix.Conn, err error) {
 	return
 }
 
-// RadixJSONifyConn ...
 func radixJSONifyConn(conn radix.Conn) (err error) {
 	var b []byte
 	if err := conn.Do(radix.Cmd(&b, "OUTPUT", "json")); err != nil {

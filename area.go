@@ -10,53 +10,53 @@ import (
 type SearchArea Command
 
 var (
-	// Get ...
+	// Get any object that already exists in the database.
 	Get = func(objectID string) SearchArea {
 		return SearchArea(NewCommand("GET", objectID))
 	}
 
-	// AreaBounds ...
+	// AreaBounds - a minimum bounding rectangle.
 	AreaBounds = func(minlat, minlon, maxlat, maxlon float64) SearchArea {
 		return SearchArea(NewCommand("BOUNDS", floatString(minlat), floatString(minlon), floatString(maxlat), floatString(maxlon)))
 	}
 
-	// AreaFeatureCollection ...
+	// AreaFeatureCollection - GeoJSON Feature Collection object.
 	AreaFeatureCollection = func(fc *geojson.FeatureCollection) SearchArea {
 		// TODO: handle error?
 		b, _ := fc.MarshalJSON()
 		return SearchArea(NewCommand("OBJECT", string(b)))
 	}
 
-	// AreaFeature ...
+	// AreaFeature - GeoJSON Feature object.
 	AreaFeature = func(ft *geojson.Feature) SearchArea {
 		// TODO: handle error?
 		b, _ := ft.MarshalJSON()
 		return SearchArea(NewCommand("OBJECT", string(b)))
 	}
 
-	// AreaGeometry ...
+	// AreaGeometry - GeoJSON Geometry object.
 	AreaGeometry = func(gm *geojson.Geometry) SearchArea {
 		// TODO: handle error?
 		b, _ := gm.MarshalJSON()
 		return SearchArea(NewCommand("OBJECT", string(b)))
 	}
 
-	// AreaCircle ...
+	// AreaCircle - a circle with the specified center and radius.
 	AreaCircle = func(lat, lon, meters float64) SearchArea {
 		return SearchArea(NewCommand("CIRCLE", floatString(lat), floatString(lon), floatString(meters)))
 	}
 
-	// AreaTile ...
+	// AreaTile - an XYZ Tile.
 	AreaTile = func(x, y, z int) SearchArea {
 		return SearchArea(NewCommand("TILE", strconv.Itoa(x), strconv.Itoa(y), strconv.Itoa(z)))
 	}
 
-	// AreaQuadkey ...
+	// AreaQuadkey - a QuadKey.
 	AreaQuadkey = func(quadkey string) SearchArea {
 		return SearchArea(NewCommand("QUADKEY", quadkey))
 	}
 
-	// AreaHash ...
+	// AreaHash - a Geohash.
 	AreaHash = func(hash string) SearchArea {
 		return SearchArea(NewCommand("HASH", hash))
 	}
@@ -66,40 +66,44 @@ var (
 type SetArea Command
 
 var (
-	// SetPoint ...
+	// SetPoint set a simple point in latitude, longitude.
 	SetPoint = func(lat, lon float64) SetArea {
 		return SetArea(NewCommand("POINT", floatString(lat), floatString(lon)))
 	}
 
-	// SetPointZ ...
+	// SetPointZ - a point with Z coordinate.
+	// This is application specific such as elevation, or a timestamp, etc.
 	SetPointZ = func(lat, lon, z float64) SetArea {
 		return SetArea(NewCommand("POINT", floatString(lat), floatString(lon), floatString(z)))
 	}
 
-	// SetFeatureCollection ...
+	// SetFeatureCollection - set GeoJSON Feature Collection object.
 	SetFeatureCollection = func(fc *geojson.FeatureCollection) SetArea {
 		b, _ := fc.MarshalJSON()
 		return SetArea(NewCommand("OBJECT", string(b)))
 	}
 
-	// SetFeature ...
+	// SetFeature - set GeoJSON Feature object.
 	SetFeature = func(ft *geojson.Feature) SetArea {
 		b, _ := ft.MarshalJSON()
 		return SetArea(NewCommand("OBJECT", string(b)))
 	}
 
-	// SetGeometry ...
+	// SetGeometry - set GeoJSON Geometry object.
 	SetGeometry = func(gm *geojson.Geometry) SetArea {
 		b, _ := gm.MarshalJSON()
 		return SetArea(NewCommand("OBJECT", string(b)))
 	}
 
-	// SetHash ...
+	// SetHash - A geohash is a convenient way of expressing a location (anywhere in the world)
+	// using a short alphanumeric string, with greater precision obtained with longer strings.
 	SetHash = func(hash string) SetArea {
 		return SetArea(NewCommand("HASH", hash))
 	}
 
-	// SetString ...
+	// SetString - It’s possible to set a raw string.
+	// The value of a string type can be plain text or a series of raw bytes.
+	// To retrieve a string value you can use GET, SCAN, or SEARCH.
 	SetString = func(str string) SetArea {
 		return SetArea(NewCommand("STRING", str))
 	}

@@ -9,19 +9,22 @@ import (
 	"github.com/tidwall/gjson"
 )
 
-// Client struct
+// Client allows you to interact with the Tile38 server.
 type Client struct {
 	debug    bool
 	executor Executor
 }
 
-// New ...
+// New creates a new Tile38 client.
+// By default uses redis pool with 5 connections.
+// In debug mode will also print commands which will be sent to the server.
 func New(addr string, debug bool) (*Client, error) {
 	dialer := NewRadixPool(addr, 5)
 	return NewWithDialer(dialer, debug)
 }
 
-// NewWithDialer ...
+// NewWithDialer creates a new Tile38 client with provided dialer.
+// See Executor interface for more information.
 func NewWithDialer(dialer ExecutorDialer, debug bool) (*Client, error) {
 	executor, err := dialer()
 	if err != nil {
@@ -40,7 +43,6 @@ func NewWithDialer(dialer ExecutorDialer, debug bool) (*Client, error) {
 	return client, nil
 }
 
-// ExecuteCmd ...
 func (client *Client) executeCmd(cmd Command) ([]byte, error) {
 	resp, err := client.executor.Execute(cmd.Name, cmd.Args...)
 	if client.debug {
@@ -58,12 +60,6 @@ func (client *Client) executeCmd(cmd Command) ([]byte, error) {
 	return resp, nil
 }
 
-// Execute command
-func (client *Client) Execute(command string, args ...string) ([]byte, error) {
-	return client.executeCmd(NewCommand(command, args...))
-}
-
-// JExecute ...
 func (client *Client) jExecute(resp interface{}, command string, args ...string) error {
 	b, err := client.Execute(command, args...)
 	if err != nil {
@@ -77,7 +73,12 @@ func (client *Client) jExecute(resp interface{}, command string, args ...string)
 	return nil
 }
 
-// ExecuteStream ...
+// Execute Tile38 command.
+func (client *Client) Execute(command string, args ...string) ([]byte, error) {
+	return client.executeCmd(NewCommand(command, args...))
+}
+
+// ExecuteStream used for Tile38 commands with streaming response.
 func (client *Client) ExecuteStream(ctx context.Context, command string, args ...string) (chan []byte, error) {
 	return client.executor.ExecuteStream(ctx, command, args...)
 }

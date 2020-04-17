@@ -7,15 +7,16 @@ import (
 	"strconv"
 )
 
-// GeofenceRequestable interface
-// TODO: rename?
+// GeofenceRequestable interface.
+// A geofence is a virtual boundary that can detect when an object enters or exits the area.
+// This boundary can be a radius or any search area format, such as a bounding box, GeoJSON object, etc.
 type GeofenceRequestable interface {
 	GeofenceCommand() Command
 }
 
 var _ GeofenceRequestable = (*Request)(nil)
 
-// Request struct
+// Request represents a geofence request.
 type Request struct {
 	Cmd           string
 	Key           string
@@ -25,7 +26,7 @@ type Request struct {
 	Options       []SearchOption
 }
 
-// GeofenceCommand ...
+// GeofenceCommand build geofence command for tile38.
 func (req *Request) GeofenceCommand() Command {
 	var args []string
 	args = append(args, req.Key)
@@ -62,25 +63,26 @@ func (req *Request) GeofenceCommand() Command {
 	return NewCommand(req.Cmd, args...)
 }
 
-// Actions ...
+// Actions sets the geofence actions to receive.
+// All actions used by default.
 func (req *Request) Actions(actions ...DetectAction) *Request {
 	req.DetectActions = actions
 	return req
 }
 
-// WithOptions ...
+// WithOptions sets the optional parameters for request.
 func (req *Request) WithOptions(opts ...SearchOption) *Request {
 	req.Options = opts
 	return req
 }
 
-// Format ...
+// Format set geofence response format.
 func (req *Request) Format(fmt OutputFormat) *Request {
 	req.OutputFormat = fmt
 	return req
 }
 
-// GeofenceWithin ...
+// GeofenceWithin return Within geofence request.
 func GeofenceWithin(key string, area SearchArea) *Request {
 	return &Request{
 		Cmd:  "WITHIN",
@@ -89,7 +91,7 @@ func GeofenceWithin(key string, area SearchArea) *Request {
 	}
 }
 
-// GeofenceIntersects ...
+// GeofenceIntersects return Intersects geofence request.
 func GeofenceIntersects(key string, area SearchArea) *Request {
 	return &Request{
 		Cmd:  "INTERSECTS",
@@ -98,7 +100,7 @@ func GeofenceIntersects(key string, area SearchArea) *Request {
 	}
 }
 
-// GeofenceNearby ...
+// GeofenceNearby return Nearby geofence request.
 func GeofenceNearby(key string, lat, lon, meters float64) *Request {
 	return &Request{
 		Cmd:  "NEARBY",
@@ -109,7 +111,7 @@ func GeofenceNearby(key string, lat, lon, meters float64) *Request {
 
 var _ GeofenceRequestable = (*RoamRequest)(nil)
 
-// RoamRequest struct
+// RoamRequest represents a roaming geofence request.
 type RoamRequest struct {
 	Key           string
 	Target        string
@@ -120,7 +122,7 @@ type RoamRequest struct {
 	Options       []SearchOption
 }
 
-// GeofenceCommand ...
+// GeofenceCommand build geofence command for tile38.
 func (req *RoamRequest) GeofenceCommand() Command {
 	var args []string
 	args = append(args, req.Key)
@@ -158,25 +160,26 @@ func (req *RoamRequest) GeofenceCommand() Command {
 	return NewCommand("NEARBY", args...)
 }
 
-// Actions ...
+// Actions sets the geofence actions to receive.
+// All actions used by default.
 func (req *RoamRequest) Actions(actions ...DetectAction) *RoamRequest {
 	req.DetectActions = actions
 	return req
 }
 
-// WithOptions ...
+// WithOptions sets the optional parameters for request.
 func (req *RoamRequest) WithOptions(opts ...SearchOption) *RoamRequest {
 	req.Options = opts
 	return req
 }
 
-// Format ...
+// Format set geofence response format.
 func (req *RoamRequest) Format(fmt OutputFormat) *RoamRequest {
 	req.OutputFormat = fmt
 	return req
 }
 
-// GeofenceRoam ...
+// GeofenceRoam return roaming geofence request.
 func GeofenceRoam(key, target, pattern string, meters int) *RoamRequest {
 	return &RoamRequest{
 		Key:     key,
@@ -186,7 +189,7 @@ func GeofenceRoam(key, target, pattern string, meters int) *RoamRequest {
 	}
 }
 
-// Fence ...
+// Fence execute geofence command.
 func (client *Client) Fence(ctx context.Context, req GeofenceRequestable) (chan Response, error) {
 	cmd := req.GeofenceCommand()
 	events, err := client.ExecuteStream(ctx, cmd.Name, cmd.Args...)

@@ -6,10 +6,10 @@ import "strconv"
 type SearchOption Command
 
 var (
-	// Asc ...
+	// Asc order. Only for SEARCH and SCAN commands.
 	Asc = SearchOption(NewCommand("ASC"))
 
-	// Desc ...
+	// Desc order. Only for SEARCH and SCAN commands.
 	Desc = SearchOption(NewCommand("DESC"))
 
 	// Count ...
@@ -17,18 +17,21 @@ var (
 		return SearchOption(NewCommand("COUNT", strconv.Itoa(count)))
 	}
 
-	// NoFields ...
+	// NoFields tells the server that you do not want field values returned with the search results.
 	NoFields = SearchOption(NewCommand("NOFIELDS"))
 
-	// Clip ...
+	// Clip tells the server to clip intersecting objects by the bounding box area of the search.
+	// It can only be used with these area formats: BOUNDS, TILE, QUADKEY, HASH.
 	Clip = SearchOption(NewCommand("CLIP"))
 
-	// Cursor ...
+	// Cursor is used to iterate though many objects from the search results.
+	// An iteration begins when the CURSOR is set to Zero or not included with the request,
+	// and completes when the cursor returned by the server is Zero.
 	Cursor = func(start int) SearchOption {
 		return SearchOption(NewCommand("CURSOR", strconv.Itoa(start)))
 	}
 
-	// Limit ...
+	// Limit can be used to limit the number of objects returned for a single search request.
 	Limit = func(count int) SearchOption {
 		return SearchOption(NewCommand("LIMIT", strconv.Itoa(count)))
 	}
@@ -55,11 +58,13 @@ var (
 	}
 
 	// Match is similar to WHERE except that it works on the object id instead of fields.
+	// There can be multiple MATCH options in a single search.
+	// The MATCH value is a simple glob pattern.
 	Match = func(pattern string) SearchOption {
 		return SearchOption(NewCommand("MATCH", pattern))
 	}
 
-	// Distance ...
+	// Distance allows to return between objects. Only for NEARBY command.
 	Distance = SearchOption(NewCommand("DISTANCE"))
 )
 
@@ -67,19 +72,21 @@ var (
 type SetOption Command
 
 var (
-	// SetField ...
-	SetField = func(name string, value float64) SetOption {
+	// Field are extra data which belongs to an object.
+	// A field is always a double precision floating point.
+	// There is no limit to the number of fields that an object can have.
+	Field = func(name string, value float64) SetOption {
 		return SetOption(NewCommand("FIELD", name, floatString(value)))
 	}
 
-	// Expiration ...
+	// Expiration set the specified expire time, in seconds.
 	Expiration = func(seconds int) SetOption {
 		return SetOption(NewCommand("EX", strconv.Itoa(seconds)))
 	}
 
-	// IfNotExists ...
+	// IfNotExists only set the object if it does not already exist.
 	IfNotExists = SetOption(NewCommand("NX"))
 
-	// IfExists ...
+	// IfExists only set the object if it already exist.
 	IfExists = SetOption(NewCommand("XX"))
 )

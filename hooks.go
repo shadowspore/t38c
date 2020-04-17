@@ -14,7 +14,7 @@ type HookBuilder struct {
 	Ex        *int
 }
 
-// Args ...
+// Args builds hook args for tile38 command.
 func (hook *HookBuilder) Args() []string {
 	var args []string
 	args = append(args, hook.Name)
@@ -36,7 +36,7 @@ func (hook *HookBuilder) Args() []string {
 	return args
 }
 
-// NewHook ...
+// NewHook return new hook builder.
 func NewHook(name string, endpoints []string, req GeofenceRequestable) *HookBuilder {
 	return &HookBuilder{
 		Name:      name,
@@ -46,16 +46,16 @@ func NewHook(name string, endpoints []string, req GeofenceRequestable) *HookBuil
 }
 
 // Meta ...
-func (hook *HookBuilder) Meta(name, value string) *HookBuilder {
-	hook.Metas = append(hook.Metas, Meta{
-		Name:  name,
-		Value: value,
-	})
+// func (hook *HookBuilder) Meta(name, value string) *HookBuilder {
+// 	hook.Metas = append(hook.Metas, Meta{
+// 		Name:  name,
+// 		Value: value,
+// 	})
 
-	return hook
-}
+// 	return hook
+// }
 
-// Expiration ...
+// Expiration set hook expiration in seconds.
 func (hook *HookBuilder) Expiration(seconds int) *HookBuilder {
 	hook.Ex = &seconds
 	return hook

@@ -6,7 +6,7 @@ type Command struct {
 	Args []string
 }
 
-// NewCommand ...
+// NewCommand return new command.
 func NewCommand(name string, args ...string) Command {
 	return Command{
 		Name: name,
