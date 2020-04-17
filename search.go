@@ -90,7 +90,7 @@ func (client *Client) Search(req *SearchRequest) (*SearchResponse, error) {
 	cmd := req.BuildCommand()
 
 	resp := &SearchResponse{}
-	err := client.JExecute(&resp, cmd.Name, cmd.Args...)
+	err := client.jExecute(&resp, cmd.Name, cmd.Args...)
 	if err != nil {
 		return nil, err
 	}

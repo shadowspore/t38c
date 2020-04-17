@@ -63,7 +63,7 @@ func (hook *HookBuilder) Expiration(seconds int) *HookBuilder {
 
 // DelHook remove a specified hook.
 func (client *Client) DelHook(name string) error {
-	return client.JExecute(nil, "DELHOOK", name)
+	return client.jExecute(nil, "DELHOOK", name)
 }
 
 // Hooks returns all hooks matching pattern.
@@ -72,7 +72,7 @@ func (client *Client) Hooks(pattern string) ([]Hook, error) {
 		Hooks []Hook `json:"hooks"`
 	}
 
-	err := client.JExecute(&resp, "HOOKS", pattern)
+	err := client.jExecute(&resp, "HOOKS", pattern)
 	if err != nil {
 		return nil, err
 	}
@@ -82,11 +82,11 @@ func (client *Client) Hooks(pattern string) ([]Hook, error) {
 
 // PDelHook removes all hooks that match the specified pattern.
 func (client *Client) PDelHook(pattern string) error {
-	return client.JExecute(nil, "PDELHOOK", pattern)
+	return client.jExecute(nil, "PDELHOOK", pattern)
 }
 
 // SetHook creates a webhook which points to a geofenced search.
 // If a hook is already associated to that name, it’ll be overwritten.
 func (client *Client) SetHook(hook *HookBuilder) error {
-	return client.JExecute(nil, "SETHOOK", hook.Args()...)
+	return client.jExecute(nil, "SETHOOK", hook.Args()...)
 }

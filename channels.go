@@ -66,7 +66,7 @@ func (client *Client) Chans(pattern string) ([]Chan, error) {
 		Chans []Chan `json:"chans"`
 	}
 
-	err := client.JExecute(&resp, "CHANS", pattern)
+	err := client.jExecute(&resp, "CHANS", pattern)
 	if err != nil {
 		return nil, err
 	}
@@ -76,12 +76,12 @@ func (client *Client) Chans(pattern string) ([]Chan, error) {
 
 // DelChan remove a specified channel.
 func (client *Client) DelChan(name string) error {
-	return client.JExecute(nil, "DELCHAN", name)
+	return client.jExecute(nil, "DELCHAN", name)
 }
 
 // PDelChan removes all channels that match the specified pattern.
 func (client *Client) PDelChan(pattern string) error {
-	return client.JExecute(nil, "PDELCHAN", pattern)
+	return client.jExecute(nil, "PDELCHAN", pattern)
 }
 
 // PSubscribe subscribes the client to the given patterns.
@@ -112,7 +112,7 @@ func (client *Client) PSubscribe(ctx context.Context, pattern string) (chan Resp
 // If a channel is already associated to that name, it’ll be overwritten.
 // Once the channel is created a client can then listen for events on that channel with SUBSCRIBE or PSUBSCRIBE.
 func (client *Client) SetChan(ch *ChanBuilder) error {
-	return client.JExecute(nil, "SETCHAN", ch.Args()...)
+	return client.jExecute(nil, "SETCHAN", ch.Args()...)
 }
 
 // Subscribe subscribes the client to the specified channels.

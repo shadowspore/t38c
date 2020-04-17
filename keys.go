@@ -13,7 +13,7 @@ func (client *Client) Bounds(key string) ([][][]float64, error) {
 		Bounds geojson.Geometry `json:"bounds"`
 	}
 
-	err := client.JExecute(&resp, "BOUNDS", key)
+	err := client.jExecute(&resp, "BOUNDS", key)
 	if err != nil {
 		return nil, err
 	}
@@ -23,17 +23,17 @@ func (client *Client) Bounds(key string) ([][][]float64, error) {
 
 // Del remove a specified object.
 func (client *Client) Del(key, objectID string) error {
-	return client.JExecute(nil, "DEL", key)
+	return client.jExecute(nil, "DEL", key)
 }
 
 // Drop remove all objects from specified key.
 func (client *Client) Drop(key string) error {
-	return client.JExecute(nil, "DROP", key)
+	return client.jExecute(nil, "DROP", key)
 }
 
 // Expire set a timeout on an id.
 func (client *Client) Expire(key, objectID string, seconds int) error {
-	return client.JExecute(nil, "EXPIRE", key, objectID, strconv.Itoa(seconds))
+	return client.jExecute(nil, "EXPIRE", key, objectID, strconv.Itoa(seconds))
 }
 
 // FSet set the value for one or more fields of an id. Fields are double precision floating points.
@@ -51,7 +51,7 @@ func (client *Client) FSet(key, objectID string, opts ...SetOption) error {
 		args = append(args, opt.Args...)
 	}
 
-	return client.JExecute(nil, "FSET", args...)
+	return client.jExecute(nil, "FSET", args...)
 }
 
 // Get returns object of an id.
@@ -63,13 +63,13 @@ func (client *Client) Get(key, objectID string, withFields bool) (resp *GetRespo
 		args = append(args, "WITHFIELDS")
 	}
 
-	err = client.JExecute(resp, "GET", args...)
+	err = client.jExecute(resp, "GET", args...)
 	return
 }
 
 // JDel delete a value from a JSON document.
 func (client *Client) JDel(key, objectID, path string) error {
-	return client.JExecute(nil, "JDEL", key, objectID, path)
+	return client.jExecute(nil, "JDEL", key, objectID, path)
 }
 
 // JGet get a value from a JSON document.
@@ -88,7 +88,7 @@ func (client *Client) Keys(pattern string) ([]string, error) {
 		Keys []string `json:"keys"`
 	}
 
-	err := client.JExecute(&resp, "KEYS", pattern)
+	err := client.jExecute(&resp, "KEYS", pattern)
 	if err != nil {
 		return nil, err
 	}
@@ -98,19 +98,19 @@ func (client *Client) Keys(pattern string) ([]string, error) {
 
 // PDel removes objects that match a specified pattern.
 func (client *Client) PDel(key, pattern string) error {
-	return client.JExecute(nil, "PDEL", key, pattern)
+	return client.jExecute(nil, "PDEL", key, pattern)
 }
 
 // Persist remove an existing timeout of an id.
 func (client *Client) Persist(key, objectID string) error {
-	return client.JExecute(nil, "PERSIST", key, objectID)
+	return client.jExecute(nil, "PERSIST", key, objectID)
 }
 
 // Rename renames collection key to newkey.
 // If newkey already exists, it will be deleted prior to renaming.
 // Returns “OK” for success or “ERR” when key or newkey are actively being used by a geofence or webhook.
 func (client *Client) Rename(key, newKey string) error {
-	return client.JExecute(nil, "RENAME", key, newKey)
+	return client.jExecute(nil, "RENAME", key, newKey)
 }
 
 // RenameNX renames collection key to newkey, if it does not exist yet.
@@ -118,7 +118,7 @@ func (client *Client) Rename(key, newKey string) error {
 // Returns 1 if key was renamed to newkey, 0 if newkey already existed,
 // or “ERR” when key or newkey are actively being used by a geofence or webhook.
 func (client *Client) RenameNX(key, newKey string) error {
-	return client.JExecute(nil, "RENAMENX", key, newKey)
+	return client.jExecute(nil, "RENAMENX", key, newKey)
 }
 
 // Set the value of an id. If a value is already associated to that key/id, it’ll be overwritten.
@@ -133,7 +133,7 @@ func (client *Client) Set(key, objectID string, area SetArea, opts ...SetOption)
 	args = append(args, area.Name)
 	args = append(args, area.Args...)
 
-	return client.JExecute(nil, "SET", args...)
+	return client.jExecute(nil, "SET", args...)
 }
 
 // Stats return stats for one or more keys.
@@ -142,7 +142,7 @@ func (client *Client) Stats(keys ...string) ([]KeyStats, error) {
 		Stats []KeyStats `json:"stats"`
 	}
 
-	err := client.JExecute(&resp, "STATS", keys...)
+	err := client.jExecute(&resp, "STATS", keys...)
 	if err != nil {
 		return nil, err
 	}
@@ -156,7 +156,7 @@ func (client *Client) TTL(key, objectID string) (int, error) {
 		TTL int `json:"ttl"`
 	}
 
-	err := client.JExecute(&resp, "TTL", key, objectID)
+	err := client.jExecute(&resp, "TTL", key, objectID)
 	if err != nil {
 		return -1, err
 	}

@@ -10,7 +10,7 @@ func (client *Client) Ping() error {
 		Ping string `json:"ping"`
 	}
 
-	err := client.JExecute(&resp, "PING")
+	err := client.jExecute(&resp, "PING")
 	if err != nil {
 		return err
 	}

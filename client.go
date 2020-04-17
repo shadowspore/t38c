@@ -41,7 +41,7 @@ func NewWithDialer(dialer ExecutorDialer, debug bool) (*Client, error) {
 }
 
 // ExecuteCmd ...
-func (client *Client) ExecuteCmd(cmd Command) ([]byte, error) {
+func (client *Client) executeCmd(cmd Command) ([]byte, error) {
 	resp, err := client.executor.Execute(cmd.Name, cmd.Args...)
 	if client.debug {
 		log.Printf("[%s]: %s", cmd, resp)
@@ -60,11 +60,11 @@ func (client *Client) ExecuteCmd(cmd Command) ([]byte, error) {
 
 // Execute command
 func (client *Client) Execute(command string, args ...string) ([]byte, error) {
-	return client.ExecuteCmd(NewCommand(command, args...))
+	return client.executeCmd(NewCommand(command, args...))
 }
 
 // JExecute ...
-func (client *Client) JExecute(resp interface{}, command string, args ...string) error {
+func (client *Client) jExecute(resp interface{}, command string, args ...string) error {
 	b, err := client.Execute(command, args...)
 	if err != nil {
 		return err

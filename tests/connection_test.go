@@ -3,8 +3,8 @@ package tests
 import (
 	"testing"
 
-	"github.com/stretchr/testify/assert"
 	t38c "github.com/lostpeer/tile38-client"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestPing(t *testing.T) {
