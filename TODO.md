@@ -1,213 +1,182 @@
 # Group 'search'
-```
 - [x] SCAN
-- [x] (arg) [CURSOR start]
-- [x] (arg) [LIMIT count]
-- [x] (arg) [MATCH pattern]
-- [x] (arg) ASC
-- [x] (arg) DESC
-- [x] (arg) [WHERE field min max ...]
-- [x] (arg) [WHEREIN field count value [value ...] ...]
-- [ ] (arg) [WHEREEVAL script numargs arg [arg ...] ...]
-- [ ] (arg) [WHEREEVALSHA sha1 numargs arg [arg ...] ...]
-- [x] (arg) [NOFIELDS]
-- [x] (arg) COUNT
-- [x] (arg) IDS
-- [x] (arg) OBJECTS
-- [x] (arg) POINTS
-- [x] (arg) BOUNDS
-- [x] (arg) HASHES precision
-
+    - [x] [CURSOR start]
+    - [x] [LIMIT count]
+    - [x] [MATCH pattern]
+    - [x] ASC
+    - [x] DESC
+    - [x] [WHERE field min max ...]
+    - [x] [WHEREIN field count value [value ...] ...]
+    - [ ] [WHEREEVAL script numargs arg [arg ...] ...]
+    - [ ] [WHEREEVALSHA sha1 numargs arg [arg ...] ...]
+    - [x] [NOFIELDS]
+    - [x] COUNT
+    - [x] IDS
+    - [x] OBJECTS
+    - [x] POINTS
+    - [x] BOUNDS
+    - [x] HASHES precision
 - [x] SEARCH
-- [x] (arg) [CURSOR start]
-- [x] (arg) [LIMIT count]
-- [x] (arg) [MATCH pattern]
-- [x] (arg) ASC
-- [x] (arg) DESC
-- [x] (arg) [WHERE field min max ...]
-- [x] (arg) [WHEREIN field count value [value ...] ...]
-- [ ] (arg) [WHEREEVAL script numargs arg [arg ...] ...]
-- [ ] (arg) [WHEREEVALSHA sha1 numargs arg [arg ...] ...]
-- [x] (arg) [NOFIELDS]
-- [x] (arg) COUNT
-- [x] (arg) IDS
-
+    - [x] [CURSOR start]
+    - [x] [LIMIT count]
+    - [x] [MATCH pattern]
+    - [x] ASC
+    - [x] DESC
+    - [x] [WHERE field min max ...]
+    - [x] [WHEREIN field count value [value ...] ...]
+    - [ ] [WHEREEVAL script numargs arg [arg ...] ...]
+    - [ ] [WHEREEVALSHA sha1 numargs arg [arg ...] ...]
+    - [x] [NOFIELDS]
+    - [x] COUNT
+    - [x] IDS
 - [x] NEARBY
-- [x] (arg) [CURSOR start]
-- [x] (arg) [LIMIT count]
-- [x] (arg) [SPARSE spread]
-- [x] (arg) [MATCH pattern]
-- [x] (arg) [DISTANCE]
-- [x] (arg) [WHERE field min max ...]
-- [x] (arg) [WHEREIN field count value [value ...] ...]
-- [ ] (arg) [WHEREEVAL script numargs arg [arg ...] ...]
-- [ ] (arg) [WHEREEVALSHA sha1 numargs arg [arg ...] ...]
-- [x] (arg) [NOFIELDS]
-- [x] (arg) [FENCE]
-- [x] (arg) [DETECT what]
-- [x] (arg) [COMMANDS which]
-- [x] (arg) COUNT
-- [x] (arg) IDS
-- [x] (arg) OBJECTS
-- [x] (arg) POINTS
-- [x] (arg) BOUNDS
-- [x] (arg) HASHES precision
-- [x] (arg) POINT lat lon meters
-- [ ] (arg) ROAM key pattern meters
-
+    - [x] [CURSOR start]
+    - [x] [LIMIT count]
+    - [x] [SPARSE spread]
+    - [x] [MATCH pattern]
+    - [x] [DISTANCE]
+    - [x] [WHERE field min max ...]
+    - [x] [WHEREIN field count value [value ...] ...]
+    - [ ] [WHEREEVAL script numargs arg [arg ...] ...]
+    - [ ] [WHEREEVALSHA sha1 numargs arg [arg ...] ...]
+    - [x] [NOFIELDS]
+    - [x] [FENCE]
+    - [x] [DETECT what]
+    - [x] [COMMANDS which]
+    - [x] COUNT
+    - [x] IDS
+    - [x] OBJECTS
+    - [x] POINTS
+    - [x] BOUNDS
+    - [x] HASHES precision
+    - [x] POINT lat lon meters
+    - [x] ROAM key pattern meters
 - [x] WITHIN
-- [x] (arg) [CURSOR start]
-- [x] (arg) [LIMIT count]
-- [x] (arg) [SPARSE spread]
-- [x] (arg) [MATCH pattern]
-- [x] (arg) [WHERE field min max ...]
-- [x] (arg) [WHEREIN field count value [value ...] ...]
-- [ ] (arg) [WHEREEVAL script numargs arg [arg ...] ...]
-- [ ] (arg) [WHEREEVALSHA sha1 numargs arg [arg ...] ...]
-- [x] (arg) [NOFIELDS]
-- [x] (arg) [FENCE]
-- [x] (arg) [DETECT what]
-- [x] (arg) [COMMANDS which]
-- [x] (arg) COUNT
-- [x] (arg) IDS
-- [x] (arg) OBJECTS
-- [x] (arg) POINTS
-- [x] (arg) BOUNDS
-- [x] (arg) HASHES precision
-- [x] (arg) GET key id
-- [x] (arg) BOUNDS minlat minlon maxlat maxlon
-- [x] (arg) OBJECT geojson
-- [x] (arg) CIRCLE lat lon meters
-- [x] (arg) TILE x y z
-- [x] (arg) QUADKEY quadkey
-- [x] (arg) HASH geohash
-
+    - [x] [CURSOR start]
+    - [x] [LIMIT count]
+    - [x] [SPARSE spread]
+    - [x] [MATCH pattern]
+    - [x] [WHERE field min max ...]
+    - [x] [WHEREIN field count value [value ...] ...]
+    - [ ] [WHEREEVAL script numargs arg [arg ...] ...]
+    - [ ] [WHEREEVALSHA sha1 numargs arg [arg ...] ...]
+    - [x] [NOFIELDS]
+    - [x] [FENCE]
+    - [x] [DETECT what]
+    - [x] [COMMANDS which]
+    - [x] COUNT
+    - [x] IDS
+    - [x] OBJECTS
+    - [x] POINTS
+    - [x] BOUNDS
+    - [x] HASHES precision
+    - [x] GET key id
+    - [x] BOUNDS minlat minlon maxlat maxlon
+    - [x] OBJECT geojson
+    - [x] CIRCLE lat lon meters
+    - [x] TILE x y z
+    - [x] QUADKEY quadkey
+    - [x] HASH geohash
 - [x] INTERSECTS
-- [x] (arg) [CURSOR start]
-- [x] (arg) [LIMIT count]
-- [x] (arg) [SPARSE spread]
-- [x] (arg) [MATCH pattern]
-- [x] (arg) [WHERE field min max ...]
-- [x] (arg) [WHEREIN field count value [value ...] ...]
-- [ ] (arg) [WHEREEVAL script numargs arg [arg ...] ...]
-- [ ] (arg) [WHEREEVALSHA sha1 numargs arg [arg ...] ...]
-- [x] (arg) [CLIP]
-- [x] (arg) [NOFIELDS]
-- [x] (arg) [FENCE]
-- [x] (arg) [DETECT what]
-- [x] (arg) [COMMANDS which]
-- [x] (arg) COUNT
-- [x] (arg) IDS
-- [x] (arg) OBJECTS
-- [x] (arg) POINTS
-- [x] (arg) BOUNDS
-- [x] (arg) HASHES precision
-- [x] (arg) GET key id
-- [x] (arg) BOUNDS minlat minlon maxlat maxlon
-- [x] (arg) OBJECT geojson
-- [x] (arg) CIRCLE lat lon meters
-- [x] (arg) TILE x y z
-- [x] (arg) QUADKEY quadkey
-- [x] (arg) HASH geohash
-
-
-```
+    - [x] [CURSOR start]
+    - [x] [LIMIT count]
+    - [x] [SPARSE spread]
+    - [x] [MATCH pattern]
+    - [x] [WHERE field min max ...]
+    - [x] [WHEREIN field count value [value ...] ...]
+    - [ ] [WHEREEVAL script numargs arg [arg ...] ...]
+    - [ ] [WHEREEVALSHA sha1 numargs arg [arg ...] ...]
+    - [x] [CLIP]
+    - [x] [NOFIELDS]
+    - [x] [FENCE]
+    - [x] [DETECT what]
+    - [x] [COMMANDS which]
+    - [x] COUNT
+    - [x] IDS
+    - [x] OBJECTS
+    - [x] POINTS
+    - [x] BOUNDS
+    - [x] HASHES precision
+    - [x] GET key id
+    - [x] BOUNDS minlat minlon maxlat maxlon
+    - [x] OBJECT geojson
+    - [x] CIRCLE lat lon meters
+    - [x] TILE x y z
+    - [x] QUADKEY quadkey
+    - [x] HASH geohash
 
 # Group 'keys'
-```
-- [ ] STATS
-- [ ] JSET
-- [ ] (arg) RAW
-- [ ] (arg) STR
-
-- [ ] PERSIST
-- [ ] JDEL
+- [x] STATS
+- [x] JSET
+    - [ ] RAW
+    - [ ] STR
+- [x] PERSIST
+- [x] JDEL
 - [x] SET
-- [x] (arg) [FIELD name value ...]
-- [x] (arg) [EX seconds]
-- [x] (arg) NX
-- [x] (arg) XX
-- [x] (arg) OBJECT geojson
-- [x] (arg) POINT lat lon [z]
-- [x] (arg) BOUNDS minlat minlon maxlat maxlon
-- [x] (arg) HASH geohash
-- [x] (arg) STRING value
-
-- [ ] TTL
-- [ ] JGET
-- [ ] (arg) [RAW]
-
+    - [x] [FIELD name value ...]
+    - [x] [EX seconds]
+    - [x] NX
+    - [x] XX
+    - [x] OBJECT geojson
+    - [x] POINT lat lon [z]
+    - [x] BOUNDS minlat minlon maxlat maxlon
+    - [x] HASH geohash
+    - [x] STRING value
+- [x] TTL
+- [x] JGET
+    - [ ] [RAW]
 - [x] DROP
-- [ ] EXPIRE
+- [x] EXPIRE
 - [x] DEL
-- [ ] RENAME
-- [ ] PDEL
+- [x] RENAME
+- [x] PDEL
 - [x] GET
-- [x] (arg) [WITHFIELDS]
-- [x] (arg) OBJECT
-- [x] (arg) POINT
-- [x] (arg) BOUNDS
-- [x] (arg) HASH geohash
-
-- [ ] FSET
-- [ ] (arg) [XX]
-
+    - [x] [WITHFIELDS]
+    - [x] OBJECT
+    - [x] POINT
+    - [x] BOUNDS
+    - [x] HASH geohash
+- [x] FSET
+    - [x] [XX]
 - [x] BOUNDS
-- [ ] RENAMENX
+- [x] RENAMENX
 - [x] KEYS
 
-```
-
 # Group 'connection'
-```
 - [x] PING
 - [ ] OUTPUT
 - [ ] AUTH
 - [ ] TIMEOUT
-- [ ] (arg) COMMAND
-
+    - [ ] COMMAND
 - [ ] QUIT
 
-```
-
-
 # Group 'webhook'
-```
 - [ ] DELHOOK
 - [ ] PDELHOOK
 - [ ] SETHOOK
-- [ ] (arg) [META name value ...]
-- [ ] (arg) [EX seconds]
-- [ ] (arg) NEARBY|WITHIN|INTERSECTS
-- [ ] (arg) FENCE
-- [ ] (arg) [DETECT what]
-- [ ] (arg) [COMMANDS which]
-
+    - [ ] [META name value ...]
+    - [ ] [EX seconds]
+    - [ ] NEARBY|WITHIN|INTERSECTS
+    - [ ] FENCE
+    - [ ] [DETECT what]
+    - [ ] [COMMANDS which]
 - [ ] HOOKS
 
-```
-
 # Group 'pubsub'
-```
-- [ ] PSUBSCRIBE
-- [ ] CHANS
-- [ ] SETCHAN
-- [ ] (arg) [META name value ...]
-- [ ] (arg) [EX seconds]
-- [ ] (arg) NEARBY|WITHIN|INTERSECTS
-- [ ] (arg) FENCE
-- [ ] (arg) [DETECT what]
-- [ ] (arg) [COMMANDS which]
-
-- [ ] PDELCHAN
-- [ ] SUBSCRIBE
-- [ ] DELCHAN
-
-```
-
+- [x] PSUBSCRIBE
+- [x] CHANS
+- [x] SETCHAN
+    - [x] [META name value ...]
+    - [x] [EX seconds]
+    - [x] NEARBY|WITHIN|INTERSECTS
+    - [x] FENCE
+    - [x] [DETECT what]
+    - [x] [COMMANDS which]
+- [x] PDELCHAN
+- [x] SUBSCRIBE
+- [x] DELCHAN
 
 # Group 'server'
-```
 - [ ] CONFIG GET
 - [ ] FLUSHDB
 - [ ] SERVER
@@ -216,11 +185,7 @@
 - [ ] CONFIG SET
 - [ ] GC
 
-```
-
-
 # Group 'scripting'
-```
 - [ ] EVALNASHA
 - [ ] EVAL
 - [ ] EVALRO
@@ -231,43 +196,8 @@
 - [ ] EVALSHA
 - [ ] SCRIPT LOAD
 
-```
-
-
 # Group 'replication'
-```
 - [ ] AOFSHRINK
 - [ ] AOF
 - [ ] AOFMD5
 - [ ] FOLLOW
-
-```
-
-
-# Group 'tests'
-```
-- [ ] TEST
-- [ ] (arg) POINT lat lon
-- [ ] (arg) GET key id
-- [ ] (arg) BOUNDS minlat minlon maxlat maxlon
-- [ ] (arg) OBJECT geojson
-- [ ] (arg) CIRCLE lat lon meters
-- [ ] (arg) TILE x y z
-- [ ] (arg) QUADKEY quadkey
-- [ ] (arg) HASH geohash
-- [ ] (arg) INTERSECTS
-- [ ] (arg) WITHIN
-- [ ] (arg) [CLIP]
-- [ ] (arg) POINT lat lon
-- [ ] (arg) GET key id
-- [ ] (arg) BOUNDS minlat minlon maxlat maxlon
-- [ ] (arg) OBJECT geojson
-- [ ] (arg) CIRCLE lat lon meters
-- [ ] (arg) TILE x y z
-- [ ] (arg) QUADKEY quadkey
-- [ ] (arg) HASH geohash
-
-
-```
-
-
