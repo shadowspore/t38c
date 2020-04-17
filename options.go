@@ -12,11 +12,6 @@ var (
 	// Desc order. Only for SEARCH and SCAN commands.
 	Desc = SearchOption(NewCommand("DESC"))
 
-	// Count ...
-	Count = func(count int) SearchOption {
-		return SearchOption(NewCommand("COUNT", strconv.Itoa(count)))
-	}
-
 	// NoFields tells the server that you do not want field values returned with the search results.
 	NoFields = SearchOption(NewCommand("NOFIELDS"))
 
