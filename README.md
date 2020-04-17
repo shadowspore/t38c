@@ -21,7 +21,8 @@ func main() {
 
 	client.Set("fleet", "truck1", t38c.SetPoint(33.5123, -112.2693))
 	client.Set("fleet", "truck2", t38c.SetPoint(33.4626, -112.1695),
-		t38c.Field("speed", 20), // optional params
+		// optional params
+		t38c.Field("speed", 20),
 		t38c.Expiration(20),
 	)
 
@@ -30,7 +31,7 @@ func main() {
 		t38c.Nearby("fleet", 33.462, -112.268, 6000,
 			// optional params
 			t38c.Where("speed", 0, 100),
-			t38c.Match("fleet*"),
+			t38c.Match("truck*"),
 		),
 	)
 }
