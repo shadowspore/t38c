@@ -151,16 +151,16 @@
 - [ ] QUIT
 
 # Group 'webhook'
-- [ ] DELHOOK
-- [ ] PDELHOOK
-- [ ] SETHOOK
-    - [ ] [META name value ...]
-    - [ ] [EX seconds]
-    - [ ] NEARBY|WITHIN|INTERSECTS
-    - [ ] FENCE
-    - [ ] [DETECT what]
-    - [ ] [COMMANDS which]
-- [ ] HOOKS
+- [x] DELHOOK
+- [x] PDELHOOK
+- [x] SETHOOK
+    - [x] [META name value ...]
+    - [x] [EX seconds]
+    - [x] NEARBY|WITHIN|INTERSECTS
+    - [x] FENCE
+    - [x] [DETECT what]
+    - [x] [COMMANDS which]
+- [x] HOOKS
 
 # Group 'pubsub'
 - [x] PSUBSCRIBE
