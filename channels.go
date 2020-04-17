@@ -36,7 +36,7 @@ func (ch *ChanBuilder) Args() []string {
 	return args
 }
 
-// NewChan return new channel builder
+// NewChan return new channel builder.
 func NewChan(name string, req GeofenceRequestable) *ChanBuilder {
 	return &ChanBuilder{
 		Name:    name,
@@ -45,14 +45,14 @@ func NewChan(name string, req GeofenceRequestable) *ChanBuilder {
 }
 
 // Meta ...
-func (ch *ChanBuilder) Meta(name, value string) *ChanBuilder {
-	ch.Metas = append(ch.Metas, Meta{
-		Name:  name,
-		Value: value,
-	})
+// func (ch *ChanBuilder) Meta(name, value string) *ChanBuilder {
+// 	ch.Metas = append(ch.Metas, Meta{
+// 		Name:  name,
+// 		Value: value,
+// 	})
 
-	return ch
-}
+// 	return ch
+// }
 
 // Expiration set the specified expire time, in seconds.
 func (ch *ChanBuilder) Expiration(seconds int) *ChanBuilder {
