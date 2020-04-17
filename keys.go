@@ -47,6 +47,11 @@ func (client *Client) FSet(key, objectID string, opts ...SetOption) error {
 	}
 
 	for _, opt := range opts {
+		if opt.Name == "FIELD" {
+			args = append(args, opt.Args...)
+			continue
+		}
+
 		args = append(args, opt.Name)
 		args = append(args, opt.Args...)
 	}
