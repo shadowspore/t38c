@@ -67,7 +67,6 @@ func Match(pattern string) SearchOption {
 type SetOption Command
 
 var (
-
 	// IfNotExists only set the object if it does not already exist.
 	IfNotExists = SetOption(NewCommand("NX"))
 
