@@ -77,6 +77,12 @@ var (
 		return SetArea(NewCommand("POINT", floatString(lat), floatString(lon), floatString(z)))
 	}
 
+	// SetBounds - a bounding box consists of two points.
+	// The first being the southwestern most point and the second is the northeastern most point.
+	SetBounds = func(lat1, lon1, lat2, lon2 float64) SetArea {
+		return SetArea(NewCommand("BOUNDS", floatString(lat1), floatString(lon1), floatString(lat2), floatString(lon2)))
+	}
+
 	// SetFeatureCollection - set GeoJSON Feature Collection object.
 	SetFeatureCollection = func(fc *geojson.FeatureCollection) SetArea {
 		b, _ := fc.MarshalJSON()
