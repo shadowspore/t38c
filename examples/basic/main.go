@@ -8,11 +8,6 @@ import (
 	t38c "github.com/lostpeer/tile38-client"
 )
 
-func printJSON(msg string, data interface{}) {
-	b, _ := json.Marshal(data)
-	fmt.Printf("%s: %s\n", msg, b)
-}
-
 func main() {
 	tile38, err := t38c.New("localhost:9851", true)
 	if err != nil {
@@ -60,4 +55,9 @@ func main() {
 	if err := tile38.Drop("fleet"); err != nil {
 		log.Fatal(err)
 	}
+}
+
+func printJSON(msg string, data interface{}) {
+	b, _ := json.Marshal(data)
+	fmt.Printf("%s: %s\n", msg, b)
 }
