@@ -39,9 +39,9 @@ func (req *SearchRequest) Format(fmt OutputFormat) *SearchRequest {
 // Within searches a collection for objects that are fully contained inside of a specified bounding area.
 func Within(key string, area SearchArea, opts ...SearchOption) *SearchRequest {
 	return &SearchRequest{
-		Cmd:  "WITHIN",
-		Key:  key,
-		Area: Command(area),
+		Cmd:           "WITHIN",
+		Key:           key,
+		Area:          Command(area),
 		SearchOptions: opts,
 	}
 }
@@ -49,9 +49,9 @@ func Within(key string, area SearchArea, opts ...SearchOption) *SearchRequest {
 // Intersects searches a collection for objects that intersect a specified bounding area.
 func Intersects(key string, area SearchArea, opts ...SearchOption) *SearchRequest {
 	return &SearchRequest{
-		Cmd:  "INTERSECTS",
-		Key:  key,
-		Area: Command(area),
+		Cmd:           "INTERSECTS",
+		Key:           key,
+		Area:          Command(area),
 		SearchOptions: opts,
 	}
 }
@@ -61,9 +61,9 @@ func Intersects(key string, area SearchArea, opts ...SearchOption) *SearchReques
 // sorting the results in order of ascending distance from that point, i.e., nearest first.
 func Nearby(key string, lat, lon, meters float64, opts ...SearchOption) *SearchRequest {
 	return &SearchRequest{
-		Cmd:  "NEARBY",
-		Key:  key,
-		Area: NewCommand("POINT", floatString(lat), floatString(lon), floatString(meters)),
+		Cmd:           "NEARBY",
+		Key:           key,
+		Area:          NewCommand("POINT", floatString(lat), floatString(lon), floatString(meters)),
 		SearchOptions: opts,
 	}
 }
@@ -71,8 +71,8 @@ func Nearby(key string, lat, lon, meters float64, opts ...SearchOption) *SearchR
 // Search iterates though a key’s string values.
 func Search(key string, opts ...SearchOption) *SearchRequest {
 	return &SearchRequest{
-		Cmd: "SEARCH",
-		Key: key,
+		Cmd:           "SEARCH",
+		Key:           key,
 		SearchOptions: opts,
 	}
 }
@@ -80,8 +80,8 @@ func Search(key string, opts ...SearchOption) *SearchRequest {
 // Scan incrementally iterates though a key.
 func Scan(key string, opts ...SearchOption) *SearchRequest {
 	return &SearchRequest{
-		Cmd: "SCAN",
-		Key: key,
+		Cmd:           "SCAN",
+		Key:           key,
 		SearchOptions: opts,
 	}
 }
