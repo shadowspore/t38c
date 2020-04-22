@@ -5,8 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
-
-	"github.com/tidwall/gjson"
 )
 
 // Client allows you to interact with the Tile38 server.
@@ -53,8 +51,8 @@ func (client *Client) executeCmd(cmd Command) ([]byte, error) {
 		return nil, err
 	}
 
-	if !gjson.GetBytes(resp, "ok").Bool() {
-		return nil, fmt.Errorf("command: %s: %s", cmd, gjson.GetBytes(resp, "err").String())
+	if err := checkResponseErr(resp); err != nil {
+		return nil, fmt.Errorf("command: %s: %v", cmd, err)
 	}
 
 	return resp, nil
