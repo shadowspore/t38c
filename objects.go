@@ -102,15 +102,22 @@ type SearchResponse struct {
 type OutputFormat Command
 
 var (
-	// FormatCount ...
+	// FormatCount - Total object count sent in the response.
+	// When LIMIT or CURSOR are provided, COUNT returns the number of results that would otherwise be sent as objects.
+	// When LIMIT is not specified, COUNT totals up all items starting from provided CURSOR position
+	// (or zero if a cursor is omitted). LIMIT and CURSOR options are ignored.
 	FormatCount = OutputFormat(NewCommand("COUNT"))
-	// FormatIDs ...
+
+	// FormatIDs - A list of IDs belonging to the key. Will not return the objects.
 	FormatIDs = OutputFormat(NewCommand("IDS"))
-	// FormatPoints ...
+
+	// FormatPoints - A list of standard latitude, longitude points.
 	FormatPoints = OutputFormat(NewCommand("POINTS"))
-	// FormatBounds ...
+
+	// FormatBounds - A list of minimum bounding rectangle.
 	FormatBounds = OutputFormat(NewCommand("BOUNDS"))
-	// FormatHashes ...
+
+	// FormatHashes - A list of Geohash. Requires a precision of 1 to 22.
 	FormatHashes = func(precision int) OutputFormat {
 		return OutputFormat(NewCommand("HASHES", strconv.Itoa(precision)))
 	}
