@@ -172,6 +172,19 @@ type RoamObject struct {
 	Meters float64 `json:"meters"`
 }
 
+// NotifyCommand ...
+type NotifyCommand string
+
+const (
+	// Del notifies the client that an object has been deleted from the collection that is being fenced.
+	Del NotifyCommand = "del"
+	// Drop notifies the client that the entire collection is dropped.
+	Drop NotifyCommand = "drop"
+	// Set notifies the client that an object has been added or updated,
+	// and when it’s position is detected by the fence.
+	Set NotifyCommand = "set"
+)
+
 // DetectAction ...
 type DetectAction string
 
