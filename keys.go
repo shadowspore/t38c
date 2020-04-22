@@ -1,7 +1,6 @@
 package t38c
 
 import (
-	"encoding/json"
 	"strconv"
 
 	geojson "github.com/paulmach/go.geojson"
@@ -78,12 +77,12 @@ func (client *Client) JDel(key, objectID, path string) error {
 }
 
 // JGet get a value from a JSON document.
-func (client *Client) JGet(key, objectID, path string) (json.RawMessage, error) {
+func (client *Client) JGet(key, objectID, path string) ([]byte, error) {
 	return client.Execute("JGET", key, objectID, path)
 }
 
 // JSet set a value in a JSON document.
-func (client *Client) JSet(key, objectID, path, value string) (json.RawMessage, error) {
+func (client *Client) JSet(key, objectID, path, value string) ([]byte, error) {
 	return client.Execute("JSET", key, objectID, path, value)
 }
 
