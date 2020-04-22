@@ -2,8 +2,6 @@ package t38c
 
 import (
 	"context"
-	"encoding/json"
-	"log"
 	"strconv"
 )
 
@@ -91,21 +89,7 @@ func (client *Client) PSubscribe(ctx context.Context, pattern string) (chan Geof
 		return nil, err
 	}
 
-	ch := make(chan GeofenceResponse, 10)
-	go func() {
-		defer close(ch)
-		for event := range events {
-			var resp GeofenceResponse
-			if err := json.Unmarshal(event, &resp); err != nil {
-				log.Printf("bad event: %v", err)
-				break
-			}
-
-			ch <- resp
-		}
-	}()
-
-	return ch, nil
+	return unmarshalEvents(events)
 }
 
 // SetChan creates a Pub/Sub channel which points to a geofenced search.
@@ -122,19 +106,5 @@ func (client *Client) Subscribe(ctx context.Context, channels ...string) (chan G
 		return nil, err
 	}
 
-	ch := make(chan GeofenceResponse, 10)
-	go func() {
-		defer close(ch)
-		for event := range events {
-			var resp GeofenceResponse
-			if err := json.Unmarshal(event, &resp); err != nil {
-				log.Printf("bad event: %v", err)
-				break
-			}
-
-			ch <- resp
-		}
-	}()
-
-	return ch, nil
+	return unmarshalEvents(events)
 }
