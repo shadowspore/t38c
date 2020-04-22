@@ -41,23 +41,20 @@ func (ob *Object) UnmarshalJSON(data []byte) error {
 	if !objectType.Exists() {
 		str := res.String()
 		ob.String = &str
-	} else {
-		var err error
-		switch objectType.String() {
-		case "FeatureCollection":
-			ob.FeatureCollection, err = geojson.UnmarshalFeatureCollection(data)
-		case "Feature":
-			ob.Feature, err = geojson.UnmarshalFeature(data)
-		default:
-			ob.Geometry, err = geojson.UnmarshalGeometry(data)
-		}
-
-		if err != nil {
-			return err
-		}
+		return nil
 	}
 
-	return nil
+	var err error
+	switch objectType.String() {
+	case "FeatureCollection":
+		ob.FeatureCollection, err = geojson.UnmarshalFeatureCollection(data)
+	case "Feature":
+		ob.Feature, err = geojson.UnmarshalFeature(data)
+	default:
+		ob.Geometry, err = geojson.UnmarshalGeometry(data)
+	}
+
+	return err
 }
 
 // GetResponse struct
