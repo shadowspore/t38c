@@ -14,7 +14,7 @@ package main
 import t38c "github.com/lostpeer/tile38-client"
 
 func main() {
-	client, err := t38c.New("localhost:9851", true)
+	client, err := t38c.New("localhost:9851", t38c.Debug())
 	if err != nil {
 		panic(err)
 	}
