@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	tile38, err := t38c.New("localhost:9851", true)
+	tile38, err := t38c.New("localhost:9851", t38c.Debug())
 	if err != nil {
 		log.Fatal(err)
 	}

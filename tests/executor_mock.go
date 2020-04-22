@@ -30,7 +30,7 @@ func NewMockExecutor() *MockExecutor {
 
 // DialFunc ...
 func (m *MockExecutor) DialFunc() t38c.ExecutorDialer {
-	return func() (t38c.Executor, error) {
+	return func(password *string) (t38c.Executor, error) {
 		return m, nil
 	}
 }

@@ -10,30 +10,46 @@ import (
 // Client allows you to interact with the Tile38 server.
 type Client struct {
 	debug    bool
+	password *string
 	executor Executor
+}
+
+// Debug option.
+func Debug() func(*Client) {
+	return func(c *Client) {
+		c.debug = true
+	}
+}
+
+// WithPassword option.
+func WithPassword(password string) func(*Client) {
+	return func(c *Client) {
+		c.password = &password
+	}
 }
 
 // New creates a new Tile38 client.
 // By default uses redis pool with 5 connections.
 // In debug mode will also print commands which will be sent to the server.
-func New(addr string, debug bool) (*Client, error) {
+func New(addr string, opts ...func(*Client)) (*Client, error) {
 	dialer := NewRadixPool(addr, 5)
-	return NewWithDialer(dialer, debug)
+	return NewWithDialer(dialer, opts...)
 }
 
 // NewWithDialer creates a new Tile38 client with provided dialer.
 // See Executor interface for more information.
-func NewWithDialer(dialer ExecutorDialer, debug bool) (*Client, error) {
-	executor, err := dialer()
+func NewWithDialer(dialer ExecutorDialer, opts ...func(*Client)) (*Client, error) {
+	client := &Client{}
+	for _, opt := range opts {
+		opt(client)
+	}
+
+	executor, err := dialer(client.password)
 	if err != nil {
 		return nil, err
 	}
 
-	client := &Client{
-		debug:    debug,
-		executor: executor,
-	}
-
+	client.executor = executor
 	if err := client.Ping(); err != nil {
 		return nil, err
 	}

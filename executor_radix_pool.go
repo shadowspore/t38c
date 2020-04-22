@@ -15,23 +15,26 @@ var _ Executor = (*RadixPoolExecutor)(nil)
 
 // RadixPoolExecutor struct
 type RadixPoolExecutor struct {
-	addr string
-	pool *radix.Pool
+	addr     string
+	password *string
+	pool     *radix.Pool
 }
 
 // NewRadixPool return radix pool dialer with provided pool size.
 func NewRadixPool(addr string, size int) ExecutorDialer {
-	return func() (Executor, error) {
+	return func(password *string) (Executor, error) {
+		connFn := poolConnFn(password)
 		pool, err := radix.NewPool("tcp", addr, size,
-			radix.PoolConnFunc(poolConnFn),
+			radix.PoolConnFunc(connFn),
 		)
 		if err != nil {
 			return nil, err
 		}
 
 		return &RadixPoolExecutor{
-			addr: addr,
-			pool: pool,
+			addr:     addr,
+			password: password,
+			pool:     pool,
 		}, nil
 	}
 }
@@ -49,7 +52,7 @@ func (rad *RadixPoolExecutor) Execute(command string, args ...string) ([]byte, e
 
 // ExecuteStream used for commands with streaming response.
 // Creates a new connection for each stream.
-func (rad *RadixPoolExecutor) ExecuteStream(ctx context.Context, command string, args ...string) (ch chan []byte, err error) {
+func (rad *RadixPoolExecutor) ExecuteStream(ctx context.Context, command string, args ...string) (chan []byte, error) {
 	conn, err := radix.Dial("tcp", rad.addr,
 		radix.DialConnectTimeout(time.Second*10),
 		radix.DialReadTimeout(0),
@@ -58,28 +61,23 @@ func (rad *RadixPoolExecutor) ExecuteStream(ctx context.Context, command string,
 		return nil, err
 	}
 
-	defer func() {
-		if err != nil {
-			conn.Close()
-		}
-	}()
-
-	{
-		if err := radixJSONifyConn(conn); err != nil {
-			return nil, err
-		}
-
-		var resp []byte
-		if err := conn.Do(radix.Cmd(&resp, command, args...)); err != nil {
-			return nil, err
-		}
-
-		if err := checkResponseErr(resp); err != nil {
-			return nil, err
-		}
+	if err := radixPrepareConn(conn, rad.password); err != nil {
+		conn.Close()
+		return nil, err
 	}
 
-	ch = make(chan []byte, 10)
+	var resp []byte
+	if err := conn.Do(radix.Cmd(&resp, command, args...)); err != nil {
+		conn.Close()
+		return nil, err
+	}
+
+	if err := checkResponseErr(resp); err != nil {
+		conn.Close()
+		return nil, err
+	}
+
+	ch := make(chan []byte, 10)
 	go func() {
 		defer func() {
 			conn.Close()
@@ -105,22 +103,31 @@ func (rad *RadixPoolExecutor) ExecuteStream(ctx context.Context, command string,
 	return ch, nil
 }
 
-func poolConnFn(net, addr string) (conn radix.Conn, err error) {
-	conn, err = radix.Dial(net, addr,
-		radix.DialConnectTimeout(time.Second*10),
-	)
-	if err != nil {
-		return
-	}
+func poolConnFn(password *string) radix.ConnFunc {
+	return radix.ConnFunc(func(net, addr string) (radix.Conn, error) {
+		conn, err := radix.Dial(net, addr,
+			radix.DialConnectTimeout(time.Second*10),
+		)
+		if err != nil {
+			return nil, err
+		}
 
-	err = radixJSONifyConn(conn)
-	if err != nil {
-		conn.Close()
-	}
-	return
+		if err := radixPrepareConn(conn, password); err != nil {
+			conn.Close()
+			return nil, err
+		}
+
+		return conn, nil
+	})
 }
 
-func radixJSONifyConn(conn radix.Conn) (err error) {
+func radixPrepareConn(conn radix.Conn, password *string) error {
+	if password != nil {
+		if err := conn.Do(radix.Cmd(nil, "AUTH", *password)); err != nil {
+			return err
+		}
+	}
+
 	var b []byte
 	if err := conn.Do(radix.Cmd(&b, "OUTPUT", "json")); err != nil {
 		return err

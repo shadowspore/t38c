@@ -10,4 +10,4 @@ type Executor interface {
 }
 
 // ExecutorDialer is a function which creates Executor instance.
-type ExecutorDialer func() (Executor, error)
+type ExecutorDialer func(password *string) (Executor, error)

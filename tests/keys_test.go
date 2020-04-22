@@ -14,7 +14,7 @@ func TestBounds(t *testing.T) {
 		`{"ok":true,"bounds":{"type":"Polygon","coordinates":[[[1,1],[2,1],[2,2],[1,2],[1,1]]]},"elapsed":"19.52µs"}`,
 	)
 
-	tile38, err := t38c.NewWithDialer(mock.DialFunc(), true)
+	tile38, err := t38c.NewWithDialer(mock.DialFunc(), t38c.Debug())
 	assert.Nil(t, err)
 
 	resp, err := tile38.Bounds("test")
