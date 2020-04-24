@@ -2,15 +2,15 @@ package t38c
 
 import "strings"
 
-// optional params
-type geofenceParams struct {
+// GeofenceParams optional params
+type GeofenceParams struct {
 	OutputFormat   OutputFormat
 	DetectActions  []DetectAction
 	NotifyCommands []NotifyCommand
 	Options        []SearchOption
 }
 
-func (params *geofenceParams) args() []string {
+func (params *GeofenceParams) args() []string {
 	args := []string{}
 	for _, opt := range params.Options {
 		args = append(args, opt.Name)
@@ -44,41 +44,44 @@ func (params *geofenceParams) args() []string {
 	return args
 }
 
+// GeofenceOption ...
+type GeofenceOption func(*GeofenceParams)
+
 // Actions sets the geofence actions.
 // All actions used by default.
-func Actions(actions ...DetectAction) func(*geofenceParams) {
-	return func(params *geofenceParams) {
+func Actions(actions ...DetectAction) GeofenceOption {
+	return func(params *GeofenceParams) {
 		params.DetectActions = actions
 	}
 }
 
 // Commands sets the geofence commands.
-func Commands(notifyCommands ...NotifyCommand) func(*geofenceParams) {
-	return func(params *geofenceParams) {
+func Commands(notifyCommands ...NotifyCommand) GeofenceOption {
+	return func(params *GeofenceParams) {
 		params.NotifyCommands = notifyCommands
 	}
 }
 
-// GeofenceOptions sets the optional parameters for request.
-func GeofenceOptions(opts ...SearchOption) func(*geofenceParams) {
-	return func(params *geofenceParams) {
+// SearchOptions sets the optional parameters for request.
+func SearchOptions(opts ...SearchOption) GeofenceOption {
+	return func(params *GeofenceParams) {
 		params.Options = opts
 	}
 }
 
 // Format set geofence GeofenceResponse format.
-func Format(fmt OutputFormat) func(*geofenceParams) {
-	return func(params *geofenceParams) {
+func Format(fmt OutputFormat) GeofenceOption {
+	return func(params *GeofenceParams) {
 		params.OutputFormat = fmt
 	}
 }
 
-func getParams(opts ...func(*geofenceParams)) *geofenceParams {
+func getParams(opts ...GeofenceOption) *GeofenceParams {
 	if len(opts) == 0 {
 		return nil
 	}
 
-	params := &geofenceParams{}
+	params := &GeofenceParams{}
 	for _, opt := range opts {
 		opt(params)
 	}

@@ -13,8 +13,7 @@ type ChanBuilder struct {
 	Ex      *int
 }
 
-// Args build args for tile38 command.
-func (ch *ChanBuilder) Args() []string {
+func (ch *ChanBuilder) args() []string {
 	var args []string
 	args = append(args, ch.Name)
 
@@ -96,7 +95,7 @@ func (client *Client) PSubscribe(ctx context.Context, pattern string) (chan Geof
 // If a channel is already associated to that name, it’ll be overwritten.
 // Once the channel is created a client can then listen for events on that channel with SUBSCRIBE or PSUBSCRIBE.
 func (client *Client) SetChan(ch *ChanBuilder) error {
-	return client.jExecute(nil, "SETCHAN", ch.Args()...)
+	return client.jExecute(nil, "SETCHAN", ch.args()...)
 }
 
 // Subscribe subscribes the client to the specified channels.

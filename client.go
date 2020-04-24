@@ -14,15 +14,18 @@ type Client struct {
 	executor Executor
 }
 
+// ClientOption ...
+type ClientOption func(*Client)
+
 // Debug option.
-func Debug() func(*Client) {
+func Debug() ClientOption {
 	return func(c *Client) {
 		c.debug = true
 	}
 }
 
 // WithPassword option.
-func WithPassword(password string) func(*Client) {
+func WithPassword(password string) ClientOption {
 	return func(c *Client) {
 		c.password = &password
 	}
@@ -31,14 +34,14 @@ func WithPassword(password string) func(*Client) {
 // New creates a new Tile38 client.
 // By default uses redis pool with 5 connections.
 // In debug mode will also print commands which will be sent to the server.
-func New(addr string, opts ...func(*Client)) (*Client, error) {
+func New(addr string, opts ...ClientOption) (*Client, error) {
 	dialer := NewRadixPool(addr, 5)
 	return NewWithDialer(dialer, opts...)
 }
 
 // NewWithDialer creates a new Tile38 client with provided dialer.
 // See Executor interface for more information.
-func NewWithDialer(dialer ExecutorDialer, opts ...func(*Client)) (*Client, error) {
+func NewWithDialer(dialer ExecutorDialer, opts ...ClientOption) (*Client, error) {
 	client := &Client{}
 	for _, opt := range opts {
 		opt(client)

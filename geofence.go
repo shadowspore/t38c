@@ -18,18 +18,18 @@ var _ GeofenceRequestable = (*GeofenceRequest)(nil)
 
 // GeofenceRequest represents a geofence request.
 type GeofenceRequest struct {
-	params *geofenceParams
-	Cmd    string
-	Key    string
-	Area   Command
+	*GeofenceParams
+	Cmd  string
+	Key  string
+	Area Command
 }
 
 // GeofenceCommand build geofence command for tile38.
 func (req *GeofenceRequest) GeofenceCommand() Command {
 	var args []string
 	args = append(args, req.Key)
-	if req.params != nil {
-		args = append(args, req.params.args()...)
+	if req.GeofenceParams != nil {
+		args = append(args, req.GeofenceParams.args()...)
 	}
 
 	args = append(args, req.Area.Name)
@@ -39,32 +39,32 @@ func (req *GeofenceRequest) GeofenceCommand() Command {
 }
 
 // GeofenceWithin return Within geofence request.
-func GeofenceWithin(key string, area SearchArea, opts ...func(*geofenceParams)) *GeofenceRequest {
+func GeofenceWithin(key string, area SearchArea, opts ...GeofenceOption) *GeofenceRequest {
 	return &GeofenceRequest{
-		Cmd:    "WITHIN",
-		Key:    key,
-		Area:   Command(area),
-		params: getParams(opts...),
+		Cmd:            "WITHIN",
+		Key:            key,
+		Area:           Command(area),
+		GeofenceParams: getParams(opts...),
 	}
 }
 
 // GeofenceIntersects return Intersects geofence request.
-func GeofenceIntersects(key string, area SearchArea, opts ...func(*geofenceParams)) *GeofenceRequest {
+func GeofenceIntersects(key string, area SearchArea, opts ...GeofenceOption) *GeofenceRequest {
 	return &GeofenceRequest{
-		Cmd:    "INTERSECTS",
-		Key:    key,
-		Area:   Command(area),
-		params: getParams(opts...),
+		Cmd:            "INTERSECTS",
+		Key:            key,
+		Area:           Command(area),
+		GeofenceParams: getParams(opts...),
 	}
 }
 
 // GeofenceNearby return Nearby geofence request.
-func GeofenceNearby(key string, lat, lon, meters float64, opts ...func(*geofenceParams)) *GeofenceRequest {
+func GeofenceNearby(key string, lat, lon, meters float64, opts ...GeofenceOption) *GeofenceRequest {
 	return &GeofenceRequest{
-		Cmd:    "NEARBY",
-		Key:    key,
-		Area:   NewCommand("POINT", floatString(lat), floatString(lon), floatString(meters)),
-		params: getParams(opts...),
+		Cmd:            "NEARBY",
+		Key:            key,
+		Area:           NewCommand("POINT", floatString(lat), floatString(lon), floatString(meters)),
+		GeofenceParams: getParams(opts...),
 	}
 }
 
@@ -72,7 +72,7 @@ var _ GeofenceRequestable = (*RoamGeofenceRequest)(nil)
 
 // RoamGeofenceRequest represents a roaming geofence request.
 type RoamGeofenceRequest struct {
-	params  *geofenceParams
+	*GeofenceParams
 	Key     string
 	Target  string
 	Pattern string
@@ -83,8 +83,8 @@ type RoamGeofenceRequest struct {
 func (req *RoamGeofenceRequest) GeofenceCommand() Command {
 	var args []string
 	args = append(args, req.Key)
-	if req.params != nil {
-		args = append(args, req.params.args()...)
+	if req.GeofenceParams != nil {
+		args = append(args, req.GeofenceParams.args()...)
 	}
 
 	args = append(args, []string{
@@ -95,13 +95,13 @@ func (req *RoamGeofenceRequest) GeofenceCommand() Command {
 }
 
 // GeofenceRoam return roaming geofence request.
-func GeofenceRoam(key, target, pattern string, meters int, opts ...func(*geofenceParams)) *RoamGeofenceRequest {
+func GeofenceRoam(key, target, pattern string, meters int, opts ...GeofenceOption) *RoamGeofenceRequest {
 	return &RoamGeofenceRequest{
-		Key:     key,
-		Target:  target,
-		Pattern: pattern,
-		Meters:  meters,
-		params:  getParams(opts...),
+		Key:            key,
+		Target:         target,
+		Pattern:        pattern,
+		Meters:         meters,
+		GeofenceParams: getParams(opts...),
 	}
 }
 

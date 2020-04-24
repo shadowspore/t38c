@@ -131,11 +131,8 @@ type Meta struct {
 
 // Hook struct
 type Hook struct {
-	Name      string            `json:"name"`
-	Key       string            `json:"key"`
-	Endpoints []string          `json:"endpoints"`
-	Command   []string          `json:"command"`
-	Meta      map[string]string `json:"meta"`
+	Endpoints []string `json:"endpoints"`
+	Chan
 }
 
 // Chan struct
