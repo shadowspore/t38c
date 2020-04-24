@@ -14,8 +14,7 @@ type HookBuilder struct {
 	Ex        *int
 }
 
-// Args builds hook args for tile38 command.
-func (hook *HookBuilder) Args() []string {
+func (hook *HookBuilder) args() []string {
 	var args []string
 	args = append(args, hook.Name)
 	args = append(args, strings.Join(hook.Endpoints, ","))
@@ -88,5 +87,5 @@ func (client *Client) PDelHook(pattern string) error {
 // SetHook creates a webhook which points to a geofenced search.
 // If a hook is already associated to that name, it’ll be overwritten.
 func (client *Client) SetHook(hook *HookBuilder) error {
-	return client.jExecute(nil, "SETHOOK", hook.Args()...)
+	return client.jExecute(nil, "SETHOOK", hook.args()...)
 }
