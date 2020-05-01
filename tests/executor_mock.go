@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"sync"
 
-	t38c "github.com/lostpeer/tile38-client"
+	t38c "github.com/powercake/tile38-client"
 )
 
 var _ t38c.Executor = (*MockExecutor)(nil)

@@ -1,4 +1,4 @@
-module github.com/lostpeer/tile38-client
+module github.com/powercake/tile38-client
 
 go 1.14
 

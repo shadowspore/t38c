@@ -1,4 +1,4 @@
-[![Go Report Card](https://goreportcard.com/badge/github.com/lostpeer/tile38-client)](https://goreportcard.com/report/github.com/lostpeer/tile38-client)
+[![Go Report Card](https://goreportcard.com/badge/github.com/powercake/tile38-client)](https://goreportcard.com/report/github.com/powercake/tile38-client)
 
 # tile38-client - Tile38 client for Go
 
@@ -11,7 +11,7 @@ more examples in [examples](examples) folder
 ```go
 package main
 
-import t38c "github.com/lostpeer/tile38-client"
+import t38c "github.com/powercake/tile38-client"
 
 func main() {
 	client, err := t38c.New("localhost:9851", t38c.Debug())
