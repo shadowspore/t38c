@@ -15,12 +15,11 @@ func main() {
 		log.Fatal(err)
 	}
 
-	results, err := tile38.Search(
-		t38c.Nearby("fleet", 33.462, -112.268, 6000,
-			t38c.Where("speed", 70, math.MaxInt32),
-			t38c.Match("truck*"),
-		),
-	)
+	query := t38c.Nearby("fleet", 33.462, -112.268, 6000).
+		Where("speed", 70, math.MaxInt32).
+		Match("truck*")
+
+	results, err := tile38.Search(query)
 	if err != nil {
 		log.Fatal(err)
 	}

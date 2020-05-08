@@ -26,13 +26,10 @@ func main() {
 		t38c.Expiration(20),
 	)
 
-	client.Search(
-		// search 6 kilometers around a point. returns one truck.
-		t38c.Nearby("fleet", 33.462, -112.268, 6000,
-			// optional params
-			t38c.Where("speed", 0, 100),
-			t38c.Match("truck*"),
-		),
-	)
+	// search 6 kilometers around a point. returns one truck.
+	query := t38c.Nearby("fleet", 33.462, -112.268, 6000).
+		Where("speed", 0, 100).
+		Match("truck*")
+	client.Search(query)
 }
 ```

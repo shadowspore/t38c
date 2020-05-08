@@ -3,8 +3,8 @@ package main
 import (
 	"log"
 
-	t38c "github.com/powercake/tile38-client"
 	geojson "github.com/paulmach/go.geojson"
+	t38c "github.com/powercake/tile38-client"
 )
 
 func main() {

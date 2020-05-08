@@ -34,10 +34,10 @@ func (ch *ChanBuilder) args() []string {
 }
 
 // NewChan return new channel builder.
-func NewChan(name string, req GeofenceRequestable) *ChanBuilder {
+func NewChan(name string, query geofenceQueryBuilder) *ChanBuilder {
 	return &ChanBuilder{
 		Name:    name,
-		Command: req.GeofenceCommand(),
+		Command: query.Cmd(),
 	}
 }
 
