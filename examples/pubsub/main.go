@@ -15,7 +15,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	geofenceRequest := t38c.GeofenceNearby("buses", 33.5123, -112.2693, 200).
+	geofenceRequest := tile38.GeofenceNearby("buses", 33.5123, -112.2693, 200).
 		Actions(t38c.Enter, t38c.Exit)
 
 	busChan := t38c.NewChan("busstop", geofenceRequest)

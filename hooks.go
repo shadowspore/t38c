@@ -36,11 +36,11 @@ func (hook *HookBuilder) args() []string {
 }
 
 // NewHook return new hook builder.
-func NewHook(name string, endpoints []string, query geofenceQueryBuilder) *HookBuilder {
+func NewHook(name string, endpoints []string, query GeofenceQueryBuilder) *HookBuilder {
 	return &HookBuilder{
 		Name:      name,
 		Endpoints: endpoints,
-		Command:   query.Cmd(),
+		Command:   query.toCmd(),
 	}
 }
 

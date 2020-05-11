@@ -15,11 +15,9 @@ func main() {
 		log.Fatal(err)
 	}
 
-	query := t38c.Nearby("fleet", 33.462, -112.268, 6000).
+	results, err := tile38.Nearby("fleet", 33.462, -112.268, 6000).
 		Where("speed", 70, math.MaxInt32).
-		Match("truck*")
-
-	results, err := tile38.Search(query)
+		Match("truck*").Do()
 	if err != nil {
 		log.Fatal(err)
 	}

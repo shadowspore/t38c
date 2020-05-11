@@ -1,3 +1,5 @@
+// +build ignore
+
 package main
 
 import (
@@ -25,14 +27,14 @@ func main() {
 
 	// search the 'fleet' collection.
 	// returns both trucks in 'fleet'
-	scanRes, err := tile38.Search(t38c.Scan("fleet"))
+	scanRes, err := tile38.Scan("fleet").Do()
 	if err != nil {
 		log.Fatal(err)
 	}
 	printJSON("scan", scanRes)
 
 	// search 6 kilometers around a point. returns one truck.
-	nearbyRes, err := tile38.Search(t38c.Nearby("fleet", 33.462, -112.268, 6000))
+	nearbyRes, err := tile38.Nearby("fleet", 33.462, -112.268, 6000).Do()
 	if err != nil {
 		log.Fatal(err)
 	}

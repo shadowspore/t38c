@@ -34,10 +34,10 @@ func (ch *ChanBuilder) args() []string {
 }
 
 // NewChan return new channel builder.
-func NewChan(name string, query geofenceQueryBuilder) *ChanBuilder {
+func NewChan(name string, query GeofenceQueryBuilder) *ChanBuilder {
 	return &ChanBuilder{
 		Name:    name,
-		Command: query.Cmd(),
+		Command: query.toCmd(),
 	}
 }
 

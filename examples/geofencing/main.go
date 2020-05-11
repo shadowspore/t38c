@@ -15,10 +15,9 @@ func main() {
 		log.Fatal(err)
 	}
 
-	geofenceRequest := t38c.GeofenceNearby("fleet", 33.462, -112.268, 6000).
-		Actions(t38c.Enter, t38c.Exit)
-
-	events, err := tile38.Fence(context.Background(), geofenceRequest)
+	events, err := tile38.GeofenceNearby("fleet", 33.462, -112.268, 6000).
+		Actions(t38c.Enter, t38c.Exit).
+		Do(context.Background())
 	if err != nil {
 		log.Fatal(err)
 	}

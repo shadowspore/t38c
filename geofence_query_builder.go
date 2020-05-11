@@ -1,12 +1,16 @@
 package t38c
 
 import (
+	"context"
+	"fmt"
+	"log"
 	"strconv"
 	"strings"
 )
 
-// geofenceQueryBuilder optional params
-type geofenceQueryBuilder struct {
+// GeofenceQueryBuilder optional params
+type GeofenceQueryBuilder struct {
+	client         *Client
 	isRoamQuery    bool
 	cmd            string
 	key            string
@@ -20,7 +24,7 @@ type geofenceQueryBuilder struct {
 	searchOpts     []Command
 }
 
-func (query geofenceQueryBuilder) args() []string {
+func (query GeofenceQueryBuilder) args() []string {
 	var args []string
 	for _, opt := range query.searchOpts {
 		args = append(args, opt.Name)
@@ -54,7 +58,7 @@ func (query geofenceQueryBuilder) args() []string {
 	return args
 }
 
-func (query geofenceQueryBuilder) Cmd() Command {
+func (query GeofenceQueryBuilder) toCmd() Command {
 	var args []string
 	if query.isRoamQuery {
 		args = append(args, query.key)
@@ -75,46 +79,61 @@ func (query geofenceQueryBuilder) Cmd() Command {
 	return NewCommand(query.cmd, args...)
 }
 
+// Do cmd
+func (query GeofenceQueryBuilder) Do(ctx context.Context) (chan GeofenceResponse, error) {
+	cmd := query.toCmd()
+	events, err := query.client.ExecuteStream(ctx, cmd.Name, cmd.Args...)
+	if err != nil {
+		return nil, fmt.Errorf("command: %s: %v", cmd, err)
+	}
+
+	if query.client.debug {
+		log.Printf("[%s]: ok\n", cmd)
+	}
+
+	return unmarshalEvents(events)
+}
+
 // Actions sets the geofence actions.
 // All actions used by default.
-func (query geofenceQueryBuilder) Actions(actions ...DetectAction) geofenceQueryBuilder {
+func (query GeofenceQueryBuilder) Actions(actions ...DetectAction) GeofenceQueryBuilder {
 	query.detectActions = append(query.detectActions, actions...)
 	return query
 }
 
 // Commands sets the geofence commands.
-func (query geofenceQueryBuilder) Commands(notifyCommands ...NotifyCommand) geofenceQueryBuilder {
+func (query GeofenceQueryBuilder) Commands(notifyCommands ...NotifyCommand) GeofenceQueryBuilder {
 	query.notifyCommands = append(query.notifyCommands, notifyCommands...)
 	return query
 }
 
 // Asc order. Only for SEARCH and SCAN commands.
-func (query geofenceQueryBuilder) Asc() geofenceQueryBuilder {
+func (query GeofenceQueryBuilder) Asc() GeofenceQueryBuilder {
 	query.searchOpts = append(query.searchOpts, NewCommand("ASC"))
 	return query
 }
 
 // Desc order. Only for SEARCH and SCAN commands.
-func (query geofenceQueryBuilder) Desc() geofenceQueryBuilder {
+func (query GeofenceQueryBuilder) Desc() GeofenceQueryBuilder {
 	query.searchOpts = append(query.searchOpts, NewCommand("DESC"))
 	return query
 }
 
 // NoFields tells the server that you do not want field values returned with the search results.
-func (query geofenceQueryBuilder) NoFields() geofenceQueryBuilder {
+func (query GeofenceQueryBuilder) NoFields() GeofenceQueryBuilder {
 	query.searchOpts = append(query.searchOpts, NewCommand("NOFIELDS"))
 	return query
 }
 
 // Clip tells the server to clip intersecting objects by the bounding box area of the search.
 // It can only be used with these area formats: BOUNDS, TILE, QUADKEY, HASH.
-func (query geofenceQueryBuilder) Clip() geofenceQueryBuilder {
+func (query GeofenceQueryBuilder) Clip() GeofenceQueryBuilder {
 	query.searchOpts = append(query.searchOpts, NewCommand("CLIP"))
 	return query
 }
 
 // Distance allows to return between objects. Only for NEARBY command.
-func (query geofenceQueryBuilder) Distance() geofenceQueryBuilder {
+func (query GeofenceQueryBuilder) Distance() GeofenceQueryBuilder {
 	query.searchOpts = append(query.searchOpts, NewCommand("DISTANCE"))
 	return query
 }
@@ -122,31 +141,31 @@ func (query geofenceQueryBuilder) Distance() geofenceQueryBuilder {
 // Cursor is used to iterate though many objects from the search results.
 // An iteration begins when the CURSOR is set to Zero or not included with the request,
 // and completes when the cursor returned by the server is Zero.
-func (query geofenceQueryBuilder) Cursor(cursor int) geofenceQueryBuilder {
+func (query GeofenceQueryBuilder) Cursor(cursor int) GeofenceQueryBuilder {
 	query.searchOpts = append(query.searchOpts, NewCommand("CURSOR", strconv.Itoa(cursor)))
 	return query
 }
 
 // Limit can be used to limit the number of objects returned for a single search request.
-func (query geofenceQueryBuilder) Limit(limit int) geofenceQueryBuilder {
+func (query GeofenceQueryBuilder) Limit(limit int) GeofenceQueryBuilder {
 	query.searchOpts = append(query.searchOpts, NewCommand("LIMIT", strconv.Itoa(limit)))
 	return query
 }
 
 // Sparse will distribute the results of a search evenly across the requested area.
-func (query geofenceQueryBuilder) Sparse(sparse int) geofenceQueryBuilder {
+func (query GeofenceQueryBuilder) Sparse(sparse int) GeofenceQueryBuilder {
 	query.searchOpts = append(query.searchOpts, NewCommand("SPARSE", strconv.Itoa(sparse)))
 	return query
 }
 
 // Where allows for filtering out results based on field values.
-func (query geofenceQueryBuilder) Where(field string, min, max float64) geofenceQueryBuilder {
+func (query GeofenceQueryBuilder) Where(field string, min, max float64) GeofenceQueryBuilder {
 	query.searchOpts = append(query.searchOpts, NewCommand("WHERE", field, floatString(min), floatString(max)))
 	return query
 }
 
 // Wherein is similar to Where except that it checks whether the object’s field value is in a given list.
-func (query geofenceQueryBuilder) Wherein(field string, values ...float64) geofenceQueryBuilder {
+func (query GeofenceQueryBuilder) Wherein(field string, values ...float64) GeofenceQueryBuilder {
 	var args []string
 	args = append(args, strconv.Itoa(len(values)))
 	for _, val := range values {
@@ -160,13 +179,13 @@ func (query geofenceQueryBuilder) Wherein(field string, values ...float64) geofe
 // Match is similar to WHERE except that it works on the object id instead of fields.
 // There can be multiple MATCH options in a single search.
 // The MATCH value is a simple glob pattern.
-func (query geofenceQueryBuilder) Match(pattern string) geofenceQueryBuilder {
+func (query GeofenceQueryBuilder) Match(pattern string) GeofenceQueryBuilder {
 	query.searchOpts = append(query.searchOpts, NewCommand("MATCH", pattern))
 	return query
 }
 
 // Format set response format.
-func (query geofenceQueryBuilder) Format(fmt OutputFormat) geofenceQueryBuilder {
+func (query GeofenceQueryBuilder) Format(fmt OutputFormat) GeofenceQueryBuilder {
 	query.outputFormat = fmt
 	return query
 }
