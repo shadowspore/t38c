@@ -19,17 +19,24 @@ func main() {
 		panic(err)
 	}
 
-	client.Set("fleet", "truck1", t38c.SetPoint(33.5123, -112.2693))
-	client.Set("fleet", "truck2", t38c.SetPoint(33.4626, -112.1695),
+	if err := client.Set("fleet", "truck1", t38c.SetPoint(33.5123, -112.2693)).Do(); err != nil {
+		panic(err)
+	}
+
+	if err := client.Set("fleet", "truck2", t38c.SetPoint(33.4626, -112.1695)).
 		// optional params
-		t38c.Field("speed", 20),
-		t38c.Expiration(20),
-	)
+		Field("speed", 20).
+		Expiration(20).
+		Do(); err != nil {
+		panic(err)
+	}
 
 	// search 6 kilometers around a point. returns one truck.
-	query := t38c.Nearby("fleet", 33.462, -112.268, 6000).
+	response, err := client.Nearby("fleet", 33.462, -112.268, 6000).
 		Where("speed", 0, 100).
-		Match("truck*")
-	client.Search(query)
+		Match("truck*").Do()
+	if err != nil {
+		panic(err)
+	}
 }
 ```

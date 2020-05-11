@@ -22,9 +22,9 @@ import "strconv"
 // 	Cursor   *int
 // 	Limit    *int
 // 	Sparse   *int
-// 	Where    *WhereOpt
-// 	Wherein  *WhereinOpt
-// 	Match    *string
+// 	Where    []*WhereOpt
+// 	Wherein  []*WhereinOpt
+// 	Match    []*string
 // }
 
 // type SearchQuery struct {
@@ -35,6 +35,7 @@ import "strconv"
 // 	Params       SearchQueryParams
 // }
 
+// SearchQueryBuilder struct
 type SearchQueryBuilder struct {
 	client       *Client
 	cmd          string
@@ -44,7 +45,6 @@ type SearchQueryBuilder struct {
 	opts         []Command
 }
 
-// Cmd builds tile38 search command.
 func (query SearchQueryBuilder) toCmd() Command {
 	var args []string
 	args = append(args, query.key)
@@ -158,27 +158,4 @@ func (query SearchQueryBuilder) Match(pattern string) SearchQueryBuilder {
 func (query SearchQueryBuilder) Format(fmt OutputFormat) SearchQueryBuilder {
 	query.outputFormat = fmt
 	return query
-}
-
-// SetOption ...
-type SetOption Command
-
-var (
-	// IfNotExists only set the object if it does not already exist.
-	IfNotExists = SetOption(NewCommand("NX"))
-
-	// IfExists only set the object if it already exist.
-	IfExists = SetOption(NewCommand("XX"))
-)
-
-// Field are extra data which belongs to an object.
-// A field is always a double precision floating point.
-// There is no limit to the number of fields that an object can have.
-func Field(name string, value float64) SetOption {
-	return SetOption(NewCommand("FIELD", name, floatString(value)))
-}
-
-// Expiration set the specified expire time, in seconds.
-func Expiration(seconds int) SetOption {
-	return SetOption(NewCommand("EX", strconv.Itoa(seconds)))
 }

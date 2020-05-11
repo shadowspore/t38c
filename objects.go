@@ -7,6 +7,12 @@ import (
 	"github.com/tidwall/gjson"
 )
 
+// Field struct
+type Field struct {
+	Name  string
+	Value float64
+}
+
 // KeyStats struct
 type KeyStats struct {
 	InMemorySize int `json:"in_memory_size"`
