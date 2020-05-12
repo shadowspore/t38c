@@ -15,7 +15,8 @@ func main() {
 	}
 
 	// To set a field when setting an object:
-	if err := tile38.Set("fleet", "truck1", t38c.SetPoint(33.5123, -112.2693)).
+	if err := tile38.Set("fleet", "truck1").
+		Point(33.5123, -112.2693).
 		Field("speed", 90).
 		Field("age", 21).
 		Do(); err != nil {

@@ -17,11 +17,11 @@ func main() {
 	}
 
 	// add a couple of points named 'truck1' and 'truck2' to a collection named 'fleet'.
-	if err := tile38.Set("fleet", "truck1", t38c.SetPoint(33.5123, -112.2693)); err != nil {
+	if err := tile38.Set("fleet", "truck1").Point(33.5123, -112.2693).Do(); err != nil {
 		log.Fatal(err)
 	}
 
-	if err := tile38.Set("fleet", "truck2", t38c.SetPoint(33.4626, -112.1695)); err != nil {
+	if err := tile38.Set("fleet", "truck2").Point(33.4626, -112.1695).Do(); err != nil {
 		log.Fatal(err)
 	}
 
