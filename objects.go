@@ -156,7 +156,7 @@ type GeofenceEvent struct {
 	Group   string             `json:"group"`
 	Detect  string             `json:"detect"`
 	Key     string             `json:"key"`
-	Time    string             `json:"time"` // TODO: custom time unmarshal
+	Time    StringTime         `json:"time"`
 	ID      string             `json:"id"`
 	Object  *Object            `json:"object,omitempty"`
 	Point   *Point             `json:"point,omitempty"`
