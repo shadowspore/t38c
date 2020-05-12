@@ -17,19 +17,14 @@ func main() {
 		log.Fatal(err)
 	}
 
-	events, err := tile38.GeofenceNearby("fleet", 33.462, -112.268, 6000).
+	handler := func(event *t38c.GeofenceEvent) {
+		b, _ := json.Marshal(event)
+		fmt.Printf("event: %s\n", b)
+	}
+
+	if err := tile38.GeofenceNearby("fleet", 33.462, -112.268, 6000).
 		Actions(t38c.Enter, t38c.Exit).
-		Do(context.Background())
-	if err != nil {
+		Do(context.Background(), handler); err != nil {
 		log.Fatal(err)
 	}
-
-	for event := range events {
-		printJSON("event", event)
-	}
-}
-
-func printJSON(msg string, data interface{}) {
-	b, _ := json.Marshal(data)
-	fmt.Printf("%s: %s\n", msg, b)
 }

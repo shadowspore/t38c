@@ -26,17 +26,11 @@ func main() {
 		log.Fatal(err)
 	}
 
-	events, err := tile38.Subscribe(context.Background(), "busstop")
-	if err != nil {
+	handler := func(event *t38c.GeofenceEvent) {
+		b, _ := json.Marshal(event)
+		fmt.Printf("event: %s\n", b)
+	}
+	if err := tile38.Subscribe(context.Background(), handler, "busstop"); err != nil {
 		log.Fatal(err)
 	}
-
-	for event := range events {
-		printJSON("event", event)
-	}
-}
-
-func printJSON(msg string, data interface{}) {
-	b, _ := json.Marshal(data)
-	fmt.Printf("%s: %s\n", msg, b)
 }
