@@ -20,9 +20,7 @@ func main() {
 	geofenceRequest := tile38.GeofenceNearby("buses", 33.5123, -112.2693, 200).
 		Actions(t38c.Enter, t38c.Exit)
 
-	busChan := t38c.NewChan("busstop", geofenceRequest)
-
-	if err := tile38.SetChan(busChan); err != nil {
+	if err := tile38.SetChan("busstop", geofenceRequest).Do(); err != nil {
 		log.Fatal(err)
 	}
 
