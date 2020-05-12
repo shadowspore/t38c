@@ -15,10 +15,10 @@ func main() {
 		log.Fatal(err)
 	}
 
-	tile38.Set("fleet", "truck1", t38c.SetPoint(33.5123, -112.2693))       // nolint:errcheck
-	tile38.Set("fleet", "truck1", t38c.SetPointZ(33.5123, -112.2693, 225)) // nolint:errcheck
-	tile38.Set("fleet", "truck1", t38c.SetBounds(30, -110, 40, -100))      // nolint:errcheck
-	tile38.Set("fleet", "truck1", t38c.SetHash("9tbnthxzr"))               // nolint:errcheck
+	tile38.Set("fleet", "truck1").Point(33.5123, -112.2693).Do()       // nolint:errcheck
+	tile38.Set("fleet", "truck1").PointZ(33.5123, -112.2693, 225).Do() // nolint:errcheck
+	tile38.Set("fleet", "truck1").Bounds(30, -110, 40, -100).Do()      // nolint:errcheck
+	tile38.Set("fleet", "truck1").Hash("9tbnthxzr").Do()               // nolint:errcheck
 
 	polygon := geojson.NewPolygonGeometry([][][]float64{
 		{
@@ -28,5 +28,5 @@ func main() {
 			{0, 0},
 		},
 	})
-	tile38.Set("city", "tempe", t38c.SetGeometry(polygon)) // nolint:errcheck
+	tile38.Set("city", "tempe").Geometry(polygon).Do() // nolint:errcheck
 }

@@ -6,8 +6,6 @@ Most features are supported (see [TODO.md](TODO.md))
 
 ## Basic example
 
-more examples in [examples](examples) folder
-
 ```go
 package main
 
@@ -19,11 +17,11 @@ func main() {
 		panic(err)
 	}
 
-	if err := client.Set("fleet", "truck1", t38c.SetPoint(33.5123, -112.2693)).Do(); err != nil {
+	if err := client.Set("fleet", "truck1").Point(33.5123, -112.2693).Do(); err != nil {
 		panic(err)
 	}
 
-	if err := client.Set("fleet", "truck2", t38c.SetPoint(33.4626, -112.1695)).
+	if err := client.Set("fleet", "truck2").Point(33.4626, -112.1695).
 		// optional params
 		Field("speed", 20).
 		Expiration(20).
@@ -40,3 +38,4 @@ func main() {
 	}
 }
 ```
+### More examples in [examples](examples) folder

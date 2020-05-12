@@ -45,6 +45,15 @@ type SearchQueryBuilder struct {
 	opts         []Command
 }
 
+func newSearchQueryBuilder(client *Client, cmd, key string, area Command) SearchQueryBuilder {
+	return SearchQueryBuilder{
+		client: client,
+		cmd:    cmd,
+		key:    key,
+		area:   area,
+	}
+}
+
 func (query SearchQueryBuilder) toCmd() Command {
 	var args []string
 	args = append(args, query.key)
@@ -59,8 +68,10 @@ func (query SearchQueryBuilder) toCmd() Command {
 		args = append(args, query.outputFormat.Args...)
 	}
 
-	args = append(args, query.area.Name)
-	args = append(args, query.area.Args...)
+	if len(query.area.Name) > 0 {
+		args = append(args, query.area.Name)
+		args = append(args, query.area.Args...)
+	}
 
 	return NewCommand(query.cmd, args...)
 }
