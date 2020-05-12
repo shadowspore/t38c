@@ -118,7 +118,7 @@ func (client *Client) Subscribe(ctx context.Context, handler func(*GeofenceEvent
 
 	for event := range events {
 		resp := &GeofenceEvent{}
-		if err := json.Unmarshal(event, &resp); err != nil {
+		if err := json.Unmarshal(event, resp); err != nil {
 			return fmt.Errorf("json unmarshal geofence response: %v", err)
 		}
 
