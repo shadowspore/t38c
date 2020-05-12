@@ -2,8 +2,6 @@ package t38c
 
 import (
 	"context"
-	"encoding/json"
-	"fmt"
 	"strconv"
 	"strings"
 )
@@ -102,21 +100,7 @@ func (query GeofenceQueryBuilder) toCmd() Command {
 // Do cmd
 func (query GeofenceQueryBuilder) Do(ctx context.Context, handler func(*GeofenceEvent)) error {
 	cmd := query.toCmd()
-	events, err := query.client.ExecuteStream(ctx, cmd.Name, cmd.Args...)
-	if err != nil {
-		return fmt.Errorf("command: %s: %v", cmd, err)
-	}
-
-	for event := range events {
-		resp := &GeofenceEvent{}
-		if err := json.Unmarshal(event, resp); err != nil {
-			return fmt.Errorf("json unmarshal geofence response: %v", err)
-		}
-
-		handler(resp)
-	}
-
-	return nil
+	return query.client.ExecuteStream(ctx, rawEventHandler(handler), cmd.Name, cmd.Args...)
 }
 
 // Actions sets the geofence actions.

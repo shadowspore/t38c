@@ -2,8 +2,6 @@ package t38c
 
 import (
 	"context"
-	"encoding/json"
-	"fmt"
 )
 
 // Chans returns all channels matching pattern.
@@ -32,21 +30,7 @@ func (client *Client) PDelChan(pattern string) error {
 
 // PSubscribe subscribes the client to the given patterns.
 func (client *Client) PSubscribe(ctx context.Context, handler func(*GeofenceEvent), pattern string) error {
-	events, err := client.ExecuteStream(ctx, "PSUBSCRIBE", pattern)
-	if err != nil {
-		return err
-	}
-
-	for event := range events {
-		resp := &GeofenceEvent{}
-		if err := json.Unmarshal(event, &resp); err != nil {
-			return fmt.Errorf("json unmarshal geofence response: %v", err)
-		}
-
-		handler(resp)
-	}
-
-	return nil
+	return client.ExecuteStream(ctx, rawEventHandler(handler), "PSUBSCRIBE", pattern)
 }
 
 // SetChan creates a Pub/Sub channel which points to a geofenced search.
@@ -59,19 +43,5 @@ func (client *Client) SetChan(name string, query GeofenceQueryBuilder) SetChanne
 
 // Subscribe subscribes the client to the specified channels.
 func (client *Client) Subscribe(ctx context.Context, handler func(*GeofenceEvent), channels ...string) error {
-	events, err := client.ExecuteStream(ctx, "SUBSCRIBE", channels...)
-	if err != nil {
-		return err
-	}
-
-	for event := range events {
-		resp := &GeofenceEvent{}
-		if err := json.Unmarshal(event, resp); err != nil {
-			return fmt.Errorf("json unmarshal geofence response: %v", err)
-		}
-
-		handler(resp)
-	}
-
-	return nil
+	return client.ExecuteStream(ctx, rawEventHandler(handler), "SUBSCRIBE", channels...)
 }

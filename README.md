@@ -12,7 +12,7 @@ package main
 import t38c "github.com/powercake/tile38-client"
 
 func main() {
-	client, err := t38c.New("localhost:9851", t38c.Debug())
+	client, err := t38c.New("localhost:9851", t38c.Debug)
 	if err != nil {
 		panic(err)
 	}
