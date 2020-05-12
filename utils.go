@@ -1,20 +1,23 @@
 package t38c
 
 import (
+	"encoding/json"
 	"fmt"
 	"strconv"
-
-	"github.com/tidwall/gjson"
 )
 
 func floatString(val float64) string {
 	return strconv.FormatFloat(val, 'f', 10, 64)
 }
 
-func checkResponseErr(resp []byte) error {
-	if !gjson.GetBytes(resp, "ok").Bool() {
-		return fmt.Errorf(gjson.GetBytes(resp, "err").String())
-	}
+func rawEventHandler(handler func(*GeofenceEvent)) func([]byte) error {
+	return func(data []byte) error {
+		resp := &GeofenceEvent{}
+		if err := json.Unmarshal(data, resp); err != nil {
+			return fmt.Errorf("json unmarshal geofence response: %v", err)
+		}
 
-	return nil
+		handler(resp)
+		return nil
+	}
 }

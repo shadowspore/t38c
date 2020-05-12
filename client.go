@@ -5,28 +5,33 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+
+	"github.com/powercake/tile38-client/transport"
+	"github.com/tidwall/gjson"
 )
 
 // Client allows you to interact with the Tile38 server.
 type Client struct {
 	debug    bool
-	password *string
 	executor Executor
 }
 
+type clientParams struct {
+	debug    bool
+	password *string
+}
+
 // ClientOption ...
-type ClientOption func(*Client)
+type ClientOption func(*clientParams)
 
 // Debug option.
-func Debug() ClientOption {
-	return func(c *Client) {
-		c.debug = true
-	}
-}
+var Debug = ClientOption(func(c *clientParams) {
+	c.debug = true
+})
 
 // WithPassword option.
 func WithPassword(password string) ClientOption {
-	return func(c *Client) {
+	return func(c *clientParams) {
 		c.password = &password
 	}
 }
@@ -35,24 +40,27 @@ func WithPassword(password string) ClientOption {
 // By default uses redis pool with 5 connections.
 // In debug mode will also print commands which will be sent to the server.
 func New(addr string, opts ...ClientOption) (*Client, error) {
-	dialer := NewRadixPool(addr, 5)
-	return NewWithDialer(dialer, opts...)
-}
-
-// NewWithDialer creates a new Tile38 client with provided dialer.
-// See Executor interface for more information.
-func NewWithDialer(dialer ExecutorDialer, opts ...ClientOption) (*Client, error) {
-	client := &Client{}
+	params := &clientParams{}
 	for _, opt := range opts {
-		opt(client)
+		opt(params)
 	}
 
-	executor, err := dialer(client.password)
+	radixPool, err := transport.NewRadixPool(addr, 5, params.password)
 	if err != nil {
 		return nil, err
 	}
 
-	client.executor = executor
+	return NewWithExecutor(radixPool, params.debug)
+}
+
+// NewWithExecutor creates a new Tile38 client with provided executor.
+// See Executor interface for more information.
+func NewWithExecutor(exec Executor, debug bool) (*Client, error) {
+	client := &Client{
+		executor: exec,
+		debug:    debug,
+	}
+
 	if err := client.Ping(); err != nil {
 		return nil, err
 	}
@@ -70,8 +78,8 @@ func (client *Client) executeCmd(cmd Command) ([]byte, error) {
 		return nil, err
 	}
 
-	if err := checkResponseErr(resp); err != nil {
-		return nil, fmt.Errorf("command: %s: %v", cmd, err)
+	if !gjson.GetBytes(resp, "ok").Bool() {
+		return nil, fmt.Errorf(gjson.GetBytes(resp, "err").String())
 	}
 
 	return resp, nil
@@ -96,17 +104,10 @@ func (client *Client) Execute(command string, args ...string) ([]byte, error) {
 }
 
 // ExecuteStream used for Tile38 commands with streaming response.
-func (client *Client) ExecuteStream(ctx context.Context, command string, args ...string) (chan []byte, error) {
+func (client *Client) ExecuteStream(ctx context.Context, handler func([]byte) error, command string, args ...string) error {
 	if client.debug {
-		status := "ok"
-		ch, err := client.executor.ExecuteStream(ctx, command, args...)
-		if err != nil {
-			status = err.Error()
-		}
-
-		log.Printf("[%s]: %s", NewCommand(command, args...), status)
-		return ch, err
+		log.Printf("[%s]", NewCommand(command, args...))
 	}
 
-	return client.executor.ExecuteStream(ctx, command, args...)
+	return client.executor.ExecuteStream(ctx, handler, command, args...)
 }
