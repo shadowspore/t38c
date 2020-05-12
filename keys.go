@@ -22,7 +22,7 @@ func (client *Client) Bounds(key string) ([][][]float64, error) {
 
 // Del remove a specified object.
 func (client *Client) Del(key, objectID string) error {
-	return client.jExecute(nil, "DEL", key)
+	return client.jExecute(nil, "DEL", key, objectID)
 }
 
 // Drop remove all objects from specified key.
