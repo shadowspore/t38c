@@ -97,5 +97,16 @@ func (client *Client) Execute(command string, args ...string) ([]byte, error) {
 
 // ExecuteStream used for Tile38 commands with streaming response.
 func (client *Client) ExecuteStream(ctx context.Context, command string, args ...string) (chan []byte, error) {
+	if client.debug {
+		status := "ok"
+		ch, err := client.executor.ExecuteStream(ctx, command, args...)
+		if err != nil {
+			status = err.Error()
+		}
+
+		log.Printf("[%s]: %s", NewCommand(command, args...), status)
+		return ch, err
+	}
+
 	return client.executor.ExecuteStream(ctx, command, args...)
 }
