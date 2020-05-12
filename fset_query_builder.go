@@ -9,6 +9,14 @@ type FSetQueryBuilder struct {
 	xx       bool
 }
 
+func newFSetQueryBuilder(client *Client, key, objectID string) FSetQueryBuilder {
+	return FSetQueryBuilder{
+		client:   client,
+		key:      key,
+		objectID: objectID,
+	}
+}
+
 func (query FSetQueryBuilder) toCmd() Command {
 	var args []string = []string{
 		query.key, query.objectID,

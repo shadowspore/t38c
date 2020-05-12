@@ -7,11 +7,20 @@ type SetQueryBuilder struct {
 	client     *Client
 	key        string
 	objectID   string
-	area       SetArea
+	area       Command
 	fields     []Field
 	nx         bool
 	xx         bool
 	expiration *int
+}
+
+func newSetQueryBuilder(client *Client, key, objectID string, area Command) SetQueryBuilder {
+	return SetQueryBuilder{
+		client:   client,
+		key:      key,
+		objectID: objectID,
+		area:     area,
+	}
 }
 
 func (query SetQueryBuilder) toCmd() Command {

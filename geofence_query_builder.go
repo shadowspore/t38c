@@ -24,6 +24,26 @@ type GeofenceQueryBuilder struct {
 	searchOpts     []Command
 }
 
+func newGeofenceQueryBuilder(client *Client, cmd, key string, area Command) GeofenceQueryBuilder {
+	return GeofenceQueryBuilder{
+		client: client,
+		cmd:    cmd,
+		key:    key,
+		area:   area,
+	}
+}
+
+func newGeofenceRoamQueryBuilder(client *Client, key, target, pattern string, meters int) GeofenceQueryBuilder {
+	return GeofenceQueryBuilder{
+		client:      client,
+		isRoamQuery: true,
+		key:         key,
+		target:      target,
+		pattern:     pattern,
+		meters:      meters,
+	}
+}
+
 func (query GeofenceQueryBuilder) args() []string {
 	var args []string
 	for _, opt := range query.searchOpts {

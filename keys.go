@@ -41,11 +41,7 @@ func (client *Client) Expire(key, objectID string, seconds int) error {
 // Specifically, if called with XX option, FSET will return 0 when called on a non-existend id.
 // Note that the non-existent key will still cause an error!
 func (client *Client) FSet(key, objectID string) FSetQueryBuilder {
-	return FSetQueryBuilder{
-		client:   client,
-		key:      key,
-		objectID: objectID,
-	}
+	return newFSetQueryBuilder(client, key, objectID)
 }
 
 // Get returns object of an id.
@@ -116,13 +112,8 @@ func (client *Client) RenameNX(key, newKey string) error {
 }
 
 // Set the value of an id. If a value is already associated to that key/id, it’ll be overwritten.
-func (client *Client) Set(key, objectID string, area SetArea) SetQueryBuilder {
-	return SetQueryBuilder{
-		client:   client,
-		key:      key,
-		objectID: objectID,
-		area:     area,
-	}
+func (client *Client) Set(key, objectID string) SetAreaSelector {
+	return newSetAreaSelector(client, key, objectID)
 }
 
 // Stats return stats for one or more keys.
