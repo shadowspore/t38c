@@ -1,8 +1,6 @@
 package t38c
 
-import (
-	"context"
-)
+import "context"
 
 // Chans returns all channels matching pattern.
 func (client *Client) Chans(pattern string) ([]Chan, error) {
