@@ -3,8 +3,8 @@ package tests
 import (
 	"testing"
 
-	t38c "github.com/powercake/tile38-client"
-	"github.com/powercake/tile38-client/transport"
+	t38c "github.com/qwertyspore/tile38-client"
+	"github.com/qwertyspore/tile38-client/transport"
 	"github.com/stretchr/testify/assert"
 )
 

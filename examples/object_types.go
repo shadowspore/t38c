@@ -6,7 +6,7 @@ import (
 	"log"
 
 	geojson "github.com/paulmach/go.geojson"
-	t38c "github.com/powercake/tile38-client"
+	t38c "github.com/qwertyspore/tile38-client"
 )
 
 func main() {

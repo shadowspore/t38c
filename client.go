@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/powercake/tile38-client/transport"
+	"github.com/qwertyspore/tile38-client/transport"
 	"github.com/tidwall/gjson"
 )
 

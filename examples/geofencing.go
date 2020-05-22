@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"log"
 
-	t38c "github.com/powercake/tile38-client"
+	t38c "github.com/qwertyspore/tile38-client"
 )
 
 func main() {

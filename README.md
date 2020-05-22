@@ -1,4 +1,4 @@
-[![Go Report Card](https://goreportcard.com/badge/github.com/powercake/tile38-client)](https://goreportcard.com/report/github.com/powercake/tile38-client)
+[![Go Report Card](https://goreportcard.com/badge/github.com/qwertyspore/tile38-client)](https://goreportcard.com/report/github.com/qwertyspore/tile38-client)
 
 # tile38-client - Tile38 client for Go
 
@@ -9,7 +9,7 @@ Most features are supported (see [TODO.md](TODO.md))
 ```go
 package main
 
-import t38c "github.com/powercake/tile38-client"
+import t38c "github.com/qwertyspore/tile38-client"
 
 func main() {
 	client, err := t38c.New("localhost:9851", t38c.Debug)
