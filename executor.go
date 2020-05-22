@@ -3,7 +3,7 @@ package t38c
 import (
 	"context"
 
-	"github.com/powercake/tile38-client/transport"
+	"github.com/b3q/tile38-client/transport"
 )
 
 var _ Executor = (*transport.RadixPool)(nil)

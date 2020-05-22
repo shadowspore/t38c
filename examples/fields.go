@@ -5,7 +5,7 @@ package main
 import (
 	"log"
 
-	t38c "github.com/powercake/tile38-client"
+	t38c "github.com/b3q/tile38-client"
 )
 
 func main() {
