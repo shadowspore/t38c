@@ -35,8 +35,9 @@ import "strconv"
 // 	Params       SearchQueryParams
 // }
 
-// SearchQueryBuilder struct
-type SearchQueryBuilder struct {
+// InwQueryBuilder struct
+// Intersects Nearby Within
+type InwQueryBuilder struct {
 	client       *Client
 	cmd          string
 	key          string
@@ -45,8 +46,8 @@ type SearchQueryBuilder struct {
 	opts         []Command
 }
 
-func newSearchQueryBuilder(client *Client, cmd, key string, area Command) SearchQueryBuilder {
-	return SearchQueryBuilder{
+func newInwQueryBuilder(client *Client, cmd, key string, area Command) InwQueryBuilder {
+	return InwQueryBuilder{
 		client: client,
 		cmd:    cmd,
 		key:    key,
@@ -54,7 +55,7 @@ func newSearchQueryBuilder(client *Client, cmd, key string, area Command) Search
 	}
 }
 
-func (query SearchQueryBuilder) toCmd() Command {
+func (query InwQueryBuilder) toCmd() Command {
 	var args []string
 	args = append(args, query.key)
 
@@ -77,7 +78,7 @@ func (query SearchQueryBuilder) toCmd() Command {
 }
 
 // Do cmd
-func (query SearchQueryBuilder) Do() (*SearchResponse, error) {
+func (query InwQueryBuilder) Do() (*SearchResponse, error) {
 	cmd := query.toCmd()
 	resp := &SearchResponse{}
 	err := query.client.jExecute(&resp, cmd.Name, cmd.Args...)
@@ -89,32 +90,32 @@ func (query SearchQueryBuilder) Do() (*SearchResponse, error) {
 }
 
 // Asc order. Only for SEARCH and SCAN commands.
-func (query SearchQueryBuilder) Asc() SearchQueryBuilder {
+func (query InwQueryBuilder) Asc() InwQueryBuilder {
 	query.opts = append(query.opts, NewCommand("ASC"))
 	return query
 }
 
 // Desc order. Only for SEARCH and SCAN commands.
-func (query SearchQueryBuilder) Desc() SearchQueryBuilder {
+func (query InwQueryBuilder) Desc() InwQueryBuilder {
 	query.opts = append(query.opts, NewCommand("DESC"))
 	return query
 }
 
 // NoFields tells the server that you do not want field values returned with the search results.
-func (query SearchQueryBuilder) NoFields() SearchQueryBuilder {
+func (query InwQueryBuilder) NoFields() InwQueryBuilder {
 	query.opts = append(query.opts, NewCommand("NOFIELDS"))
 	return query
 }
 
 // Clip tells the server to clip intersecting objects by the bounding box area of the search.
 // It can only be used with these area formats: BOUNDS, TILE, QUADKEY, HASH.
-func (query SearchQueryBuilder) Clip() SearchQueryBuilder {
+func (query InwQueryBuilder) Clip() InwQueryBuilder {
 	query.opts = append(query.opts, NewCommand("CLIP"))
 	return query
 }
 
 // Distance allows to return between objects. Only for NEARBY command.
-func (query SearchQueryBuilder) Distance() SearchQueryBuilder {
+func (query InwQueryBuilder) Distance() InwQueryBuilder {
 	query.opts = append(query.opts, NewCommand("DISTANCE"))
 	return query
 }
@@ -122,31 +123,31 @@ func (query SearchQueryBuilder) Distance() SearchQueryBuilder {
 // Cursor is used to iterate though many objects from the search results.
 // An iteration begins when the CURSOR is set to Zero or not included with the request,
 // and completes when the cursor returned by the server is Zero.
-func (query SearchQueryBuilder) Cursor(cursor int) SearchQueryBuilder {
+func (query InwQueryBuilder) Cursor(cursor int) InwQueryBuilder {
 	query.opts = append(query.opts, NewCommand("CURSOR", strconv.Itoa(cursor)))
 	return query
 }
 
 // Limit can be used to limit the number of objects returned for a single search request.
-func (query SearchQueryBuilder) Limit(limit int) SearchQueryBuilder {
+func (query InwQueryBuilder) Limit(limit int) InwQueryBuilder {
 	query.opts = append(query.opts, NewCommand("LIMIT", strconv.Itoa(limit)))
 	return query
 }
 
 // Sparse will distribute the results of a search evenly across the requested area.
-func (query SearchQueryBuilder) Sparse(sparse int) SearchQueryBuilder {
+func (query InwQueryBuilder) Sparse(sparse int) InwQueryBuilder {
 	query.opts = append(query.opts, NewCommand("SPARSE", strconv.Itoa(sparse)))
 	return query
 }
 
 // Where allows for filtering out results based on field values.
-func (query SearchQueryBuilder) Where(field string, min, max float64) SearchQueryBuilder {
+func (query InwQueryBuilder) Where(field string, min, max float64) InwQueryBuilder {
 	query.opts = append(query.opts, NewCommand("WHERE", field, floatString(min), floatString(max)))
 	return query
 }
 
 // Wherein is similar to Where except that it checks whether the object’s field value is in a given list.
-func (query SearchQueryBuilder) Wherein(field string, values ...float64) SearchQueryBuilder {
+func (query InwQueryBuilder) Wherein(field string, values ...float64) InwQueryBuilder {
 	var args []string
 	args = append(args, strconv.Itoa(len(values)))
 	for _, val := range values {
@@ -160,13 +161,13 @@ func (query SearchQueryBuilder) Wherein(field string, values ...float64) SearchQ
 // Match is similar to WHERE except that it works on the object id instead of fields.
 // There can be multiple MATCH options in a single search.
 // The MATCH value is a simple glob pattern.
-func (query SearchQueryBuilder) Match(pattern string) SearchQueryBuilder {
+func (query InwQueryBuilder) Match(pattern string) InwQueryBuilder {
 	query.opts = append(query.opts, NewCommand("MATCH", pattern))
 	return query
 }
 
 // Format set response format.
-func (query SearchQueryBuilder) Format(fmt OutputFormat) SearchQueryBuilder {
+func (query InwQueryBuilder) Format(fmt OutputFormat) InwQueryBuilder {
 	query.outputFormat = fmt
 	return query
 }
