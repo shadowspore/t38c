@@ -89,37 +89,6 @@ func (query InwQueryBuilder) Do() (*SearchResponse, error) {
 	return resp, nil
 }
 
-// Asc order. Only for SEARCH and SCAN commands.
-func (query InwQueryBuilder) Asc() InwQueryBuilder {
-	query.opts = append(query.opts, NewCommand("ASC"))
-	return query
-}
-
-// Desc order. Only for SEARCH and SCAN commands.
-func (query InwQueryBuilder) Desc() InwQueryBuilder {
-	query.opts = append(query.opts, NewCommand("DESC"))
-	return query
-}
-
-// NoFields tells the server that you do not want field values returned with the search results.
-func (query InwQueryBuilder) NoFields() InwQueryBuilder {
-	query.opts = append(query.opts, NewCommand("NOFIELDS"))
-	return query
-}
-
-// Clip tells the server to clip intersecting objects by the bounding box area of the search.
-// It can only be used with these area formats: BOUNDS, TILE, QUADKEY, HASH.
-func (query InwQueryBuilder) Clip() InwQueryBuilder {
-	query.opts = append(query.opts, NewCommand("CLIP"))
-	return query
-}
-
-// Distance allows to return between objects. Only for NEARBY command.
-func (query InwQueryBuilder) Distance() InwQueryBuilder {
-	query.opts = append(query.opts, NewCommand("DISTANCE"))
-	return query
-}
-
 // Cursor is used to iterate though many objects from the search results.
 // An iteration begins when the CURSOR is set to Zero or not included with the request,
 // and completes when the cursor returned by the server is Zero.
@@ -137,6 +106,21 @@ func (query InwQueryBuilder) Limit(limit int) InwQueryBuilder {
 // Sparse will distribute the results of a search evenly across the requested area.
 func (query InwQueryBuilder) Sparse(sparse int) InwQueryBuilder {
 	query.opts = append(query.opts, NewCommand("SPARSE", strconv.Itoa(sparse)))
+	return query
+}
+
+// Match is similar to WHERE except that it works on the object id instead of fields.
+// There can be multiple MATCH options in a single search.
+// The MATCH value is a simple glob pattern.
+func (query InwQueryBuilder) Match(pattern string) InwQueryBuilder {
+	query.opts = append(query.opts, NewCommand("MATCH", pattern))
+	return query
+}
+
+// Distance allows to return between objects.
+// Only for NEARBY command.
+func (query InwQueryBuilder) Distance() InwQueryBuilder {
+	query.opts = append(query.opts, NewCommand("DISTANCE"))
 	return query
 }
 
@@ -158,11 +142,17 @@ func (query InwQueryBuilder) Wherein(field string, values ...float64) InwQueryBu
 	return query
 }
 
-// Match is similar to WHERE except that it works on the object id instead of fields.
-// There can be multiple MATCH options in a single search.
-// The MATCH value is a simple glob pattern.
-func (query InwQueryBuilder) Match(pattern string) InwQueryBuilder {
-	query.opts = append(query.opts, NewCommand("MATCH", pattern))
+// Clip tells the server to clip intersecting objects by the bounding box area of the search.
+// It can only be used with these area formats: BOUNDS, TILE, QUADKEY, HASH.
+// Only for INTERSECTS command.
+func (query InwQueryBuilder) Clip() InwQueryBuilder {
+	query.opts = append(query.opts, NewCommand("CLIP"))
+	return query
+}
+
+// NoFields tells the server that you do not want field values returned with the search results.
+func (query InwQueryBuilder) NoFields() InwQueryBuilder {
+	query.opts = append(query.opts, NewCommand("NOFIELDS"))
 	return query
 }
 
