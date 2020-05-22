@@ -19,19 +19,17 @@ func (client *Client) Nearby(key string, lat, lon, meters float64) InwQueryBuild
 }
 
 // Search iterates though a key’s string values.
-func (client *Client) Search(key string) InwQueryBuilder {
-	return InwQueryBuilder{
+func (client *Client) Search(key string) SearchQueryBuilder {
+	return SearchQueryBuilder{
 		client: client,
-		cmd:    "SEARCH",
 		key:    key,
 	}
 }
 
 // Scan incrementally iterates though a key.
-func (client *Client) Scan(key string) InwQueryBuilder {
-	return InwQueryBuilder{
+func (client *Client) Scan(key string) ScanQueryBuilder {
+	return ScanQueryBuilder{
 		client: client,
-		cmd:    "SCAN",
 		key:    key,
 	}
 }
