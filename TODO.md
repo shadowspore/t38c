@@ -7,8 +7,8 @@
     - [x] DESC
     - [x] [WHERE field min max ...]
     - [x] [WHEREIN field count value [value ...] ...]
-    - [ ] [WHEREEVAL script numargs arg [arg ...] ...]
-    - [ ] [WHEREEVALSHA sha1 numargs arg [arg ...] ...]
+    - [x] [WHEREEVAL script numargs arg [arg ...] ...]
+    - [x] [WHEREEVALSHA sha1 numargs arg [arg ...] ...]
     - [x] [NOFIELDS]
     - [x] COUNT
     - [x] IDS
@@ -24,8 +24,8 @@
     - [x] DESC
     - [x] [WHERE field min max ...]
     - [x] [WHEREIN field count value [value ...] ...]
-    - [ ] [WHEREEVAL script numargs arg [arg ...] ...]
-    - [ ] [WHEREEVALSHA sha1 numargs arg [arg ...] ...]
+    - [x] [WHEREEVAL script numargs arg [arg ...] ...]
+    - [x] [WHEREEVALSHA sha1 numargs arg [arg ...] ...]
     - [x] [NOFIELDS]
     - [x] COUNT
     - [x] IDS
@@ -37,8 +37,8 @@
     - [x] [DISTANCE]
     - [x] [WHERE field min max ...]
     - [x] [WHEREIN field count value [value ...] ...]
-    - [ ] [WHEREEVAL script numargs arg [arg ...] ...]
-    - [ ] [WHEREEVALSHA sha1 numargs arg [arg ...] ...]
+    - [x] [WHEREEVAL script numargs arg [arg ...] ...]
+    - [x] [WHEREEVALSHA sha1 numargs arg [arg ...] ...]
     - [x] [NOFIELDS]
     - [x] [FENCE]
     - [x] [DETECT what]
@@ -58,8 +58,8 @@
     - [x] [MATCH pattern]
     - [x] [WHERE field min max ...]
     - [x] [WHEREIN field count value [value ...] ...]
-    - [ ] [WHEREEVAL script numargs arg [arg ...] ...]
-    - [ ] [WHEREEVALSHA sha1 numargs arg [arg ...] ...]
+    - [x] [WHEREEVAL script numargs arg [arg ...] ...]
+    - [x] [WHEREEVALSHA sha1 numargs arg [arg ...] ...]
     - [x] [NOFIELDS]
     - [x] [FENCE]
     - [x] [DETECT what]
@@ -84,8 +84,8 @@
     - [x] [MATCH pattern]
     - [x] [WHERE field min max ...]
     - [x] [WHEREIN field count value [value ...] ...]
-    - [ ] [WHEREEVAL script numargs arg [arg ...] ...]
-    - [ ] [WHEREEVALSHA sha1 numargs arg [arg ...] ...]
+    - [x] [WHEREEVAL script numargs arg [arg ...] ...]
+    - [x] [WHEREEVALSHA sha1 numargs arg [arg ...] ...]
     - [x] [CLIP]
     - [x] [NOFIELDS]
     - [x] [FENCE]
@@ -186,15 +186,15 @@
 - [ ] GC
 
 # Group 'scripting'
-- [ ] EVALNASHA
-- [ ] EVAL
-- [ ] EVALRO
-- [ ] SCRIPT FLUSH
-- [ ] EVALNA
-- [ ] EVALROSHA
-- [ ] SCRIPT EXISTS
-- [ ] EVALSHA
-- [ ] SCRIPT LOAD
+- [x] EVALNASHA
+- [x] EVAL
+- [x] EVALRO
+- [x] SCRIPT FLUSH
+- [x] EVALNA
+- [x] EVALROSHA
+- [x] SCRIPT EXISTS
+- [x] EVALSHA
+- [x] SCRIPT LOAD
 
 # Group 'replication'
 - [ ] AOFSHRINK
