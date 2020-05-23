@@ -145,7 +145,7 @@
 # Group 'connection'
 - [x] PING
 - [ ] OUTPUT
-- [ ] AUTH
+- [x] AUTH
 - [ ] TIMEOUT
     - [ ] COMMAND
 - [ ] QUIT
