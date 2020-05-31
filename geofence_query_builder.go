@@ -185,6 +185,34 @@ func (query GeofenceQueryBuilder) Wherein(field string, values ...float64) Geofe
 	return query
 }
 
+// WhereEval similar to WHERE except that matching decision is made by Lua script
+// For example:
+// 'nearby fleet whereeval "return FIELDS.wheels > ARGV[1] or (FIELDS.length * FIELDS.width) > ARGV[2]" 2 8 120 point 33.462 -112.268 6000'
+// will return only the objects in the fleet collection that are within the 6km radius
+// and have a field named wheels that is above 8, or have length and width whose product is greater than 120.
+// Multiple WHEREEVALs are concatenated as and clauses. See EVAL command for more details.
+// Note that, unlike the EVAL command, WHEREVAL Lua environment (1) does not have KEYS global,
+// and (2) has the FIELDS global with the Lua table of the iterated object’s fields.
+func (query GeofenceQueryBuilder) WhereEval(script string, args ...string) GeofenceQueryBuilder {
+	cmd := NewCommand("WHEREEVAL", append([]string{script}, args...)...)
+	query.opts = append(query.opts, cmd)
+	return query
+}
+
+// WhereEvalSHA similar to WHERE except that matching decision is made by Lua script
+// For example:
+// 'nearby fleet whereeval "return FIELDS.wheels > ARGV[1] or (FIELDS.length * FIELDS.width) > ARGV[2]" 2 8 120 point 33.462 -112.268 6000'
+// will return only the objects in the fleet collection that are within the 6km radius
+// and have a field named wheels that is above 8, or have length and width whose product is greater than 120.
+// Multiple WHEREEVALs are concatenated as and clauses. See EVAL command for more details.
+// Note that, unlike the EVAL command, WHEREVAL Lua environment (1) does not have KEYS global,
+// and (2) has the FIELDS global with the Lua table of the iterated object’s fields.
+func (query GeofenceQueryBuilder) WhereEvalSHA(sha string, args ...string) GeofenceQueryBuilder {
+	cmd := NewCommand("WHEREEVALSHA", append([]string{sha}, args...)...)
+	query.opts = append(query.opts, cmd)
+	return query
+}
+
 // Match is similar to WHERE except that it works on the object id instead of fields.
 // There can be multiple MATCH options in a single search.
 // The MATCH value is a simple glob pattern.
