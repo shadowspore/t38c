@@ -195,7 +195,7 @@ func (query GeofenceQueryBuilder) Wherein(field string, values ...float64) Geofe
 // and (2) has the FIELDS global with the Lua table of the iterated object’s fields.
 func (query GeofenceQueryBuilder) WhereEval(script string, args ...string) GeofenceQueryBuilder {
 	cmd := NewCommand("WHEREEVAL", append([]string{script}, args...)...)
-	query.opts = append(query.opts, cmd)
+	query.searchOpts = append(query.searchOpts, cmd)
 	return query
 }
 
@@ -209,7 +209,7 @@ func (query GeofenceQueryBuilder) WhereEval(script string, args ...string) Geofe
 // and (2) has the FIELDS global with the Lua table of the iterated object’s fields.
 func (query GeofenceQueryBuilder) WhereEvalSHA(sha string, args ...string) GeofenceQueryBuilder {
 	cmd := NewCommand("WHEREEVALSHA", append([]string{sha}, args...)...)
-	query.opts = append(query.opts, cmd)
+	query.searchOpts = append(query.searchOpts, cmd)
 	return query
 }
 
