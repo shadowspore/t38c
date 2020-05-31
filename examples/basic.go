@@ -16,6 +16,10 @@ func main() {
 		log.Fatal(err)
 	}
 
+	// how to set pool size
+	t38c.New(":9851", t38c.Debug, t38c.SetPoolSize(10))
+
+
 	// add a couple of points named 'truck1' and 'truck2' to a collection named 'fleet'.
 	if err := tile38.Set("fleet", "truck1").Point(33.5123, -112.2693).Do(); err != nil {
 		log.Fatal(err)
