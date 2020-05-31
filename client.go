@@ -111,3 +111,17 @@ func (client *Client) ExecuteStream(ctx context.Context, handler func([]byte) er
 
 	return client.executor.ExecuteStream(ctx, handler, command, args...)
 }
+
+// Close method closes the connection
+func (client *Client) Close() error {
+	if client.debug {
+		log.Printf("closing connection")
+	}
+	err := client.Close()
+
+	if client.debug {
+		log.Printf("connection closed")
+	}
+
+	return err
+}
