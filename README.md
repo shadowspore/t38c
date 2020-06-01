@@ -4,7 +4,11 @@
 
 Most features are supported (see [TODO.md](TODO.md))
 
-## Basic example
+```
+go get github.com/b3q/tile38-client
+```
+
+### Basic example
 
 ```go
 package main
