@@ -5,7 +5,7 @@ type FSetQueryBuilder struct {
 	client   *Client
 	key      string
 	objectID string
-	fields   []Field
+	fields   []field
 	xx       bool
 }
 
@@ -38,7 +38,7 @@ func (query FSetQueryBuilder) Do() error {
 
 // Field sets the object field
 func (query FSetQueryBuilder) Field(name string, value float64) FSetQueryBuilder {
-	query.fields = append(query.fields, Field{name, value})
+	query.fields = append(query.fields, field{name, value})
 	return query
 }
 

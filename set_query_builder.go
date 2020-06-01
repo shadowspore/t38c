@@ -8,7 +8,7 @@ type SetQueryBuilder struct {
 	key        string
 	objectID   string
 	area       tileCmd
-	fields     []Field
+	fields     []field
 	nx         bool
 	xx         bool
 	expiration *int
@@ -53,7 +53,7 @@ func (query SetQueryBuilder) Do() error {
 
 // Field sets the object field
 func (query SetQueryBuilder) Field(name string, value float64) SetQueryBuilder {
-	query.fields = append(query.fields, Field{name, value})
+	query.fields = append(query.fields, field{name, value})
 	return query
 }
 

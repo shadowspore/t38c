@@ -7,8 +7,7 @@ import (
 	"github.com/tidwall/gjson"
 )
 
-// Field struct
-type Field struct {
+type field struct {
 	Name  string
 	Value float64
 }
