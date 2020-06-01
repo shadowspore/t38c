@@ -59,11 +59,11 @@ func (query GeofenceQueryBuilder) toCmd() tileCmd {
 	}
 
 	if len(query.notifyCommands) > 0 {
-		actions := make([]string, len(query.notifyCommands))
+		commands := make([]string, len(query.notifyCommands))
 		for i := range query.notifyCommands {
-			actions[i] = string(query.notifyCommands[i])
+			commands[i] = string(query.notifyCommands[i])
 		}
-		cmd.appendArgs("COMMANDS", strings.Join(actions, ","))
+		cmd.appendArgs("COMMANDS", strings.Join(commands, ","))
 	}
 
 	if len(query.outputFormat.Name) > 0 {
