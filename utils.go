@@ -6,6 +6,28 @@ import (
 	"strconv"
 )
 
+type tileCmd struct {
+	Name string
+	Args []string
+}
+
+func newTileCmd(name string, args ...string) tileCmd {
+	return tileCmd{name, args}
+}
+
+func (cmd tileCmd) appendArgs(name string, args ...string) {
+	cmd.Args = append(cmd.Args, args...)
+}
+
+func (cmd tileCmd) String() string {
+	str := cmd.Name
+	for _, arg := range cmd.Args {
+		str += " " + arg
+	}
+
+	return str
+}
+
 func floatString(val float64) string {
 	return strconv.FormatFloat(val, 'g', 10, 64)
 }

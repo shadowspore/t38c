@@ -7,7 +7,7 @@ type SearchQueryBuilder struct {
 	client       *Client
 	key          string
 	outputFormat OutputFormat
-	opts         []Command
+	opts         []tileCmd
 }
 
 func newSearchQueryBuilder(client *Client, key string) SearchQueryBuilder {
@@ -17,21 +17,17 @@ func newSearchQueryBuilder(client *Client, key string) SearchQueryBuilder {
 	}
 }
 
-func (query SearchQueryBuilder) toCmd() Command {
-	var args []string
-	args = append(args, query.key)
-
+func (query SearchQueryBuilder) toCmd() tileCmd {
+	cmd := newTileCmd("SEARCH", query.key)
 	for _, opt := range query.opts {
-		args = append(args, opt.Name)
-		args = append(args, opt.Args...)
+		cmd.appendArgs(opt.Name, opt.Args...)
 	}
 
 	if len(query.outputFormat.Name) > 0 {
-		args = append(args, query.outputFormat.Name)
-		args = append(args, query.outputFormat.Args...)
+		cmd.appendArgs(query.outputFormat.Name, query.outputFormat.Args...)
 	}
 
-	return NewCommand("SEARCH", args...)
+	return cmd
 }
 
 // Do cmd
@@ -50,13 +46,13 @@ func (query SearchQueryBuilder) Do() (*SearchResponse, error) {
 // An iteration begins when the CURSOR is set to Zero or not included with the request,
 // and completes when the cursor returned by the server is Zero.
 func (query SearchQueryBuilder) Cursor(cursor int) SearchQueryBuilder {
-	query.opts = append(query.opts, NewCommand("CURSOR", strconv.Itoa(cursor)))
+	query.opts = append(query.opts, newTileCmd("CURSOR", strconv.Itoa(cursor)))
 	return query
 }
 
 // Limit can be used to limit the number of objects returned for a single search request.
 func (query SearchQueryBuilder) Limit(limit int) SearchQueryBuilder {
-	query.opts = append(query.opts, NewCommand("LIMIT", strconv.Itoa(limit)))
+	query.opts = append(query.opts, newTileCmd("LIMIT", strconv.Itoa(limit)))
 	return query
 }
 
@@ -64,25 +60,25 @@ func (query SearchQueryBuilder) Limit(limit int) SearchQueryBuilder {
 // There can be multiple MATCH options in a single search.
 // The MATCH value is a simple glob pattern.
 func (query SearchQueryBuilder) Match(pattern string) SearchQueryBuilder {
-	query.opts = append(query.opts, NewCommand("MATCH", pattern))
+	query.opts = append(query.opts, newTileCmd("MATCH", pattern))
 	return query
 }
 
 // Asc order. Only for SEARCH and SCAN commands.
 func (query SearchQueryBuilder) Asc() SearchQueryBuilder {
-	query.opts = append(query.opts, NewCommand("ASC"))
+	query.opts = append(query.opts, newTileCmd("ASC"))
 	return query
 }
 
 // Desc order. Only for SEARCH and SCAN commands.
 func (query SearchQueryBuilder) Desc() SearchQueryBuilder {
-	query.opts = append(query.opts, NewCommand("DESC"))
+	query.opts = append(query.opts, newTileCmd("DESC"))
 	return query
 }
 
 // Where allows for filtering out results based on field values.
 func (query SearchQueryBuilder) Where(field string, min, max float64) SearchQueryBuilder {
-	query.opts = append(query.opts, NewCommand("WHERE", field, floatString(min), floatString(max)))
+	query.opts = append(query.opts, newTileCmd("WHERE", field, floatString(min), floatString(max)))
 	return query
 }
 
@@ -94,13 +90,13 @@ func (query SearchQueryBuilder) Wherein(field string, values ...float64) SearchQ
 		args = append(args, floatString(val))
 	}
 
-	query.opts = append(query.opts, NewCommand("WHEREIN", args...))
+	query.opts = append(query.opts, newTileCmd("WHEREIN", args...))
 	return query
 }
 
 // NoFields tells the server that you do not want field values returned with the search results.
 func (query SearchQueryBuilder) NoFields() SearchQueryBuilder {
-	query.opts = append(query.opts, NewCommand("NOFIELDS"))
+	query.opts = append(query.opts, newTileCmd("NOFIELDS"))
 	return query
 }
 

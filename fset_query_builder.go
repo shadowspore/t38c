@@ -17,21 +17,17 @@ func newFSetQueryBuilder(client *Client, key, objectID string) FSetQueryBuilder 
 	}
 }
 
-func (query FSetQueryBuilder) toCmd() Command {
-	var args []string = []string{
-		query.key, query.objectID,
-	}
-
+func (query FSetQueryBuilder) toCmd() tileCmd {
+	cmd := newTileCmd("FSET", query.key, query.objectID)
 	if query.xx {
-		args = append(args, "XX")
+		cmd.appendArgs("XX")
 	}
 
 	for _, field := range query.fields {
-		args = append(args, field.Name)
-		args = append(args, floatString(field.Value))
+		cmd.appendArgs(field.Name, floatString(field.Value))
 	}
 
-	return NewCommand("FSET", args...)
+	return cmd
 }
 
 // Do cmd

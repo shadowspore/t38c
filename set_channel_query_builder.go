@@ -6,12 +6,12 @@ import "strconv"
 type SetChannelQueryBuilder struct {
 	client     *Client
 	name       string
-	cmd        Command
+	cmd        tileCmd
 	metas      []Meta
 	expiration *int
 }
 
-func newSetChannelQueryBuilder(client *Client, name string, cmd Command) SetChannelQueryBuilder {
+func newSetChannelQueryBuilder(client *Client, name string, cmd tileCmd) SetChannelQueryBuilder {
 	return SetChannelQueryBuilder{
 		client: client,
 		name:   name,
@@ -19,22 +19,18 @@ func newSetChannelQueryBuilder(client *Client, name string, cmd Command) SetChan
 	}
 }
 
-func (query SetChannelQueryBuilder) toCmd() Command {
-	args := []string{query.name}
+func (query SetChannelQueryBuilder) toCmd() tileCmd {
+	cmd := newTileCmd("SETCHAN", query.name)
 	for _, meta := range query.metas {
-		args = append(args, "META")
-		args = append(args, meta.Name)
-		args = append(args, meta.Value)
+		cmd.appendArgs("META", meta.Name, meta.Value)
 	}
 
 	if query.expiration != nil {
-		args = append(args, "EX")
-		args = append(args, strconv.Itoa(*query.expiration))
+		cmd.appendArgs("EX", strconv.Itoa(*query.expiration))
 	}
 
-	args = append(args, query.cmd.Name)
-	args = append(args, query.cmd.Args...)
-	return NewCommand("SETCHAN", args...)
+	cmd.appendArgs(query.cmd.Name, query.cmd.Args...)
+	return cmd
 }
 
 // Do cmd

@@ -41,12 +41,12 @@ type InwQueryBuilder struct {
 	client       *Client
 	cmd          string
 	key          string
-	area         Command
+	area         tileCmd
 	outputFormat OutputFormat
-	opts         []Command
+	opts         []tileCmd
 }
 
-func newInwQueryBuilder(client *Client, cmd, key string, area Command) InwQueryBuilder {
+func newInwQueryBuilder(client *Client, cmd, key string, area tileCmd) InwQueryBuilder {
 	return InwQueryBuilder{
 		client: client,
 		cmd:    cmd,
@@ -55,26 +55,21 @@ func newInwQueryBuilder(client *Client, cmd, key string, area Command) InwQueryB
 	}
 }
 
-func (query InwQueryBuilder) toCmd() Command {
-	var args []string
-	args = append(args, query.key)
-
+func (query InwQueryBuilder) toCmd() tileCmd {
+	cmd := newTileCmd(query.cmd, query.key)
 	for _, opt := range query.opts {
-		args = append(args, opt.Name)
-		args = append(args, opt.Args...)
+		cmd.appendArgs(opt.Name, opt.Args...)
 	}
 
 	if len(query.outputFormat.Name) > 0 {
-		args = append(args, query.outputFormat.Name)
-		args = append(args, query.outputFormat.Args...)
+		cmd.appendArgs(query.outputFormat.Name, query.outputFormat.Args...)
 	}
 
 	if len(query.area.Name) > 0 {
-		args = append(args, query.area.Name)
-		args = append(args, query.area.Args...)
+		cmd.appendArgs(query.area.Name, query.area.Args...)
 	}
 
-	return NewCommand(query.cmd, args...)
+	return cmd
 }
 
 // Do cmd
@@ -93,19 +88,19 @@ func (query InwQueryBuilder) Do() (*SearchResponse, error) {
 // An iteration begins when the CURSOR is set to Zero or not included with the request,
 // and completes when the cursor returned by the server is Zero.
 func (query InwQueryBuilder) Cursor(cursor int) InwQueryBuilder {
-	query.opts = append(query.opts, NewCommand("CURSOR", strconv.Itoa(cursor)))
+	query.opts = append(query.opts, newTileCmd("CURSOR", strconv.Itoa(cursor)))
 	return query
 }
 
 // Limit can be used to limit the number of objects returned for a single search request.
 func (query InwQueryBuilder) Limit(limit int) InwQueryBuilder {
-	query.opts = append(query.opts, NewCommand("LIMIT", strconv.Itoa(limit)))
+	query.opts = append(query.opts, newTileCmd("LIMIT", strconv.Itoa(limit)))
 	return query
 }
 
 // Sparse will distribute the results of a search evenly across the requested area.
 func (query InwQueryBuilder) Sparse(sparse int) InwQueryBuilder {
-	query.opts = append(query.opts, NewCommand("SPARSE", strconv.Itoa(sparse)))
+	query.opts = append(query.opts, newTileCmd("SPARSE", strconv.Itoa(sparse)))
 	return query
 }
 
@@ -113,20 +108,20 @@ func (query InwQueryBuilder) Sparse(sparse int) InwQueryBuilder {
 // There can be multiple MATCH options in a single search.
 // The MATCH value is a simple glob pattern.
 func (query InwQueryBuilder) Match(pattern string) InwQueryBuilder {
-	query.opts = append(query.opts, NewCommand("MATCH", pattern))
+	query.opts = append(query.opts, newTileCmd("MATCH", pattern))
 	return query
 }
 
 // Distance allows to return between objects.
 // Only for NEARBY command.
 func (query InwQueryBuilder) Distance() InwQueryBuilder {
-	query.opts = append(query.opts, NewCommand("DISTANCE"))
+	query.opts = append(query.opts, newTileCmd("DISTANCE"))
 	return query
 }
 
 // Where allows for filtering out results based on field values.
 func (query InwQueryBuilder) Where(field string, min, max float64) InwQueryBuilder {
-	query.opts = append(query.opts, NewCommand("WHERE", field, floatString(min), floatString(max)))
+	query.opts = append(query.opts, newTileCmd("WHERE", field, floatString(min), floatString(max)))
 	return query
 }
 
@@ -138,7 +133,7 @@ func (query InwQueryBuilder) Wherein(field string, values ...float64) InwQueryBu
 		args = append(args, floatString(val))
 	}
 
-	query.opts = append(query.opts, NewCommand("WHEREIN", args...))
+	query.opts = append(query.opts, newTileCmd("WHEREIN", args...))
 	return query
 }
 
@@ -151,7 +146,7 @@ func (query InwQueryBuilder) Wherein(field string, values ...float64) InwQueryBu
 // Note that, unlike the EVAL command, WHEREVAL Lua environment (1) does not have KEYS global,
 // and (2) has the FIELDS global with the Lua table of the iterated object’s fields.
 func (query InwQueryBuilder) WhereEval(script string, args ...string) InwQueryBuilder {
-	cmd := NewCommand("WHEREEVAL", append([]string{script}, args...)...)
+	cmd := newTileCmd("WHEREEVAL", append([]string{script}, args...)...)
 	query.opts = append(query.opts, cmd)
 	return query
 }
@@ -165,7 +160,7 @@ func (query InwQueryBuilder) WhereEval(script string, args ...string) InwQueryBu
 // Note that, unlike the EVAL command, WHEREVAL Lua environment (1) does not have KEYS global,
 // and (2) has the FIELDS global with the Lua table of the iterated object’s fields.
 func (query InwQueryBuilder) WhereEvalSHA(sha string, args ...string) InwQueryBuilder {
-	cmd := NewCommand("WHEREEVALSHA", append([]string{sha}, args...)...)
+	cmd := newTileCmd("WHEREEVALSHA", append([]string{sha}, args...)...)
 	query.opts = append(query.opts, cmd)
 	return query
 }
@@ -174,13 +169,13 @@ func (query InwQueryBuilder) WhereEvalSHA(sha string, args ...string) InwQueryBu
 // It can only be used with these area formats: BOUNDS, TILE, QUADKEY, HASH.
 // Only for INTERSECTS command.
 func (query InwQueryBuilder) Clip() InwQueryBuilder {
-	query.opts = append(query.opts, NewCommand("CLIP"))
+	query.opts = append(query.opts, newTileCmd("CLIP"))
 	return query
 }
 
 // NoFields tells the server that you do not want field values returned with the search results.
 func (query InwQueryBuilder) NoFields() InwQueryBuilder {
-	query.opts = append(query.opts, NewCommand("NOFIELDS"))
+	query.opts = append(query.opts, newTileCmd("NOFIELDS"))
 	return query
 }
 

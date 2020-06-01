@@ -23,13 +23,13 @@ func newGeofenceAreaSelector(client *Client, cmd, key string) GeofenceAreaSelect
 
 // Get any object that already exists in the database.
 func (selector GeofenceAreaSelector) Get(objectID string) GeofenceQueryBuilder {
-	area := NewCommand("GET", objectID)
+	area := newTileCmd("GET", objectID)
 	return newGeofenceQueryBuilder(selector.client, selector.cmd, selector.key, area)
 }
 
 // Bounds - a minimum bounding rectangle.
 func (selector GeofenceAreaSelector) Bounds(minlat, minlon, maxlat, maxlon float64) GeofenceQueryBuilder {
-	area := NewCommand("BOUNDS", floatString(minlat), floatString(minlon), floatString(maxlat), floatString(maxlon))
+	area := newTileCmd("BOUNDS", floatString(minlat), floatString(minlon), floatString(maxlat), floatString(maxlon))
 	return newGeofenceQueryBuilder(selector.client, selector.cmd, selector.key, area)
 }
 
@@ -37,7 +37,7 @@ func (selector GeofenceAreaSelector) Bounds(minlat, minlon, maxlat, maxlon float
 func (selector GeofenceAreaSelector) FeatureCollection(fc *geojson.FeatureCollection) GeofenceQueryBuilder {
 	// TODO: handle error?
 	b, _ := fc.MarshalJSON()
-	area := NewCommand("OBJECT", string(b))
+	area := newTileCmd("OBJECT", string(b))
 	return newGeofenceQueryBuilder(selector.client, selector.cmd, selector.key, area)
 }
 
@@ -45,7 +45,7 @@ func (selector GeofenceAreaSelector) FeatureCollection(fc *geojson.FeatureCollec
 func (selector GeofenceAreaSelector) Feature(ft *geojson.Feature) GeofenceQueryBuilder {
 	// TODO: handle error?
 	b, _ := ft.MarshalJSON()
-	area := NewCommand("OBJECT", string(b))
+	area := newTileCmd("OBJECT", string(b))
 	return newGeofenceQueryBuilder(selector.client, selector.cmd, selector.key, area)
 }
 
@@ -53,30 +53,30 @@ func (selector GeofenceAreaSelector) Feature(ft *geojson.Feature) GeofenceQueryB
 func (selector GeofenceAreaSelector) Geometry(gm *geojson.Geometry) GeofenceQueryBuilder {
 	// TODO: handle error?
 	b, _ := gm.MarshalJSON()
-	area := NewCommand("OBJECT", string(b))
+	area := newTileCmd("OBJECT", string(b))
 	return newGeofenceQueryBuilder(selector.client, selector.cmd, selector.key, area)
 }
 
 // Circle - a circle with the specified center and radius.
 func (selector GeofenceAreaSelector) Circle(lat, lon, meters float64) GeofenceQueryBuilder {
-	area := NewCommand("CIRCLE", floatString(lat), floatString(lon), floatString(meters))
+	area := newTileCmd("CIRCLE", floatString(lat), floatString(lon), floatString(meters))
 	return newGeofenceQueryBuilder(selector.client, selector.cmd, selector.key, area)
 }
 
 // Tile - an XYZ Tile.
 func (selector GeofenceAreaSelector) Tile(x, y, z int) GeofenceQueryBuilder {
-	area := NewCommand("TILE", strconv.Itoa(x), strconv.Itoa(y), strconv.Itoa(z))
+	area := newTileCmd("TILE", strconv.Itoa(x), strconv.Itoa(y), strconv.Itoa(z))
 	return newGeofenceQueryBuilder(selector.client, selector.cmd, selector.key, area)
 }
 
 // Quadkey - a QuadKey.
 func (selector GeofenceAreaSelector) Quadkey(quadkey string) GeofenceQueryBuilder {
-	area := NewCommand("QUADKEY", quadkey)
+	area := newTileCmd("QUADKEY", quadkey)
 	return newGeofenceQueryBuilder(selector.client, selector.cmd, selector.key, area)
 }
 
 // Hash - a Geohash.
 func (selector GeofenceAreaSelector) Hash(hash string) GeofenceQueryBuilder {
-	area := NewCommand("HASH", hash)
+	area := newTileCmd("HASH", hash)
 	return newGeofenceQueryBuilder(selector.client, selector.cmd, selector.key, area)
 }

@@ -68,23 +68,6 @@ func NewWithExecutor(exec Executor, debug bool) (*Client, error) {
 	return client, nil
 }
 
-func (client *Client) executeCmd(cmd Command) ([]byte, error) {
-	resp, err := client.executor.Execute(cmd.Name, cmd.Args...)
-	if client.debug {
-		log.Printf("[%s]: %s", cmd, resp)
-	}
-
-	if err != nil {
-		return nil, err
-	}
-
-	if !gjson.GetBytes(resp, "ok").Bool() {
-		return nil, fmt.Errorf(gjson.GetBytes(resp, "err").String())
-	}
-
-	return resp, nil
-}
-
 func (client *Client) jExecute(resp interface{}, command string, args ...string) error {
 	b, err := client.Execute(command, args...)
 	if err != nil {
@@ -100,13 +83,26 @@ func (client *Client) jExecute(resp interface{}, command string, args ...string)
 
 // Execute Tile38 command.
 func (client *Client) Execute(command string, args ...string) ([]byte, error) {
-	return client.executeCmd(NewCommand(command, args...))
+	resp, err := client.executor.Execute(command, args...)
+	if client.debug {
+		log.Printf("[%s]: %s", newTileCmd(command, args...).String(), resp)
+	}
+
+	if err != nil {
+		return nil, err
+	}
+
+	if !gjson.GetBytes(resp, "ok").Bool() {
+		return nil, fmt.Errorf(gjson.GetBytes(resp, "err").String())
+	}
+
+	return resp, nil
 }
 
 // ExecuteStream used for Tile38 commands with streaming response.
 func (client *Client) ExecuteStream(ctx context.Context, handler func([]byte) error, command string, args ...string) error {
 	if client.debug {
-		log.Printf("[%s]", NewCommand(command, args...))
+		log.Printf("[%s]", newTileCmd(command, args...).String())
 	}
 
 	return client.executor.ExecuteStream(ctx, handler, command, args...)

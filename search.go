@@ -14,7 +14,7 @@ func (client *Client) Intersects(key string) InwAreaSelector {
 // The KNN algorithm is used instead of the standard overlap+Haversine algorithm,
 // sorting the results in order of ascending distance from that point, i.e., nearest first.
 func (client *Client) Nearby(key string, lat, lon, meters float64) InwQueryBuilder {
-	area := NewCommand("POINT", floatString(lat), floatString(lon), floatString(meters))
+	area := newTileCmd("POINT", floatString(lat), floatString(lon), floatString(meters))
 	return newInwQueryBuilder(client, "NEARBY", key, area)
 }
 

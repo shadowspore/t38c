@@ -7,7 +7,7 @@ type ScanQueryBuilder struct {
 	client       *Client
 	key          string
 	outputFormat OutputFormat
-	opts         []Command
+	opts         []tileCmd
 }
 
 func newScanQueryBuilder(client *Client, key string) ScanQueryBuilder {
@@ -17,21 +17,17 @@ func newScanQueryBuilder(client *Client, key string) ScanQueryBuilder {
 	}
 }
 
-func (query ScanQueryBuilder) toCmd() Command {
-	var args []string
-	args = append(args, query.key)
-
+func (query ScanQueryBuilder) toCmd() tileCmd {
+	cmd := newTileCmd("SCAN", query.key)
 	for _, opt := range query.opts {
-		args = append(args, opt.Name)
-		args = append(args, opt.Args...)
+		cmd.appendArgs(opt.Name, opt.Args...)
 	}
 
 	if len(query.outputFormat.Name) > 0 {
-		args = append(args, query.outputFormat.Name)
-		args = append(args, query.outputFormat.Args...)
+		cmd.appendArgs(query.outputFormat.Name, query.outputFormat.Args...)
 	}
 
-	return NewCommand("SCAN", args...)
+	return cmd
 }
 
 // Do cmd
@@ -50,13 +46,13 @@ func (query ScanQueryBuilder) Do() (*SearchResponse, error) {
 // An iteration begins when the CURSOR is set to Zero or not included with the request,
 // and completes when the cursor returned by the server is Zero.
 func (query ScanQueryBuilder) Cursor(cursor int) ScanQueryBuilder {
-	query.opts = append(query.opts, NewCommand("CURSOR", strconv.Itoa(cursor)))
+	query.opts = append(query.opts, newTileCmd("CURSOR", strconv.Itoa(cursor)))
 	return query
 }
 
 // Limit can be used to limit the number of objects returned for a single search request.
 func (query ScanQueryBuilder) Limit(limit int) ScanQueryBuilder {
-	query.opts = append(query.opts, NewCommand("LIMIT", strconv.Itoa(limit)))
+	query.opts = append(query.opts, newTileCmd("LIMIT", strconv.Itoa(limit)))
 	return query
 }
 
@@ -64,25 +60,25 @@ func (query ScanQueryBuilder) Limit(limit int) ScanQueryBuilder {
 // There can be multiple MATCH options in a single search.
 // The MATCH value is a simple glob pattern.
 func (query ScanQueryBuilder) Match(pattern string) ScanQueryBuilder {
-	query.opts = append(query.opts, NewCommand("MATCH", pattern))
+	query.opts = append(query.opts, newTileCmd("MATCH", pattern))
 	return query
 }
 
 // Asc order. Only for SEARCH and SCAN commands.
 func (query ScanQueryBuilder) Asc() ScanQueryBuilder {
-	query.opts = append(query.opts, NewCommand("ASC"))
+	query.opts = append(query.opts, newTileCmd("ASC"))
 	return query
 }
 
 // Desc order. Only for SEARCH and SCAN commands.
 func (query ScanQueryBuilder) Desc() ScanQueryBuilder {
-	query.opts = append(query.opts, NewCommand("DESC"))
+	query.opts = append(query.opts, newTileCmd("DESC"))
 	return query
 }
 
 // Where allows for filtering out results based on field values.
 func (query ScanQueryBuilder) Where(field string, min, max float64) ScanQueryBuilder {
-	query.opts = append(query.opts, NewCommand("WHERE", field, floatString(min), floatString(max)))
+	query.opts = append(query.opts, newTileCmd("WHERE", field, floatString(min), floatString(max)))
 	return query
 }
 
@@ -94,13 +90,13 @@ func (query ScanQueryBuilder) Wherein(field string, values ...float64) ScanQuery
 		args = append(args, floatString(val))
 	}
 
-	query.opts = append(query.opts, NewCommand("WHEREIN", args...))
+	query.opts = append(query.opts, newTileCmd("WHEREIN", args...))
 	return query
 }
 
 // NoFields tells the server that you do not want field values returned with the search results.
 func (query ScanQueryBuilder) NoFields() ScanQueryBuilder {
-	query.opts = append(query.opts, NewCommand("NOFIELDS"))
+	query.opts = append(query.opts, newTileCmd("NOFIELDS"))
 	return query
 }
 

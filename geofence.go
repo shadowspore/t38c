@@ -12,7 +12,7 @@ func (client *Client) GeofenceIntersects(key string) GeofenceAreaSelector {
 
 // GeofenceNearby return Nearby geofence request.
 func (client *Client) GeofenceNearby(key string, lat, lon, meters float64) GeofenceQueryBuilder {
-	area := NewCommand("POINT", floatString(lat), floatString(lon), floatString(meters))
+	area := newTileCmd("POINT", floatString(lat), floatString(lon), floatString(meters))
 	return newGeofenceQueryBuilder(client, "NEARBY", key, area)
 }
 
