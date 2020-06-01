@@ -1,6 +1,6 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/b3q/tile38-client)](https://goreportcard.com/report/github.com/b3q/tile38-client)
-
-# tile38-client - Tile38 client for Go
+[![Documentation](https://godoc.org/github.com/b3q/tile38-client?status.svg)](https://pkg.go.dev/github.com/b3q/tile38-client?tab=doc)
+# Tile38 client for Go
 
 Most features are supported (see [TODO.md](TODO.md))
 
