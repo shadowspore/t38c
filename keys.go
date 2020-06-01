@@ -46,14 +46,12 @@ func (client *Client) FSet(key, objectID string) FSetQueryBuilder {
 
 // Get returns object of an id.
 func (client *Client) Get(key, objectID string, withFields bool) (resp *GetResponse, err error) {
-	var args []string
-	args = append(args, key)
-	args = append(args, objectID)
+	cmd := newTileCmd("GET", key, objectID)
 	if withFields {
-		args = append(args, "WITHFIELDS")
+		cmd.appendArgs("WITHFIELDS")
 	}
 
-	err = client.jExecute(resp, "GET", args...)
+	err = client.jExecute(resp, cmd.Name, cmd.Args...)
 	return
 }
 

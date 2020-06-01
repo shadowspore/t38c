@@ -41,12 +41,12 @@ type InwQueryBuilder struct {
 	client       *Client
 	cmd          string
 	key          string
-	area         tileCmd
+	area         *tileCmd
 	outputFormat OutputFormat
-	opts         []tileCmd
+	opts         []*tileCmd
 }
 
-func newInwQueryBuilder(client *Client, cmd, key string, area tileCmd) InwQueryBuilder {
+func newInwQueryBuilder(client *Client, cmd, key string, area *tileCmd) InwQueryBuilder {
 	return InwQueryBuilder{
 		client: client,
 		cmd:    cmd,
@@ -55,20 +55,17 @@ func newInwQueryBuilder(client *Client, cmd, key string, area tileCmd) InwQueryB
 	}
 }
 
-func (query InwQueryBuilder) toCmd() tileCmd {
+func (query InwQueryBuilder) toCmd() *tileCmd {
 	cmd := newTileCmd(query.cmd, query.key)
 	for _, opt := range query.opts {
 		cmd.appendArgs(opt.Name, opt.Args...)
 	}
 
-	if len(query.outputFormat.Name) > 0 {
+	if query.outputFormat != nil {
 		cmd.appendArgs(query.outputFormat.Name, query.outputFormat.Args...)
 	}
 
-	if len(query.area.Name) > 0 {
-		cmd.appendArgs(query.area.Name, query.area.Args...)
-	}
-
+	cmd.appendArgs(query.area.Name, query.area.Args...)
 	return cmd
 }
 

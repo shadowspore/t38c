@@ -7,7 +7,7 @@ type SearchQueryBuilder struct {
 	client       *Client
 	key          string
 	outputFormat OutputFormat
-	opts         []tileCmd
+	opts         []*tileCmd
 }
 
 func newSearchQueryBuilder(client *Client, key string) SearchQueryBuilder {
@@ -17,13 +17,13 @@ func newSearchQueryBuilder(client *Client, key string) SearchQueryBuilder {
 	}
 }
 
-func (query SearchQueryBuilder) toCmd() tileCmd {
+func (query SearchQueryBuilder) toCmd() *tileCmd {
 	cmd := newTileCmd("SEARCH", query.key)
 	for _, opt := range query.opts {
 		cmd.appendArgs(opt.Name, opt.Args...)
 	}
 
-	if len(query.outputFormat.Name) > 0 {
+	if query.outputFormat != nil {
 		cmd.appendArgs(query.outputFormat.Name, query.outputFormat.Args...)
 	}
 

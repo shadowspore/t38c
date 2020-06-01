@@ -7,14 +7,14 @@ type SetQueryBuilder struct {
 	client     *Client
 	key        string
 	objectID   string
-	area       tileCmd
+	area       *tileCmd
 	fields     []field
 	nx         bool
 	xx         bool
 	expiration *int
 }
 
-func newSetQueryBuilder(client *Client, key, objectID string, area tileCmd) SetQueryBuilder {
+func newSetQueryBuilder(client *Client, key, objectID string, area *tileCmd) SetQueryBuilder {
 	return SetQueryBuilder{
 		client:   client,
 		key:      key,
@@ -23,7 +23,7 @@ func newSetQueryBuilder(client *Client, key, objectID string, area tileCmd) SetQ
 	}
 }
 
-func (query SetQueryBuilder) toCmd() tileCmd {
+func (query SetQueryBuilder) toCmd() *tileCmd {
 	cmd := newTileCmd("SET", query.key, query.objectID)
 	if query.nx {
 		cmd.appendArgs("NX")

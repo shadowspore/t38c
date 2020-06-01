@@ -17,7 +17,7 @@ func newFSetQueryBuilder(client *Client, key, objectID string) FSetQueryBuilder 
 	}
 }
 
-func (query FSetQueryBuilder) toCmd() tileCmd {
+func (query FSetQueryBuilder) toCmd() *tileCmd {
 	cmd := newTileCmd("FSET", query.key, query.objectID)
 	if query.xx {
 		cmd.appendArgs("XX")

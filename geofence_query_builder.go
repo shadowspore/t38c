@@ -12,17 +12,17 @@ type GeofenceQueryBuilder struct {
 	isRoamQuery    bool
 	cmd            string
 	key            string
-	area           tileCmd
+	area           *tileCmd
 	target         string
 	pattern        string
 	meters         int
 	outputFormat   OutputFormat
 	detectActions  []DetectAction
 	notifyCommands []NotifyCommand
-	searchOpts     []tileCmd
+	searchOpts     []*tileCmd
 }
 
-func newGeofenceQueryBuilder(client *Client, cmd, key string, area tileCmd) GeofenceQueryBuilder {
+func newGeofenceQueryBuilder(client *Client, cmd, key string, area *tileCmd) GeofenceQueryBuilder {
 	return GeofenceQueryBuilder{
 		client: client,
 		cmd:    cmd,
@@ -43,7 +43,7 @@ func newGeofenceRoamQueryBuilder(client *Client, key, target, pattern string, me
 	}
 }
 
-func (query GeofenceQueryBuilder) toCmd() tileCmd {
+func (query GeofenceQueryBuilder) toCmd() *tileCmd {
 	cmd := newTileCmd(query.cmd, query.key)
 	for _, opt := range query.searchOpts {
 		cmd.appendArgs(opt.Name, opt.Args...)
@@ -66,7 +66,7 @@ func (query GeofenceQueryBuilder) toCmd() tileCmd {
 		cmd.appendArgs("COMMANDS", strings.Join(commands, ","))
 	}
 
-	if len(query.outputFormat.Name) > 0 {
+	if query.outputFormat != nil {
 		cmd.appendArgs(query.outputFormat.Name, query.outputFormat.Args...)
 	}
 

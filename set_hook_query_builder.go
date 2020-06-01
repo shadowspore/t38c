@@ -10,12 +10,12 @@ type SetHookQueryBuilder struct {
 	client     *Client
 	name       string
 	endpoints  []string
-	cmd        tileCmd
+	cmd        *tileCmd
 	metas      []Meta
 	expiration *int
 }
 
-func newSetHookQueryBuilder(client *Client, name, endpoint string, cmd tileCmd) SetHookQueryBuilder {
+func newSetHookQueryBuilder(client *Client, name, endpoint string, cmd *tileCmd) SetHookQueryBuilder {
 	return SetHookQueryBuilder{
 		client:    client,
 		name:      name,
@@ -24,7 +24,7 @@ func newSetHookQueryBuilder(client *Client, name, endpoint string, cmd tileCmd) 
 	}
 }
 
-func (query SetHookQueryBuilder) toCmd() tileCmd {
+func (query SetHookQueryBuilder) toCmd() *tileCmd {
 	cmd := newTileCmd("SETHOOK", query.name, strings.Join(query.endpoints, ","))
 	for _, meta := range query.metas {
 		cmd.appendArgs("META", meta.Name, meta.Value)

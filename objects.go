@@ -104,7 +104,7 @@ type SearchResponse struct {
 }
 
 // OutputFormat ...
-type OutputFormat tileCmd
+type OutputFormat *tileCmd
 
 var (
 	// FormatCount - Total object count sent in the response.

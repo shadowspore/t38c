@@ -11,16 +11,17 @@ type tileCmd struct {
 	Args []string
 }
 
-func newTileCmd(name string, args ...string) tileCmd {
-	return tileCmd{name, args}
+func newTileCmd(name string, args ...string) *tileCmd {
+	return &tileCmd{name, args}
 }
 
-func (cmd tileCmd) appendArgs(name string, args ...string) tileCmd {
+func (cmd *tileCmd) appendArgs(name string, args ...string) *tileCmd {
+	cmd.Args = append(cmd.Args, name)
 	cmd.Args = append(cmd.Args, args...)
 	return cmd
 }
 
-func (cmd tileCmd) String() string {
+func (cmd *tileCmd) String() string {
 	str := cmd.Name
 	for _, arg := range cmd.Args {
 		str += " " + arg

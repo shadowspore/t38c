@@ -7,7 +7,7 @@ type ScanQueryBuilder struct {
 	client       *Client
 	key          string
 	outputFormat OutputFormat
-	opts         []tileCmd
+	opts         []*tileCmd
 }
 
 func newScanQueryBuilder(client *Client, key string) ScanQueryBuilder {
@@ -17,13 +17,13 @@ func newScanQueryBuilder(client *Client, key string) ScanQueryBuilder {
 	}
 }
 
-func (query ScanQueryBuilder) toCmd() tileCmd {
+func (query ScanQueryBuilder) toCmd() *tileCmd {
 	cmd := newTileCmd("SCAN", query.key)
 	for _, opt := range query.opts {
 		cmd.appendArgs(opt.Name, opt.Args...)
 	}
 
-	if len(query.outputFormat.Name) > 0 {
+	if query.outputFormat != nil {
 		cmd.appendArgs(query.outputFormat.Name, query.outputFormat.Args...)
 	}
 
