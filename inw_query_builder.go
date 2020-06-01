@@ -146,7 +146,7 @@ func (query InwQueryBuilder) Wherein(field string, values ...float64) InwQueryBu
 // and (2) has the FIELDS global with the Lua table of the iterated object’s fields.
 func (query InwQueryBuilder) WhereEval(script string, args ...string) InwQueryBuilder {
 	query.opts = append(query.opts,
-		newTileCmd("WHEREEVAL").appendArgs(script, args...),
+		newTileCmd("WHEREEVAL", script).appendArgs(strconv.Itoa(len(args)), args...),
 	)
 	return query
 }
@@ -161,7 +161,7 @@ func (query InwQueryBuilder) WhereEval(script string, args ...string) InwQueryBu
 // and (2) has the FIELDS global with the Lua table of the iterated object’s fields.
 func (query InwQueryBuilder) WhereEvalSHA(sha string, args ...string) InwQueryBuilder {
 	query.opts = append(query.opts,
-		newTileCmd("WHEREEVALSHA").appendArgs(sha, args...),
+		newTileCmd("WHEREEVALSHA", sha).appendArgs(strconv.Itoa(len(args)), args...),
 	)
 	return query
 }
