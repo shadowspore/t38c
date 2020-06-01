@@ -15,8 +15,9 @@ func newTileCmd(name string, args ...string) tileCmd {
 	return tileCmd{name, args}
 }
 
-func (cmd tileCmd) appendArgs(name string, args ...string) {
+func (cmd tileCmd) appendArgs(name string, args ...string) tileCmd {
 	cmd.Args = append(cmd.Args, args...)
+	return cmd
 }
 
 func (cmd tileCmd) String() string {

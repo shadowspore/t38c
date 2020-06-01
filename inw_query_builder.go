@@ -127,13 +127,12 @@ func (query InwQueryBuilder) Where(field string, min, max float64) InwQueryBuild
 
 // Wherein is similar to Where except that it checks whether the object’s field value is in a given list.
 func (query InwQueryBuilder) Wherein(field string, values ...float64) InwQueryBuilder {
-	var args []string
-	args = append(args, strconv.Itoa(len(values)))
+	cmd := newTileCmd("WHEREIN", strconv.Itoa(len(values)))
 	for _, val := range values {
-		args = append(args, floatString(val))
+		cmd.appendArgs(floatString(val))
 	}
 
-	query.opts = append(query.opts, newTileCmd("WHEREIN", args...))
+	query.opts = append(query.opts, cmd)
 	return query
 }
 
@@ -146,8 +145,9 @@ func (query InwQueryBuilder) Wherein(field string, values ...float64) InwQueryBu
 // Note that, unlike the EVAL command, WHEREVAL Lua environment (1) does not have KEYS global,
 // and (2) has the FIELDS global with the Lua table of the iterated object’s fields.
 func (query InwQueryBuilder) WhereEval(script string, args ...string) InwQueryBuilder {
-	cmd := newTileCmd("WHEREEVAL", append([]string{script}, args...)...)
-	query.opts = append(query.opts, cmd)
+	query.opts = append(query.opts,
+		newTileCmd("WHEREEVAL").appendArgs(script, args...),
+	)
 	return query
 }
 
@@ -160,8 +160,9 @@ func (query InwQueryBuilder) WhereEval(script string, args ...string) InwQueryBu
 // Note that, unlike the EVAL command, WHEREVAL Lua environment (1) does not have KEYS global,
 // and (2) has the FIELDS global with the Lua table of the iterated object’s fields.
 func (query InwQueryBuilder) WhereEvalSHA(sha string, args ...string) InwQueryBuilder {
-	cmd := newTileCmd("WHEREEVALSHA", append([]string{sha}, args...)...)
-	query.opts = append(query.opts, cmd)
+	query.opts = append(query.opts,
+		newTileCmd("WHEREEVALSHA").appendArgs(sha, args...),
+	)
 	return query
 }
 
