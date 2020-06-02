@@ -98,18 +98,6 @@ func (query GeofenceQueryBuilder) Commands(notifyCommands ...NotifyCommand) Geof
 	return query
 }
 
-// Asc order. Only for SEARCH and SCAN commands.
-func (query GeofenceQueryBuilder) Asc() GeofenceQueryBuilder {
-	query.searchOpts = append(query.searchOpts, newTileCmd("ASC"))
-	return query
-}
-
-// Desc order. Only for SEARCH and SCAN commands.
-func (query GeofenceQueryBuilder) Desc() GeofenceQueryBuilder {
-	query.searchOpts = append(query.searchOpts, newTileCmd("DESC"))
-	return query
-}
-
 // NoFields tells the server that you do not want field values returned with the search results.
 func (query GeofenceQueryBuilder) NoFields() GeofenceQueryBuilder {
 	query.searchOpts = append(query.searchOpts, newTileCmd("NOFIELDS"))
