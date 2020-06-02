@@ -4,14 +4,14 @@ import "strconv"
 
 // SetChannelQueryBuilder struct
 type SetChannelQueryBuilder struct {
-	client     *Client
+	client     tile38Client
 	name       string
 	cmd        *tileCmd
 	metas      []Meta
 	expiration *int
 }
 
-func newSetChannelQueryBuilder(client *Client, name string, cmd *tileCmd) SetChannelQueryBuilder {
+func newSetChannelQueryBuilder(client tile38Client, name string, cmd *tileCmd) SetChannelQueryBuilder {
 	return SetChannelQueryBuilder{
 		client: client,
 		name:   name,

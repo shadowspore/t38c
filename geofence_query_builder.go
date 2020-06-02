@@ -8,7 +8,7 @@ import (
 
 // GeofenceQueryBuilder optional params
 type GeofenceQueryBuilder struct {
-	client         *Client
+	client         tile38Client
 	isRoamQuery    bool
 	cmd            string
 	key            string
@@ -22,7 +22,7 @@ type GeofenceQueryBuilder struct {
 	searchOpts     []*tileCmd
 }
 
-func newGeofenceQueryBuilder(client *Client, cmd, key string, area *tileCmd) GeofenceQueryBuilder {
+func newGeofenceQueryBuilder(client tile38Client, cmd, key string, area *tileCmd) GeofenceQueryBuilder {
 	return GeofenceQueryBuilder{
 		client: client,
 		cmd:    cmd,
@@ -31,7 +31,7 @@ func newGeofenceQueryBuilder(client *Client, cmd, key string, area *tileCmd) Geo
 	}
 }
 
-func newGeofenceRoamQueryBuilder(client *Client, key, target, pattern string, meters int) GeofenceQueryBuilder {
+func newGeofenceRoamQueryBuilder(client tile38Client, key, target, pattern string, meters int) GeofenceQueryBuilder {
 	return GeofenceQueryBuilder{
 		client:      client,
 		cmd:         "NEARBY",

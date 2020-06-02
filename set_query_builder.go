@@ -4,7 +4,7 @@ import "strconv"
 
 // SetQueryBuilder struct
 type SetQueryBuilder struct {
-	client     *Client
+	client     tile38Client
 	key        string
 	objectID   string
 	area       *tileCmd
@@ -14,7 +14,7 @@ type SetQueryBuilder struct {
 	expiration *int
 }
 
-func newSetQueryBuilder(client *Client, key, objectID string, area *tileCmd) SetQueryBuilder {
+func newSetQueryBuilder(client tile38Client, key, objectID string, area *tileCmd) SetQueryBuilder {
 	return SetQueryBuilder{
 		client:   client,
 		key:      key,

@@ -14,3 +14,9 @@ type Executor interface {
 	Execute(command string, args ...string) ([]byte, error)
 	ExecuteStream(ctx context.Context, handler func([]byte) error, command string, args ...string) error
 }
+
+// for internal usage
+type tile38Client interface {
+	Executor
+	jExecute(resp interface{}, command string, args ...string) error
+}

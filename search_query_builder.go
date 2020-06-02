@@ -4,13 +4,13 @@ import "strconv"
 
 // SearchQueryBuilder struct
 type SearchQueryBuilder struct {
-	client       *Client
+	client       tile38Client
 	key          string
 	outputFormat OutputFormat
 	opts         []*tileCmd
 }
 
-func newSearchQueryBuilder(client *Client, key string) SearchQueryBuilder {
+func newSearchQueryBuilder(client tile38Client, key string) SearchQueryBuilder {
 	return SearchQueryBuilder{
 		client: client,
 		key:    key,

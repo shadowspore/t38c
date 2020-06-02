@@ -4,13 +4,13 @@ import "strconv"
 
 // ScanQueryBuilder struct
 type ScanQueryBuilder struct {
-	client       *Client
+	client       tile38Client
 	key          string
 	outputFormat OutputFormat
 	opts         []*tileCmd
 }
 
-func newScanQueryBuilder(client *Client, key string) ScanQueryBuilder {
+func newScanQueryBuilder(client tile38Client, key string) ScanQueryBuilder {
 	return ScanQueryBuilder{
 		client: client,
 		key:    key,
