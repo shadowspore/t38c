@@ -26,6 +26,7 @@ type Client struct {
 type clientParams struct {
 	debug    bool
 	password *string
+	poolSize int
 }
 
 // ClientOption ...
@@ -43,16 +44,22 @@ func WithPassword(password string) ClientOption {
 	}
 }
 
+// PoolSize option.
+func SetPoolSize(size int) ClientOption {
+	return func(c *clientParams) {
+		c.poolSize = size
+	}
+}
 // New creates a new Tile38 client.
 // By default uses redis pool with 5 connections.
 // In debug mode will also print commands which will be sent to the server.
 func New(addr string, opts ...ClientOption) (*Client, error) {
-	params := &clientParams{}
+	params := &clientParams{poolSize: 5}
 	for _, opt := range opts {
 		opt(params)
 	}
 
-	radixPool, err := transport.NewRadixPool(addr, 5, params.password)
+	radixPool, err := transport.NewRadixPool(addr, params.poolSize, params.password)
 	if err != nil {
 		return nil, err
 	}
