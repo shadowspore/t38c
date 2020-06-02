@@ -84,7 +84,7 @@ func (query ScanQueryBuilder) Where(field string, min, max float64) ScanQueryBui
 
 // Wherein is similar to Where except that it checks whether the object’s field value is in a given list.
 func (query ScanQueryBuilder) Wherein(field string, values ...float64) ScanQueryBuilder {
-	cmd := newTileCmd("WHEREIN", strconv.Itoa(len(values)))
+	cmd := newTileCmd("WHEREIN", field, strconv.Itoa(len(values)))
 	for _, val := range values {
 		cmd.appendArgs(floatString(val))
 	}
