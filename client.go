@@ -44,12 +44,13 @@ func WithPassword(password string) ClientOption {
 	}
 }
 
-// PoolSize option.
+// SetPoolSize option.
 func SetPoolSize(size int) ClientOption {
 	return func(c *clientParams) {
 		c.poolSize = size
 	}
 }
+
 // New creates a new Tile38 client.
 // By default uses redis pool with 5 connections.
 // In debug mode will also print commands which will be sent to the server.
