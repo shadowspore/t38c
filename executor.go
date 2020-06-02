@@ -7,7 +7,6 @@ import (
 )
 
 var _ Executor = (*transport.RadixPool)(nil)
-var _ Executor = (*transport.Mock)(nil)
 
 // Executor represents Tile38 connection.
 // Communication should be in JSON format only.
