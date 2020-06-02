@@ -2,6 +2,7 @@ package t38c
 
 import (
 	"strconv"
+	"time"
 
 	geojson "github.com/paulmach/go.geojson"
 	"github.com/tidwall/gjson"
@@ -155,7 +156,7 @@ type GeofenceEvent struct {
 	Group   string             `json:"group"`
 	Detect  string             `json:"detect"`
 	Key     string             `json:"key"`
-	Time    StringTime         `json:"time"`
+	Time    time.Time          `json:"time"`
 	ID      string             `json:"id"`
 	Object  *Object            `json:"object,omitempty"`
 	Point   *Point             `json:"point,omitempty"`
