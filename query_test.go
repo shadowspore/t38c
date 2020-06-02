@@ -3,8 +3,6 @@ package t38c
 import (
 	"strings"
 	"testing"
-
-	"github.com/stretchr/testify/assert"
 )
 
 func TestInwQueryBuilder(t *testing.T) {
@@ -35,7 +33,18 @@ func TestInwQueryBuilder(t *testing.T) {
 		cmd := *test.Query.toCmd()
 		actual := append([]string{cmd.Name}, cmd.Args...)
 		expected := strings.Split(test.Expected, " ")
-		assert.Equal(t, expected, actual)
+		if len(actual) != len(expected) {
+			t.Fatalf("not equal: bad length (%d, %d)\n"+
+				"expected: %s\n"+
+				"actual  : %s\n", len(expected), len(actual), expected, actual)
+		}
+		for i := 0; i < len(actual); i++ {
+			if actual[i] != expected[i] {
+				t.Fatalf("not equal:\n"+
+					"expected: %s\n"+
+					"actual  : %s\n", expected, actual)
+			}
+		}
 	}
 }
 
@@ -66,7 +75,18 @@ func TestGeofenceQueryBuilder(t *testing.T) {
 		cmd := *test.Query.toCmd()
 		actual := append([]string{cmd.Name}, cmd.Args...)
 		expected := strings.Split(test.Expected, " ")
-		assert.Equal(t, expected, actual)
+		if len(actual) != len(expected) {
+			t.Fatalf("not equal: bad length (%d, %d)\n"+
+				"expected: %s\n"+
+				"actual  : %s\n", len(expected), len(actual), expected, actual)
+		}
+		for i := 0; i < len(actual); i++ {
+			if actual[i] != expected[i] {
+				t.Fatalf("not equal:\n"+
+					"expected: %s\n"+
+					"actual  : %s\n", expected, actual)
+			}
+		}
 	}
 }
 
@@ -89,6 +109,17 @@ func TestSetQueryBuilder(t *testing.T) {
 		cmd := *test.Query.toCmd()
 		actual := append([]string{cmd.Name}, cmd.Args...)
 		expected := strings.Split(test.Expected, " ")
-		assert.Equal(t, expected, actual)
+		if len(actual) != len(expected) {
+			t.Fatalf("not equal: bad length (%d, %d)\n"+
+				"expected: %s\n"+
+				"actual  : %s\n", len(expected), len(actual), expected, actual)
+		}
+		for i := 0; i < len(actual); i++ {
+			if actual[i] != expected[i] {
+				t.Fatalf("not equal:\n"+
+					"expected: %s\n"+
+					"actual  : %s\n", expected, actual)
+			}
+		}
 	}
 }
