@@ -83,7 +83,7 @@ func NewWithExecutor(exec Executor, debug bool) (*Client, error) {
 }
 
 func (client *Client) jExecute(resp interface{}, command string, args ...string) error {
-	b, err := client.exec.Execute(command, args...)
+	b, err := client.Execute(command, args...)
 	if err != nil {
 		return err
 	}
