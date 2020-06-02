@@ -124,7 +124,7 @@ func (query InwQueryBuilder) Where(field string, min, max float64) InwQueryBuild
 
 // Wherein is similar to Where except that it checks whether the object’s field value is in a given list.
 func (query InwQueryBuilder) Wherein(field string, values ...float64) InwQueryBuilder {
-	cmd := newTileCmd("WHEREIN", strconv.Itoa(len(values)))
+	cmd := newTileCmd("WHEREIN", field, strconv.Itoa(len(values)))
 	for _, val := range values {
 		cmd.appendArgs(floatString(val))
 	}

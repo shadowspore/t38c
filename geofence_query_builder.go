@@ -157,7 +157,7 @@ func (query GeofenceQueryBuilder) Where(field string, min, max float64) Geofence
 
 // Wherein is similar to Where except that it checks whether the object’s field value is in a given list.
 func (query GeofenceQueryBuilder) Wherein(field string, values ...float64) GeofenceQueryBuilder {
-	cmd := newTileCmd("WHEREIN", strconv.Itoa(len(values)))
+	cmd := newTileCmd("WHEREIN", field, strconv.Itoa(len(values)))
 	for _, val := range values {
 		cmd.appendArgs(floatString(val))
 	}
