@@ -2,7 +2,7 @@ package t38c
 
 // Hooks struct
 type Hooks struct {
-	client *Client
+	client tile38Client
 }
 
 // DelHook remove a specified hook.

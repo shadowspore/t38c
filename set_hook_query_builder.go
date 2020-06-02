@@ -7,7 +7,7 @@ import (
 
 // SetHookQueryBuilder struct
 type SetHookQueryBuilder struct {
-	client     *Client
+	client     tile38Client
 	name       string
 	endpoints  []string
 	cmd        *tileCmd
@@ -15,7 +15,7 @@ type SetHookQueryBuilder struct {
 	expiration *int
 }
 
-func newSetHookQueryBuilder(client *Client, name, endpoint string, cmd *tileCmd) SetHookQueryBuilder {
+func newSetHookQueryBuilder(client tile38Client, name, endpoint string, cmd *tileCmd) SetHookQueryBuilder {
 	return SetHookQueryBuilder{
 		client:    client,
 		name:      name,

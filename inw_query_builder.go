@@ -38,7 +38,7 @@ import "strconv"
 // InwQueryBuilder struct
 // Intersects Nearby Within
 type InwQueryBuilder struct {
-	client       *Client
+	client       tile38Client
 	cmd          string
 	key          string
 	area         *tileCmd
@@ -46,7 +46,7 @@ type InwQueryBuilder struct {
 	opts         []*tileCmd
 }
 
-func newInwQueryBuilder(client *Client, cmd, key string, area *tileCmd) InwQueryBuilder {
+func newInwQueryBuilder(client tile38Client, cmd, key string, area *tileCmd) InwQueryBuilder {
 	return InwQueryBuilder{
 		client: client,
 		cmd:    cmd,
