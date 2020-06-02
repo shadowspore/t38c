@@ -6,13 +6,13 @@ import (
 )
 
 func TestInwQueryBuilder(t *testing.T) {
-	client := &Client{}
+	search := &Search{}
 	tests := []struct {
 		Query    InwQueryBuilder
 		Expected string
 	}{
 		{
-			Query: client.Nearby("fleet", 10, 20, 30).
+			Query: search.Nearby("fleet", 10, 20, 30).
 				Where("speed", 10, 20).
 				Wherein("speed", 10, 20, 30).
 				Match("abc*").
@@ -22,7 +22,7 @@ func TestInwQueryBuilder(t *testing.T) {
 			Expected: "NEARBY fleet WHERE speed 10 20 WHEREIN speed 3 10 20 30 MATCH abc* CURSOR 10 LIMIT 5 IDS POINT 10 20 30",
 		},
 		{
-			Query: client.Intersects("fleet").
+			Query: search.Intersects("fleet").
 				Tile(10, 20, 30).
 				Match("abc*"),
 			Expected: "INTERSECTS fleet MATCH abc* TILE 10 20 30",
@@ -49,13 +49,13 @@ func TestInwQueryBuilder(t *testing.T) {
 }
 
 func TestGeofenceQueryBuilder(t *testing.T) {
-	client := &Client{}
+	geofence := &Geofence{}
 	tests := []struct {
 		Query    GeofenceQueryBuilder
 		Expected string
 	}{
 		{
-			Query: client.GeofenceNearby("fleet", 10, 20, 30).
+			Query: geofence.Nearby("fleet", 10, 20, 30).
 				Actions(Enter, Exit, Cross).
 				Clip().
 				Commands(Set, Del).
@@ -64,7 +64,7 @@ func TestGeofenceQueryBuilder(t *testing.T) {
 			Expected: "NEARBY fleet CLIP CURSOR 5 FENCE DETECT enter,exit,cross COMMANDS set,del HASHES 5 POINT 10 20 30",
 		},
 		{
-			Query: client.GeofenceRoam("agent", "target", "*", 100).
+			Query: geofence.Roam("agent", "target", "*", 100).
 				Distance().
 				Wherein("price", 20, 30),
 			Expected: "NEARBY agent DISTANCE WHEREIN price 2 20 30 FENCE ROAM target * 100",
@@ -91,13 +91,13 @@ func TestGeofenceQueryBuilder(t *testing.T) {
 }
 
 func TestSetQueryBuilder(t *testing.T) {
-	client := &Client{}
+	keys := &Keys{}
 	tests := []struct {
 		Query    SetQueryBuilder
 		Expected string
 	}{
 		{
-			Query: client.Set("agent", "47").
+			Query: keys.Set("agent", "47").
 				PointZ(0, 0, -20).
 				Field("age", 55).
 				Expiration(60 * 60 * 24 * 365),

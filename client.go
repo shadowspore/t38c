@@ -12,8 +12,15 @@ import (
 
 // Client allows you to interact with the Tile38 server.
 type Client struct {
-	debug    bool
-	executor Executor
+	debug bool
+	exec  Executor
+
+	Search    *Search
+	Keys      *Keys
+	Webhooks  *Hooks
+	Channels  *Channels
+	Scripting *Scripting
+	Geofence  *Geofence
 }
 
 type clientParams struct {
@@ -57,19 +64,26 @@ func New(addr string, opts ...ClientOption) (*Client, error) {
 // See Executor interface for more information.
 func NewWithExecutor(exec Executor, debug bool) (*Client, error) {
 	client := &Client{
-		executor: exec,
-		debug:    debug,
+		exec:  exec,
+		debug: debug,
 	}
 
 	if err := client.Ping(); err != nil {
 		return nil, err
 	}
 
+	client.Webhooks = &Hooks{client}
+	client.Geofence = &Geofence{client}
+	client.Keys = &Keys{client}
+	client.Search = &Search{client}
+	client.Scripting = &Scripting{client}
+	client.Channels = &Channels{client}
+
 	return client, nil
 }
 
 func (client *Client) jExecute(resp interface{}, command string, args ...string) error {
-	b, err := client.Execute(command, args...)
+	b, err := client.exec.Execute(command, args...)
 	if err != nil {
 		return err
 	}
@@ -83,7 +97,7 @@ func (client *Client) jExecute(resp interface{}, command string, args ...string)
 
 // Execute Tile38 command.
 func (client *Client) Execute(command string, args ...string) ([]byte, error) {
-	resp, err := client.executor.Execute(command, args...)
+	resp, err := client.exec.Execute(command, args...)
 	if client.debug {
 		log.Printf("[%s]: %s", newTileCmd(command, args...).String(), resp)
 	}
@@ -105,5 +119,5 @@ func (client *Client) ExecuteStream(ctx context.Context, handler func([]byte) er
 		log.Printf("[%s]", newTileCmd(command, args...).String())
 	}
 
-	return client.executor.ExecuteStream(ctx, handler, command, args...)
+	return client.exec.ExecuteStream(ctx, handler, command, args...)
 }

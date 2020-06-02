@@ -17,24 +17,24 @@ func main() {
 	}
 
 	// add a couple of points named 'truck1' and 'truck2' to a collection named 'fleet'.
-	if err := tile38.Set("fleet", "truck1").Point(33.5123, -112.2693).Do(); err != nil {
+	if err := tile38.Keys.Set("fleet", "truck1").Point(33.5123, -112.2693).Do(); err != nil {
 		log.Fatal(err)
 	}
 
-	if err := tile38.Set("fleet", "truck2").Point(33.4626, -112.1695).Do(); err != nil {
+	if err := tile38.Keys.Set("fleet", "truck2").Point(33.4626, -112.1695).Do(); err != nil {
 		log.Fatal(err)
 	}
 
 	// search the 'fleet' collection.
 	// returns both trucks in 'fleet'
-	scanRes, err := tile38.Scan("fleet").Do()
+	scanRes, err := tile38.Search.Scan("fleet").Do()
 	if err != nil {
 		log.Fatal(err)
 	}
 	printJSON("scan", scanRes)
 
 	// search 6 kilometers around a point. returns one truck.
-	nearbyRes, err := tile38.Nearby("fleet", 33.462, -112.268, 6000).Do()
+	nearbyRes, err := tile38.Search.Nearby("fleet", 33.462, -112.268, 6000).Do()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -42,19 +42,19 @@ func main() {
 
 	// key value operations
 	// returns 'truck1'
-	truck1, err := tile38.Get("fleet", "truck1", false)
+	truck1, err := tile38.Keys.Get("fleet", "truck1", false)
 	if err != nil {
 		log.Fatal(err)
 	}
 	printJSON("get truck1", truck1)
 
 	// deletes 'truck2'
-	if err := tile38.Del("fleet", "truck2"); err != nil {
+	if err := tile38.Keys.Del("fleet", "truck2"); err != nil {
 		log.Fatal(err)
 	}
 
 	// removes all
-	if err := tile38.Drop("fleet"); err != nil {
+	if err := tile38.Keys.Drop("fleet"); err != nil {
 		log.Fatal(err)
 	}
 }

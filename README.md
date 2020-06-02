@@ -21,11 +21,11 @@ func main() {
 		panic(err)
 	}
 
-	if err := client.Set("fleet", "truck1").Point(33.5123, -112.2693).Do(); err != nil {
+	if err := client.Keys.Set("fleet", "truck1").Point(33.5123, -112.2693).Do(); err != nil {
 		panic(err)
 	}
 
-	if err := client.Set("fleet", "truck2").Point(33.4626, -112.1695).
+	if err := client.Keys.Set("fleet", "truck2").Point(33.4626, -112.1695).
 		// optional params
 		Field("speed", 20).
 		Expiration(20).
@@ -34,7 +34,7 @@ func main() {
 	}
 
 	// search 6 kilometers around a point. returns one truck.
-	response, err := client.Nearby("fleet", 33.462, -112.268, 6000).
+	response, err := client.Search.Nearby("fleet", 33.462, -112.268, 6000).
 		Where("speed", 0, 100).
 		Match("truck*").Do()
 	if err != nil {

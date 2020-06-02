@@ -17,10 +17,10 @@ func main() {
 		log.Fatal(err)
 	}
 
-	geofenceRequest := tile38.GeofenceNearby("buses", 33.5123, -112.2693, 200).
+	geofenceRequest := tile38.Geofence.Nearby("buses", 33.5123, -112.2693, 200).
 		Actions(t38c.Enter, t38c.Exit)
 
-	if err := tile38.SetChan("busstop", geofenceRequest).Do(); err != nil {
+	if err := tile38.Channels.SetChan("busstop", geofenceRequest).Do(); err != nil {
 		log.Fatal(err)
 	}
 
@@ -28,7 +28,7 @@ func main() {
 		b, _ := json.Marshal(event)
 		fmt.Printf("event: %s\n", b)
 	}
-	if err := tile38.Subscribe(context.Background(), handler, "busstop"); err != nil {
+	if err := tile38.Channels.Subscribe(context.Background(), handler, "busstop"); err != nil {
 		log.Fatal(err)
 	}
 }

@@ -22,7 +22,7 @@ func main() {
 		fmt.Printf("event: %s\n", b)
 	}
 
-	if err := tile38.GeofenceNearby("fleet", 33.462, -112.268, 6000).
+	if err := tile38.Geofence.Nearby("fleet", 33.462, -112.268, 6000).
 		Actions(t38c.Enter, t38c.Exit).
 		Do(context.Background(), handler); err != nil {
 		log.Fatal(err)

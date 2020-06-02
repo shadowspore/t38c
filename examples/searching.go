@@ -17,7 +17,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	results, err := tile38.Nearby("fleet", 33.462, -112.268, 6000).
+	results, err := tile38.Search.Nearby("fleet", 33.462, -112.268, 6000).
 		Where("speed", 70, math.MaxInt32).
 		Match("truck*").Do()
 	if err != nil {

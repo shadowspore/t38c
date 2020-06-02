@@ -15,7 +15,7 @@ func main() {
 	}
 
 	// To set a field when setting an object:
-	if err := tile38.Set("fleet", "truck1").
+	if err := tile38.Keys.Set("fleet", "truck1").
 		Point(33.5123, -112.2693).
 		Field("speed", 90).
 		Field("age", 21).
@@ -24,7 +24,7 @@ func main() {
 	}
 
 	// To set a field when an object already exists:
-	if err := tile38.FSet("fleet", "truck1").Field("speed", 90).Do(); err != nil {
+	if err := tile38.Keys.FSet("fleet", "truck1").Field("speed", 90).Do(); err != nil {
 		log.Fatal(err)
 	}
 }
