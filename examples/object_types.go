@@ -5,8 +5,8 @@ package main
 import (
 	"log"
 
-	geojson "github.com/paulmach/go.geojson"
 	t38c "github.com/b3q/tile38-client"
+	geojson "github.com/paulmach/go.geojson"
 )
 
 func main() {
