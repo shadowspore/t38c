@@ -2,14 +2,14 @@ package t38c
 
 // FSetQueryBuilder struct
 type FSetQueryBuilder struct {
-	client   *Client
+	client   tile38Client
 	key      string
 	objectID string
 	fields   []field
 	xx       bool
 }
 
-func newFSetQueryBuilder(client *Client, key, objectID string) FSetQueryBuilder {
+func newFSetQueryBuilder(client tile38Client, key, objectID string) FSetQueryBuilder {
 	return FSetQueryBuilder{
 		client:   client,
 		key:      key,

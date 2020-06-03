@@ -8,7 +8,7 @@ import (
 
 // Keys struct
 type Keys struct {
-	client *Client
+	client tile38Client
 }
 
 // Bounds returns the minimum bounding rectangle for all objects in a key.
