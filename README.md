@@ -1,8 +1,8 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/b3q/tile38-client)](https://goreportcard.com/report/github.com/b3q/tile38-client)
 [![Documentation](https://godoc.org/github.com/b3q/tile38-client?status.svg)](https://pkg.go.dev/github.com/b3q/tile38-client?tab=doc)
-# Tile38 client for Go
+# Tile38 Client
 
-Most features are supported (see [TODO.md](TODO.md))
+Supported features: [click](TODO.md)
 
 ```
 go get github.com/b3q/tile38-client
@@ -42,4 +42,4 @@ func main() {
 	}
 }
 ```
-### More examples in [examples](examples) folder
+More examples: [click](examples)
