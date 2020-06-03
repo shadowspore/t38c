@@ -8,12 +8,12 @@ import (
 
 // GeofenceAreaSelector struct
 type GeofenceAreaSelector struct {
-	client *Client
+	client tile38Client
 	cmd    string
 	key    string
 }
 
-func newGeofenceAreaSelector(client *Client, cmd, key string) GeofenceAreaSelector {
+func newGeofenceAreaSelector(client tile38Client, cmd, key string) GeofenceAreaSelector {
 	return GeofenceAreaSelector{
 		client: client,
 		cmd:    cmd,

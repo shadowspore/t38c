@@ -6,12 +6,12 @@ import (
 
 // SetAreaSelector struct
 type SetAreaSelector struct {
-	client   *Client
+	client   tile38Client
 	key      string
 	objectID string
 }
 
-func newSetAreaSelector(client *Client, key, objectID string) SetAreaSelector {
+func newSetAreaSelector(client tile38Client, key, objectID string) SetAreaSelector {
 	return SetAreaSelector{
 		client:   client,
 		key:      key,

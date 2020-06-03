@@ -9,12 +9,12 @@ import (
 // InwAreaSelector struct
 // Intersects Nearby Within
 type InwAreaSelector struct {
-	client *Client
+	client tile38Client
 	cmd    string
 	key    string
 }
 
-func newInwAreaSelector(client *Client, cmd, key string) InwAreaSelector {
+func newInwAreaSelector(client tile38Client, cmd, key string) InwAreaSelector {
 	return InwAreaSelector{
 		client: client,
 		cmd:    cmd,
