@@ -108,8 +108,8 @@
 # Group 'keys'
 - [x] STATS
 - [x] JSET
-    - [ ] RAW
-    - [ ] STR
+    - [X] RAW
+    - [X] STR
 - [x] PERSIST
 - [x] JDEL
 - [x] SET
