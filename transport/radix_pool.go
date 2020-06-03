@@ -72,6 +72,9 @@ func (rad *RadixPool) ExecuteStream(ctx context.Context, handler func([]byte) er
 		return fmt.Errorf(gjson.GetBytes(resp, "err").String())
 	}
 
+	ctx, cancel := context.WithCancel(ctx)
+	defer cancel()
+
 	var forcedDisconnect int32
 	go func() {
 		<-ctx.Done()
