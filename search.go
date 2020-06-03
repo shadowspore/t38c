@@ -2,7 +2,7 @@ package t38c
 
 // Search struct
 type Search struct {
-	client *Client
+	client tile38Client
 }
 
 // Within searches a collection for objects that are fully contained inside of a specified bounding area.

@@ -4,7 +4,7 @@ import "context"
 
 // Channels struct
 type Channels struct {
-	client *Client
+	client tile38Client
 }
 
 // Chans returns all Channels matching pattern.

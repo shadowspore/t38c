@@ -4,7 +4,7 @@ import "strconv"
 
 // Scripting struct
 type Scripting struct {
-	client *Client
+	client tile38Client
 }
 
 func makeScriptArgs(scriptOrSHA string, keys []string, args []string) []string {

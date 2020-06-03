@@ -2,7 +2,7 @@ package t38c
 
 // Geofence struct
 type Geofence struct {
-	client *Client
+	client tile38Client
 }
 
 // Within geofence
