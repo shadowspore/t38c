@@ -1,6 +1,7 @@
 package t38c
 
 import (
+	"encoding/json"
 	"strconv"
 
 	geojson "github.com/paulmach/go.geojson"
@@ -67,12 +68,25 @@ func (ks *Keys) JDel(key, objectID, path string) error {
 
 // JGet get a value from a JSON document.
 func (ks *Keys) JGet(key, objectID, path string) ([]byte, error) {
-	return ks.client.Execute("JGET", key, objectID, path)
+	var resp struct {
+		Value json.RawMessage `json:"value"`
+	}
+
+	// cmd := newTileCmd("JGET", key, objectID, path)
+	// if raw {
+	// 	cmd.appendArgs("RAW")
+	// }
+
+	err := ks.client.jExecute(&resp, "JGET", key, objectID, path)
+	if err != nil {
+		return nil, err
+	}
+	return resp.Value, nil
 }
 
 // JSet set a value in a JSON document.
-func (ks *Keys) JSet(key, objectID, path, value string) ([]byte, error) {
-	return ks.client.Execute("JSET", key, objectID, path, value)
+func (ks *Keys) JSet(key, objectID, path, value string) JSetQueryBuilder {
+	return newJSetQueryBuilder(ks.client, key, objectID, path, value)
 }
 
 // Keys returns all keys matching pattern.
