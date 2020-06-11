@@ -13,6 +13,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer tile38.Close()
 
 	// To set a field when setting an object:
 	if err := tile38.Keys.Set("fleet", "truck1").
