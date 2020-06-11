@@ -129,3 +129,11 @@ func (client *Client) ExecuteStream(ctx context.Context, handler func([]byte) er
 
 	return client.exec.ExecuteStream(ctx, handler, command, args...)
 }
+
+// Close closes all connections in the pool and rejects future execution calls.
+// Blocks until all streams are closed.
+//
+// NOTE: custom Executor implementation may change behavior.
+func (client *Client) Close() error {
+	return client.exec.Close()
+}

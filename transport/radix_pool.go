@@ -2,8 +2,9 @@ package transport
 
 import (
 	"context"
-	"encoding/json"
+	"errors"
 	"fmt"
+	"sync"
 	"sync/atomic"
 	"time"
 
@@ -12,11 +13,16 @@ import (
 	"github.com/tidwall/gjson"
 )
 
+// ErrClosedClient error
+var ErrClosedClient = errors.New("closed client")
+
 // RadixPool struct
 type RadixPool struct {
 	addr     string
 	password *string
 	pool     *radix.Pool
+	wg       sync.WaitGroup
+	closed   uint32
 }
 
 // NewRadixPool return radix pool dialer with provided pool size.
@@ -38,6 +44,10 @@ func NewRadixPool(addr string, size int, password *string) (*RadixPool, error) {
 
 // Execute command
 func (rad *RadixPool) Execute(command string, args ...string) ([]byte, error) {
+	if rad.isClosed() {
+		return nil, ErrClosedClient
+	}
+
 	var resp []byte
 	err := rad.pool.Do(radix.Cmd(&resp, command, args...))
 	if err != nil {
@@ -50,6 +60,12 @@ func (rad *RadixPool) Execute(command string, args ...string) ([]byte, error) {
 // ExecuteStream used for commands with streaming response.
 // Creates a new connection for each stream.
 func (rad *RadixPool) ExecuteStream(ctx context.Context, handler func([]byte) error, command string, args ...string) error {
+	if rad.isClosed() {
+		return ErrClosedClient
+	}
+
+	rad.wg.Add(1)
+	defer rad.wg.Done()
 	conn, err := radix.Dial("tcp", rad.addr,
 		radix.DialConnectTimeout(time.Second*10),
 		radix.DialReadTimeout(0),
@@ -101,46 +117,16 @@ func (rad *RadixPool) ExecuteStream(ctx context.Context, handler func([]byte) er
 	return nil
 }
 
-func poolConnFn(password *string) radix.ConnFunc {
-	return radix.ConnFunc(func(net, addr string) (radix.Conn, error) {
-		conn, err := radix.Dial(net, addr,
-			radix.DialConnectTimeout(time.Second*10),
-		)
-		if err != nil {
-			return nil, err
-		}
-
-		if err := radixPrepareConn(conn, password); err != nil {
-			conn.Close()
-			return nil, err
-		}
-
-		return conn, nil
-	})
+func (rad *RadixPool) isClosed() bool {
+	return atomic.LoadUint32(&rad.closed) == 1
 }
 
-func radixPrepareConn(conn radix.Conn, password *string) error {
-	if password != nil {
-		if err := conn.Do(radix.Cmd(nil, "AUTH", *password)); err != nil {
-			return err
-		}
-	}
-
-	var b []byte
-	if err := conn.Do(radix.Cmd(&b, "OUTPUT", "json")); err != nil {
-		return err
-	}
-
-	var resp struct {
-		Ok bool `json:"ok"`
-	}
-	if err := json.Unmarshal(b, &resp); err != nil {
-		return err
-	}
-
-	if !resp.Ok {
-		return fmt.Errorf("bad response: %s", b)
-	}
-
-	return nil
+// Close closes all connections in the pool and rejects future execution calls.
+// Blocks until all streams are closed.
+func (rad *RadixPool) Close() error {
+	atomic.StoreUint32(&rad.closed, 1)
+	err := rad.pool.Close()
+	rad.pool = nil
+	rad.wg.Wait()
+	return err
 }

@@ -13,6 +13,7 @@ var _ Executor = (*transport.RadixPool)(nil)
 type Executor interface {
 	Execute(command string, args ...string) ([]byte, error)
 	ExecuteStream(ctx context.Context, handler func([]byte) error, command string, args ...string) error
+	Close() error
 }
 
 // for internal usage
