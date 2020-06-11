@@ -83,8 +83,8 @@ func (rad *RadixPool) ExecuteStream(ctx context.Context, handler func([]byte) er
 	}()
 
 	for atomic.LoadInt32(&forcedDisconnect) == 0 {
-		resp := &resp2.BulkStringBytes{}
-		if err := conn.Decode(resp); err != nil {
+		var response resp2.BulkStringBytes
+		if err := conn.Decode(&response); err != nil {
 			forced := atomic.LoadInt32(&forcedDisconnect) == 1
 			if forced {
 				return nil
@@ -93,7 +93,7 @@ func (rad *RadixPool) ExecuteStream(ctx context.Context, handler func([]byte) er
 			return fmt.Errorf("resp decode: %v", err)
 		}
 
-		if err := handler(resp.B); err != nil {
+		if err := handler(response.B); err != nil {
 			return err
 		}
 	}
