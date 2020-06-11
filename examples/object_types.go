@@ -14,6 +14,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer tile38.Close()
 
 	tile38.Keys.Set("fleet", "truck1").Point(33.5123, -112.2693).Do()       // nolint:errcheck
 	tile38.Keys.Set("fleet", "truck1").PointZ(33.5123, -112.2693, 225).Do() // nolint:errcheck

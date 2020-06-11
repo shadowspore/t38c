@@ -16,6 +16,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer tile38.Close()
 
 	results, err := tile38.Search.Nearby("fleet", 33.462, -112.268, 6000).
 		Where("speed", 70, math.MaxInt32).

@@ -16,6 +16,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer tile38.Close()
 
 	geofenceRequest := tile38.Geofence.Nearby("buses", 33.5123, -112.2693, 200).
 		Actions(t38c.Enter, t38c.Exit)

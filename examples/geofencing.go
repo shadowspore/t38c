@@ -16,6 +16,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer tile38.Close()
 
 	handler := func(event *t38c.GeofenceEvent) {
 		b, _ := json.Marshal(event)
