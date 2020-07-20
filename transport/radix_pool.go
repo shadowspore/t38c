@@ -126,7 +126,6 @@ func (rad *RadixPool) isClosed() bool {
 func (rad *RadixPool) Close() error {
 	atomic.StoreUint32(&rad.closed, 1)
 	err := rad.pool.Close()
-	rad.pool = nil
 	rad.wg.Wait()
 	return err
 }
