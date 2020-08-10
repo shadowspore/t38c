@@ -36,24 +36,33 @@ func (selector InwAreaSelector) Bounds(minlat, minlon, maxlat, maxlon float64) I
 
 // FeatureCollection - GeoJSON Feature Collection object.
 func (selector InwAreaSelector) FeatureCollection(fc *geojson.FeatureCollection) InwQueryBuilder {
-	// TODO: handle error?
-	b, _ := fc.MarshalJSON()
+	b, err := fc.MarshalJSON()
+	if err != nil {
+		panic(err)
+	}
+
 	area := newCmd("OBJECT", string(b))
 	return newInwQueryBuilder(selector.client, selector.cmd, selector.key, area)
 }
 
 // Feature - GeoJSON Feature object.
 func (selector InwAreaSelector) Feature(ft *geojson.Feature) InwQueryBuilder {
-	// TODO: handle error?
-	b, _ := ft.MarshalJSON()
+	b, err := ft.MarshalJSON()
+	if err != nil {
+		panic(err)
+	}
+
 	area := newCmd("OBJECT", string(b))
 	return newInwQueryBuilder(selector.client, selector.cmd, selector.key, area)
 }
 
 // Geometry - GeoJSON Geometry object.
 func (selector InwAreaSelector) Geometry(gm *geojson.Geometry) InwQueryBuilder {
-	// TODO: handle error?
-	b, _ := gm.MarshalJSON()
+	b, err := gm.MarshalJSON()
+	if err != nil {
+		panic(err)
+	}
+
 	area := newCmd("OBJECT", string(b))
 	return newInwQueryBuilder(selector.client, selector.cmd, selector.key, area)
 }

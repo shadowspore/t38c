@@ -35,24 +35,33 @@ func (selector GeofenceAreaSelector) Bounds(minlat, minlon, maxlat, maxlon float
 
 // FeatureCollection - GeoJSON Feature Collection object.
 func (selector GeofenceAreaSelector) FeatureCollection(fc *geojson.FeatureCollection) GeofenceQueryBuilder {
-	// TODO: handle error?
-	b, _ := fc.MarshalJSON()
+	b, err := fc.MarshalJSON()
+	if err != nil {
+		panic(err)
+	}
+
 	area := newCmd("OBJECT", string(b))
 	return newGeofenceQueryBuilder(selector.client, selector.cmd, selector.key, area)
 }
 
 // Feature - GeoJSON Feature object.
 func (selector GeofenceAreaSelector) Feature(ft *geojson.Feature) GeofenceQueryBuilder {
-	// TODO: handle error?
-	b, _ := ft.MarshalJSON()
+	b, err := ft.MarshalJSON()
+	if err != nil {
+		panic(err)
+	}
+
 	area := newCmd("OBJECT", string(b))
 	return newGeofenceQueryBuilder(selector.client, selector.cmd, selector.key, area)
 }
 
 // Geometry - GeoJSON Geometry object.
 func (selector GeofenceAreaSelector) Geometry(gm *geojson.Geometry) GeofenceQueryBuilder {
-	// TODO: handle error?
-	b, _ := gm.MarshalJSON()
+	b, err := gm.MarshalJSON()
+	if err != nil {
+		panic(err)
+	}
+
 	area := newCmd("OBJECT", string(b))
 	return newGeofenceQueryBuilder(selector.client, selector.cmd, selector.key, area)
 }
