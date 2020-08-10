@@ -113,16 +113,12 @@ var (
 	// When LIMIT is not specified, COUNT totals up all items starting from provided CURSOR position
 	// (or zero if a cursor is omitted). LIMIT and CURSOR options are ignored.
 	FormatCount = OutputFormat(newCmd("COUNT"))
-
 	// FormatIDs - A list of IDs belonging to the key. Will not return the objects.
 	FormatIDs = OutputFormat(newCmd("IDS"))
-
 	// FormatPoints - A list of standard latitude, longitude points.
 	FormatPoints = OutputFormat(newCmd("POINTS"))
-
 	// FormatBounds - A list of minimum bounding rectangle.
 	FormatBounds = OutputFormat(newCmd("BOUNDS"))
-
 	// FormatHashes - A list of Geohash. Requires a precision of 1 to 22.
 	FormatHashes = func(precision int) OutputFormat {
 		return OutputFormat(newCmd("HASHES", strconv.Itoa(precision)))
