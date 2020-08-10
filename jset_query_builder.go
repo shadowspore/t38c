@@ -7,6 +7,8 @@ type JSetQueryBuilder struct {
 	objectID string
 	path     string
 	value    string
+	str      bool
+	raw      bool
 }
 
 func newJSetQueryBuilder(client tile38Client, key, objectID, path, value string) JSetQueryBuilder {
@@ -19,9 +21,19 @@ func newJSetQueryBuilder(client tile38Client, key, objectID, path, value string)
 	}
 }
 
-func (query JSetQueryBuilder) toCmd() *tileCmd {
-	cmd := newTileCmd("JSET", query.key, query.objectID, query.path, query.value)
-	return cmd
+func (query JSetQueryBuilder) toCmd() cmd {
+	args := []string{
+		query.key, query.objectID, query.path, query.value,
+	}
+
+	if query.str {
+		args = append(args, "STR")
+	}
+
+	if query.raw {
+		args = append(args, "RAW")
+	}
+	return newCmd("JSET", args...)
 }
 
 // Do cmd
@@ -30,16 +42,14 @@ func (query JSetQueryBuilder) Do() error {
 	return query.client.jExecute(nil, cmd.Name, cmd.Args...)
 }
 
-// DoStr allows value to be interpreted as a string
-func (query JSetQueryBuilder) DoStr() error {
-	cmd := query.toCmd()
-	cmd.appendArgs("STR")
-	return query.client.jExecute(nil, cmd.Name, cmd.Args...)
+// Str allows value to be interpreted as a string
+func (query JSetQueryBuilder) Str() JSetQueryBuilder {
+	query.str = true
+	return query
 }
 
-// DoRaw allows value to be interpreted as a serialized JSON object
-func (query JSetQueryBuilder) DoRaw() error {
-	cmd := query.toCmd()
-	cmd.appendArgs("RAW")
-	return query.client.jExecute(nil, cmd.Name, cmd.Args...)
+// Raw allows value to be interpreted as a serialized JSON object
+func (query JSetQueryBuilder) Raw() JSetQueryBuilder {
+	query.raw = true
+	return query
 }

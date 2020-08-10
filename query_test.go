@@ -9,7 +9,7 @@ import (
 func TestSearch(t *testing.T) {
 	search := &Search{}
 	tests := []struct {
-		Cmd      *tileCmd
+		Cmd      cmd
 		Expected string
 	}{
 		{
@@ -41,7 +41,7 @@ func TestSearch(t *testing.T) {
 func TestGeofence(t *testing.T) {
 	geofence := &Geofence{}
 	tests := []struct {
-		Cmd      *tileCmd
+		Cmd      cmd
 		Expected string
 	}{
 		{
@@ -57,7 +57,7 @@ func TestGeofence(t *testing.T) {
 			Cmd: geofence.Roam("agent", "target", "*", 100).
 				Distance().
 				Wherein("price", 20, 30).toCmd(),
-			Expected: "NEARBY agent DISTANCE WHEREIN price 2 20 30 FENCE ROAM target * 100",
+			Expected: "NEARBY agent WHEREIN price 2 20 30 DISTANCE FENCE ROAM target * 100",
 		},
 	}
 
@@ -72,7 +72,7 @@ func TestGeofence(t *testing.T) {
 func TestKeys(t *testing.T) {
 	keys := &Keys{}
 	tests := []struct {
-		Cmd      *tileCmd
+		Cmd      cmd
 		Expected string
 	}{
 		{
@@ -98,7 +98,7 @@ func TestKeys(t *testing.T) {
 	}
 }
 
-func compare(cmd *tileCmd, expectedCmd string) error {
+func compare(cmd cmd, expectedCmd string) error {
 	actual := append([]string{cmd.Name}, cmd.Args...)
 	expected := strings.Split(expectedCmd, " ")
 	if len(actual) != len(expected) {

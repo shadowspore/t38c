@@ -17,7 +17,7 @@ func (gf *Geofence) Intersects(key string) GeofenceAreaSelector {
 
 // Nearby geofence
 func (gf *Geofence) Nearby(key string, lat, lon, meters float64) GeofenceQueryBuilder {
-	area := newTileCmd("POINT", floatString(lat), floatString(lon), floatString(meters))
+	area := newCmd("POINT", floatString(lat), floatString(lon), floatString(meters))
 	return newGeofenceQueryBuilder(gf.client, "NEARBY", key, area)
 }
 

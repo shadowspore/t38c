@@ -52,12 +52,12 @@ func (ks *Keys) FSet(key, objectID string) FSetQueryBuilder {
 
 // Get returns object of an id.
 func (ks *Keys) Get(key, objectID string, withFields bool) (resp *GetResponse, err error) {
-	cmd := newTileCmd("GET", key, objectID)
+	args := []string{key, objectID}
 	if withFields {
-		cmd.appendArgs("WITHFIELDS")
+		args = append(args, "WITHFIELDS")
 	}
 
-	err = ks.client.jExecute(resp, cmd.Name, cmd.Args...)
+	err = ks.client.jExecute(resp, "GET", args...)
 	return
 }
 

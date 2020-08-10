@@ -7,14 +7,14 @@ type SetQueryBuilder struct {
 	client     tile38Client
 	key        string
 	objectID   string
-	area       *tileCmd
+	area       cmd
 	fields     []field
 	nx         bool
 	xx         bool
 	expiration *int
 }
 
-func newSetQueryBuilder(client tile38Client, key, objectID string, area *tileCmd) SetQueryBuilder {
+func newSetQueryBuilder(client tile38Client, key, objectID string, area cmd) SetQueryBuilder {
 	return SetQueryBuilder{
 		client:   client,
 		key:      key,
@@ -23,26 +23,27 @@ func newSetQueryBuilder(client tile38Client, key, objectID string, area *tileCmd
 	}
 }
 
-func (query SetQueryBuilder) toCmd() *tileCmd {
-	cmd := newTileCmd("SET", query.key, query.objectID)
+func (query SetQueryBuilder) toCmd() cmd {
+	args := []string{query.key, query.objectID}
 	if query.nx {
-		cmd.appendArgs("NX")
+		args = append(args, "NX")
 	}
 
 	if query.xx {
-		cmd.appendArgs("XX")
+		args = append(args, "XX")
 	}
 
 	if query.expiration != nil {
-		cmd.appendArgs("EX", strconv.Itoa(*query.expiration))
+		args = append(args, "EX", strconv.Itoa(*query.expiration))
 	}
 
 	for _, field := range query.fields {
-		cmd.appendArgs("FIELD", field.Name, floatString(field.Value))
+		args = append(args, "FIELD", field.Name, floatString(field.Value))
 	}
 
-	cmd.appendArgs(query.area.Name, query.area.Args...)
-	return cmd
+	args = append(args, query.area.Name)
+	args = append(args, query.area.Args...)
+	return newCmd("SET", args...)
 }
 
 // Do cmd

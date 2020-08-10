@@ -10,32 +10,33 @@ type SetHookQueryBuilder struct {
 	client     tile38Client
 	name       string
 	endpoints  []string
-	cmd        *tileCmd
+	cmd        cmd
 	metas      []Meta
 	expiration *int
 }
 
-func newSetHookQueryBuilder(client tile38Client, name, endpoint string, cmd *tileCmd) SetHookQueryBuilder {
+func newSetHookQueryBuilder(client tile38Client, name, endpoint string, query cmd) SetHookQueryBuilder {
 	return SetHookQueryBuilder{
 		client:    client,
 		name:      name,
 		endpoints: []string{endpoint},
-		cmd:       cmd,
+		cmd:       query,
 	}
 }
 
-func (query SetHookQueryBuilder) toCmd() *tileCmd {
-	cmd := newTileCmd("SETHOOK", query.name, strings.Join(query.endpoints, ","))
+func (query SetHookQueryBuilder) toCmd() cmd {
+	args := []string{query.name, strings.Join(query.endpoints, ",")}
 	for _, meta := range query.metas {
-		cmd.appendArgs("META", meta.Name, meta.Value)
+		args = append(args, "META", meta.Name, meta.Value)
 	}
 
 	if query.expiration != nil {
-		cmd.appendArgs("EX", strconv.Itoa(*query.expiration))
+		args = append(args, "EX", strconv.Itoa(*query.expiration))
 	}
 
-	cmd.appendArgs(query.cmd.Name, query.cmd.Args...)
-	return cmd
+	args = append(args, query.cmd.Name)
+	args = append(args, query.cmd.Args...)
+	return newCmd("SETHOOK", args...)
 }
 
 // Do cmd

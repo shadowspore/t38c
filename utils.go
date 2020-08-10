@@ -4,29 +4,23 @@ import (
 	"encoding/json"
 	"fmt"
 	"strconv"
+	"strings"
 )
 
-type tileCmd struct {
+type cmd struct {
 	Name string
 	Args []string
 }
 
-func newTileCmd(name string, args ...string) *tileCmd {
-	return &tileCmd{name, args}
+func newCmd(name string, args ...string) cmd {
+	return cmd{name, args}
 }
 
-func (cmd *tileCmd) appendArgs(name string, args ...string) *tileCmd {
-	cmd.Args = append(cmd.Args, name)
-	cmd.Args = append(cmd.Args, args...)
-	return cmd
-}
-
-func (cmd *tileCmd) String() string {
-	str := cmd.Name
-	for _, arg := range cmd.Args {
-		str += " " + arg
+func (c cmd) String() string {
+	str := c.Name
+	if len(c.Args) > 0 {
+		str += " " + strings.Join(c.Args, " ")
 	}
-
 	return str
 }
 

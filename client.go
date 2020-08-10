@@ -107,7 +107,7 @@ func (client *Client) jExecute(resp interface{}, command string, args ...string)
 func (client *Client) Execute(command string, args ...string) ([]byte, error) {
 	resp, err := client.exec.Execute(command, args...)
 	if client.debug {
-		log.Printf("[%s]: %s", newTileCmd(command, args...).String(), resp)
+		log.Printf("[%s]: %s", newCmd(command, args...).String(), resp)
 	}
 
 	if err != nil {
@@ -124,7 +124,7 @@ func (client *Client) Execute(command string, args ...string) ([]byte, error) {
 // ExecuteStream used for Tile38 commands with streaming response.
 func (client *Client) ExecuteStream(ctx context.Context, handler func([]byte) error, command string, args ...string) error {
 	if client.debug {
-		log.Printf("[%s]", newTileCmd(command, args...).String())
+		log.Printf("[%s]", newCmd(command, args...).String())
 	}
 
 	return client.exec.ExecuteStream(ctx, handler, command, args...)

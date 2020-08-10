@@ -12,17 +12,17 @@ type GeofenceQueryBuilder struct {
 	isRoamQuery    bool
 	cmd            string
 	key            string
-	area           *tileCmd
+	area           cmd
 	target         string
 	pattern        string
 	meters         int
-	outputFormat   OutputFormat
+	outputFormat   *OutputFormat
 	detectActions  []DetectAction
 	notifyCommands []NotifyCommand
-	searchOpts     []*tileCmd
+	searchOpts     searchOpts
 }
 
-func newGeofenceQueryBuilder(client tile38Client, cmd, key string, area *tileCmd) GeofenceQueryBuilder {
+func newGeofenceQueryBuilder(client tile38Client, cmd, key string, area cmd) GeofenceQueryBuilder {
 	return GeofenceQueryBuilder{
 		client: client,
 		cmd:    cmd,
@@ -43,19 +43,16 @@ func newGeofenceRoamQueryBuilder(client tile38Client, key, target, pattern strin
 	}
 }
 
-func (query GeofenceQueryBuilder) toCmd() *tileCmd {
-	cmd := newTileCmd(query.cmd, query.key)
-	for _, opt := range query.searchOpts {
-		cmd.appendArgs(opt.Name, opt.Args...)
-	}
-
-	cmd.appendArgs("FENCE")
+func (query GeofenceQueryBuilder) toCmd() cmd {
+	args := []string{query.key}
+	args = append(args, query.searchOpts.Args()...)
+	args = append(args, "FENCE")
 	if len(query.detectActions) > 0 {
 		actions := make([]string, len(query.detectActions))
 		for i := range query.detectActions {
 			actions[i] = string(query.detectActions[i])
 		}
-		cmd.appendArgs("DETECT", strings.Join(actions, ","))
+		args = append(args, "DETECT", strings.Join(actions, ","))
 	}
 
 	if len(query.notifyCommands) > 0 {
@@ -63,20 +60,22 @@ func (query GeofenceQueryBuilder) toCmd() *tileCmd {
 		for i := range query.notifyCommands {
 			commands[i] = string(query.notifyCommands[i])
 		}
-		cmd.appendArgs("COMMANDS", strings.Join(commands, ","))
+		args = append(args, "COMMANDS", strings.Join(commands, ","))
 	}
 
 	if query.outputFormat != nil {
-		cmd.appendArgs(query.outputFormat.Name, query.outputFormat.Args...)
+		args = append(args, query.outputFormat.Name)
+		args = append(args, query.outputFormat.Args...)
 	}
 
 	if query.isRoamQuery {
-		cmd.appendArgs("ROAM", query.target, query.pattern, strconv.Itoa(query.meters))
-		return cmd
+		args = append(args, "ROAM", query.target, query.pattern, strconv.Itoa(query.meters))
+	} else {
+		args = append(args, query.area.Name)
+		args = append(args, query.area.Args...)
 	}
 
-	cmd.appendArgs(query.area.Name, query.area.Args...)
-	return cmd
+	return newCmd(query.cmd, args...)
 }
 
 // Do cmd
@@ -100,20 +99,20 @@ func (query GeofenceQueryBuilder) Commands(notifyCommands ...NotifyCommand) Geof
 
 // NoFields tells the server that you do not want field values returned with the search results.
 func (query GeofenceQueryBuilder) NoFields() GeofenceQueryBuilder {
-	query.searchOpts = append(query.searchOpts, newTileCmd("NOFIELDS"))
+	query.searchOpts.NoFields = true
 	return query
 }
 
 // Clip tells the server to clip intersecting objects by the bounding box area of the search.
 // It can only be used with these area formats: BOUNDS, TILE, QUADKEY, HASH.
 func (query GeofenceQueryBuilder) Clip() GeofenceQueryBuilder {
-	query.searchOpts = append(query.searchOpts, newTileCmd("CLIP"))
+	query.searchOpts.Clip = true
 	return query
 }
 
 // Distance allows to return between objects. Only for NEARBY tileCmd.
 func (query GeofenceQueryBuilder) Distance() GeofenceQueryBuilder {
-	query.searchOpts = append(query.searchOpts, newTileCmd("DISTANCE"))
+	query.searchOpts.Distance = true
 	return query
 }
 
@@ -121,36 +120,38 @@ func (query GeofenceQueryBuilder) Distance() GeofenceQueryBuilder {
 // An iteration begins when the CURSOR is set to Zero or not included with the request,
 // and completes when the cursor returned by the server is Zero.
 func (query GeofenceQueryBuilder) Cursor(cursor int) GeofenceQueryBuilder {
-	query.searchOpts = append(query.searchOpts, newTileCmd("CURSOR", strconv.Itoa(cursor)))
+	query.searchOpts.Curosr = &cursor
 	return query
 }
 
 // Limit can be used to limit the number of objects returned for a single search request.
 func (query GeofenceQueryBuilder) Limit(limit int) GeofenceQueryBuilder {
-	query.searchOpts = append(query.searchOpts, newTileCmd("LIMIT", strconv.Itoa(limit)))
+	query.searchOpts.Limit = &limit
 	return query
 }
 
 // Sparse will distribute the results of a search evenly across the requested area.
 func (query GeofenceQueryBuilder) Sparse(sparse int) GeofenceQueryBuilder {
-	query.searchOpts = append(query.searchOpts, newTileCmd("SPARSE", strconv.Itoa(sparse)))
+	query.searchOpts.Sparse = &sparse
 	return query
 }
 
 // Where allows for filtering out results based on field values.
 func (query GeofenceQueryBuilder) Where(field string, min, max float64) GeofenceQueryBuilder {
-	query.searchOpts = append(query.searchOpts, newTileCmd("WHERE", field, floatString(min), floatString(max)))
+	query.searchOpts.Where = append(query.searchOpts.Where, whereOpt{
+		Field: field,
+		Min:   min,
+		Max:   max,
+	})
 	return query
 }
 
 // Wherein is similar to Where except that it checks whether the object’s field value is in a given list.
 func (query GeofenceQueryBuilder) Wherein(field string, values ...float64) GeofenceQueryBuilder {
-	cmd := newTileCmd("WHEREIN", field, strconv.Itoa(len(values)))
-	for _, val := range values {
-		cmd.appendArgs(floatString(val))
-	}
-
-	query.searchOpts = append(query.searchOpts, cmd)
+	query.searchOpts.Wherein = append(query.searchOpts.Wherein, whereinOpt{
+		Field:  field,
+		Values: values,
+	})
 	return query
 }
 
@@ -163,9 +164,10 @@ func (query GeofenceQueryBuilder) Wherein(field string, values ...float64) Geofe
 // Note that, unlike the EVAL command, WHEREVAL Lua environment (1) does not have KEYS global,
 // and (2) has the FIELDS global with the Lua table of the iterated object’s fields.
 func (query GeofenceQueryBuilder) WhereEval(script string, args ...string) GeofenceQueryBuilder {
-	query.searchOpts = append(query.searchOpts,
-		newTileCmd("WHEREEVAL", script).appendArgs(strconv.Itoa(len(args)), args...),
-	)
+	query.searchOpts.WhereEval = append(query.searchOpts.WhereEval, whereEvalOpt{
+		Name: script,
+		Args: args,
+	})
 	return query
 }
 
@@ -178,9 +180,11 @@ func (query GeofenceQueryBuilder) WhereEval(script string, args ...string) Geofe
 // Note that, unlike the EVAL command, WHEREVAL Lua environment (1) does not have KEYS global,
 // and (2) has the FIELDS global with the Lua table of the iterated object’s fields.
 func (query GeofenceQueryBuilder) WhereEvalSHA(sha string, args ...string) GeofenceQueryBuilder {
-	query.searchOpts = append(query.searchOpts,
-		newTileCmd("WHEREEVALSHA", sha).appendArgs(strconv.Itoa(len(args)), args...),
-	)
+	query.searchOpts.WhereEval = append(query.searchOpts.WhereEval, whereEvalOpt{
+		Name:  sha,
+		IsSHA: true,
+		Args:  args,
+	})
 	return query
 }
 
@@ -188,12 +192,12 @@ func (query GeofenceQueryBuilder) WhereEvalSHA(sha string, args ...string) Geofe
 // There can be multiple MATCH options in a single search.
 // The MATCH value is a simple glob pattern.
 func (query GeofenceQueryBuilder) Match(pattern string) GeofenceQueryBuilder {
-	query.searchOpts = append(query.searchOpts, newTileCmd("MATCH", pattern))
+	query.searchOpts.Match = append(query.searchOpts.Match, pattern)
 	return query
 }
 
 // Format set response format.
 func (query GeofenceQueryBuilder) Format(fmt OutputFormat) GeofenceQueryBuilder {
-	query.outputFormat = fmt
+	query.outputFormat = &fmt
 	return query
 }
