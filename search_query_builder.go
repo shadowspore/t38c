@@ -17,7 +17,7 @@ func newSearchQueryBuilder(client tile38Client, key string) SearchQueryBuilder {
 
 func (query SearchQueryBuilder) toCmd() cmd {
 	args := []string{query.key}
-
+	args = append(args, query.opts.Args()...)
 	if query.outputFormat != nil {
 		args = append(args, query.outputFormat.Name)
 		args = append(args, query.outputFormat.Args...)
