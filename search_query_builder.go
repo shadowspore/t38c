@@ -27,10 +27,11 @@ func (query SearchQueryBuilder) toCmd() cmd {
 }
 
 // Do cmd
-func (query SearchQueryBuilder) Do() (resp *SearchResponse, err error) {
+func (query SearchQueryBuilder) Do() (*SearchResponse, error) {
 	cmd := query.toCmd()
-	err = query.client.jExecute(&resp, cmd.Name, cmd.Args...)
-	return
+	resp := new(SearchResponse)
+	err := query.client.jExecute(&resp, cmd.Name, cmd.Args...)
+	return resp, err
 }
 
 // Cursor is used to iterate though many objects from the search results.
