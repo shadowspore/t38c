@@ -1,14 +1,14 @@
 # Tile38 Client
-[![Go](https://github.com/b3q/tile38-client/workflows/Go/badge.svg)](https://github.com/b3q/tile38-client/actions)
-[![Documentation](https://pkg.go.dev/badge/github.com/b3q/tile38-client)](https://pkg.go.dev/github.com/b3q/tile38-client?tab=doc)
-[![Go Report Card](https://goreportcard.com/badge/github.com/b3q/tile38-client)](https://goreportcard.com/report/github.com/b3q/tile38-client)
-[![codecov](https://codecov.io/gh/b3q/tile38-client/branch/master/graph/badge.svg)](https://codecov.io/gh/b3q/tile38-client)
-[![license](https://img.shields.io/github/license/b3q/tile38-client.svg)](https://github.com/b3q/tile38-client/blob/master/LICENSE)
+[![Go](https://github.com/zerobounty/tile38-client/workflows/Go/badge.svg)](https://github.com/zerobounty/tile38-client/actions)
+[![Documentation](https://pkg.go.dev/badge/github.com/zerobounty/tile38-client)](https://pkg.go.dev/github.com/zerobounty/tile38-client?tab=doc)
+[![Go Report Card](https://goreportcard.com/badge/github.com/zerobounty/tile38-client)](https://goreportcard.com/report/github.com/zerobounty/tile38-client)
+[![codecov](https://codecov.io/gh/zerobounty/tile38-client/branch/master/graph/badge.svg)](https://codecov.io/gh/zerobounty/tile38-client)
+[![license](https://img.shields.io/github/license/zerobounty/tile38-client.svg)](https://github.com/zerobounty/tile38-client/blob/master/LICENSE)
 
 Supported features: [click](TODO.md)
 
 ```
-go get github.com/b3q/tile38-client
+go get github.com/zerobounty/tile38-client
 ```
 
 ### Basic example
@@ -19,7 +19,7 @@ package main
 import (
 	"fmt"
 
-	t38c "github.com/b3q/tile38-client"
+	t38c "github.com/zerobounty/tile38-client"
 )
 
 func main() {
