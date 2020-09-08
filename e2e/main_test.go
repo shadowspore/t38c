@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	t38c "github.com/zerobounty/tile38-client"
+	t38c "github.com/axvq/tile38-client"
 	"github.com/ory/dockertest/v3"
 	geojson "github.com/paulmach/go.geojson"
 	"github.com/stretchr/testify/assert"

@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"log"
 
-	t38c "github.com/zerobounty/tile38-client"
+	t38c "github.com/axvq/tile38-client"
 )
 
 func main() {

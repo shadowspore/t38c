@@ -1,4 +1,4 @@
-module github.com/zerobounty/tile38-client
+module github.com/axvq/tile38-client
 
 go 1.14
 
