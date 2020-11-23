@@ -2,7 +2,7 @@
 [![Go](https://github.com/axvq/tile38-client/workflows/Go/badge.svg)](https://github.com/axvq/tile38-client/actions)
 [![Documentation](https://pkg.go.dev/badge/github.com/axvq/tile38-client)](https://pkg.go.dev/github.com/axvq/tile38-client?tab=doc)
 [![Go Report Card](https://goreportcard.com/badge/github.com/axvq/tile38-client)](https://goreportcard.com/report/github.com/axvq/tile38-client)
-[![codecov](https://codecov.io/gh/axvq/tile38-client/branch/master/graph/badge.svg)](https://codecov.io/gh/axvq/tile38-client)
+[![codecov](https://codecov.io/gh/zweihander/tile38-client/branch/master/graph/badge.svg)](https://codecov.io/gh/axvq/tile38-client)
 [![license](https://img.shields.io/github/license/axvq/tile38-client.svg)](https://github.com/axvq/tile38-client/blob/master/LICENSE)
 
 Supported features: [click](TODO.md)
