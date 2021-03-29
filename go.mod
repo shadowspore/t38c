@@ -7,5 +7,5 @@ require (
 	github.com/ory/dockertest/v3 v3.6.3
 	github.com/paulmach/go.geojson v1.4.0
 	github.com/stretchr/testify v1.7.0
-	github.com/tidwall/gjson v1.6.8
+	github.com/tidwall/gjson v1.7.4
 )
