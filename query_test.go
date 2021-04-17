@@ -65,8 +65,8 @@ func TestSearch(t *testing.T) {
 			Expected: "INTERSECTS fleet MATCH abc* TILE 10 20 30",
 		},
 		{
-			Cmd:      search.Within("foo").Get("objID").Distance().WhereEval("bar").toCmd(),
-			Expected: "WITHIN foo WHEREEVAL bar 0 DISTANCE GET objID",
+			Cmd:      search.Within("foo").Get("baz", "objID").Distance().WhereEval("bar").toCmd(),
+			Expected: "WITHIN foo WHEREEVAL bar 0 DISTANCE GET baz objID",
 		},
 		{
 			Cmd:      search.Search("foo").Asc().Cursor(5).Limit(5).Match("bar*").FormatIDs().toCmd(),

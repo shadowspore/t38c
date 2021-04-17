@@ -22,8 +22,8 @@ func newGeofenceAreaSelector(client tile38Client, cmd, key string) GeofenceAreaS
 }
 
 // Get any object that already exists in the database.
-func (selector GeofenceAreaSelector) Get(objectID string) GeofenceQueryBuilder {
-	area := newCmd("GET", objectID)
+func (selector GeofenceAreaSelector) Get(key, objectID string) GeofenceQueryBuilder {
+	area := newCmd("GET", key, objectID)
 	return newGeofenceQueryBuilder(selector.client, selector.cmd, selector.key, area)
 }
 
