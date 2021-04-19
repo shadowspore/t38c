@@ -1,4 +1,4 @@
-module github.com/axvq/tile38-client
+module github.com/xjem/t38c
 
 go 1.14
 

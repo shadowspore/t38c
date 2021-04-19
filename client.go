@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/axvq/tile38-client/transport"
+	"github.com/xjem/t38c/transport"
 	"github.com/tidwall/gjson"
 )
 

@@ -8,7 +8,7 @@ import (
 	"log"
 	"math"
 
-	t38c "github.com/axvq/tile38-client"
+	"github.com/xjem/t38c"
 )
 
 func main() {

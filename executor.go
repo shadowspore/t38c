@@ -3,7 +3,7 @@ package t38c
 import (
 	"context"
 
-	"github.com/axvq/tile38-client/transport"
+	"github.com/xjem/t38c/transport"
 )
 
 var _ Executor = (*transport.RadixPool)(nil)

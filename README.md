@@ -1,14 +1,14 @@
 # Tile38 Client
-[![Go](https://github.com/axvq/tile38-client/workflows/Go/badge.svg)](https://github.com/axvq/tile38-client/actions)
-[![Documentation](https://pkg.go.dev/badge/github.com/axvq/tile38-client)](https://pkg.go.dev/github.com/axvq/tile38-client?tab=doc)
-[![Go Report Card](https://goreportcard.com/badge/github.com/axvq/tile38-client)](https://goreportcard.com/report/github.com/axvq/tile38-client)
+[![Go](https://github.com/xjem/t38c/workflows/Go/badge.svg)](https://github.com/xjem/t38c/actions)
+[![Documentation](https://pkg.go.dev/badge/github.com/xjem/t38c)](https://pkg.go.dev/github.com/xjem/t38c?tab=doc)
+[![Go Report Card](https://goreportcard.com/badge/github.com/xjem/t38c)](https://goreportcard.com/report/github.com/xjem/t38c)
 [![codecov](https://codecov.io/gh/zweihander/tile38-client/branch/master/graph/badge.svg)](https://codecov.io/gh/axvq/tile38-client)
-[![license](https://img.shields.io/github/license/axvq/tile38-client.svg)](https://github.com/axvq/tile38-client/blob/master/LICENSE)
+[![license](https://img.shields.io/github/license/axvq/tile38-client.svg)](https://github.com/xjem/t38c/blob/master/LICENSE)
 
 Supported features: [click](TODO.md)
 
 ```
-go get github.com/axvq/tile38-client
+go get github.com/xjem/t38c
 ```
 
 ### Basic example
@@ -19,7 +19,7 @@ package main
 import (
 	"fmt"
 
-	t38c "github.com/axvq/tile38-client"
+	"github.com/xjem/t38c"
 )
 
 func main() {
