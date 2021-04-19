@@ -23,8 +23,8 @@ func newInwAreaSelector(client tile38Client, cmd, key string) InwAreaSelector {
 }
 
 // Get any object that already exists in the database.
-func (selector InwAreaSelector) Get(objectID string) InwQueryBuilder {
-	area := newCmd("GET", objectID)
+func (selector InwAreaSelector) Get(key, objectID string) InwQueryBuilder {
+	area := newCmd("GET", key, objectID)
 	return newInwQueryBuilder(selector.client, selector.cmd, selector.key, area)
 }
 

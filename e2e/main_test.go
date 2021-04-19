@@ -80,3 +80,31 @@ func TestKeys(t *testing.T) {
 	_, err = client.Keys.Get("foo", "baz", false)
 	assert.Error(t, err)
 }
+
+func TestWithin(t *testing.T) {
+	if err := client.Keys.Set("points", "point-1").Point(1, 1).Do(); err != nil {
+		t.Error(err)
+	}
+
+	geom := geojson.NewPolygonGeometry([][][]float64{{
+		{0, 0},
+		{20, 0},
+		{20, 20},
+		{0, 20},
+		{0, 0},
+	}})
+
+	if err := client.Keys.Set("areas", "area-1").Geometry(geom).Do(); err != nil {
+		t.Error(err)
+	}
+
+	resp, err := client.Search.Within("points").
+		Get("areas", "area-1").
+		Format(t38c.FormatIDs).
+		Do()
+	if err != nil {
+		t.Error(err)
+	}
+
+	assert.Equal(t, []string{"point-1"}, resp.IDs)
+}
