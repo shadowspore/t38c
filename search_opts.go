@@ -25,7 +25,7 @@ type searchOpts struct {
 	NoFields  bool
 	Clip      bool
 	Distance  bool
-	Curosr    *int
+	Cursor    *int
 	Limit     *int
 	Sparse    *int
 	Where     []whereOpt
@@ -83,8 +83,8 @@ func (opts searchOpts) Args() (args []string) {
 		args = append(args, "DISTANCE")
 	}
 
-	if opts.Curosr != nil {
-		args = append(args, "CURSOR", strconv.Itoa(*opts.Curosr))
+	if opts.Cursor != nil {
+		args = append(args, "CURSOR", strconv.Itoa(*opts.Cursor))
 	}
 
 	if opts.Limit != nil {

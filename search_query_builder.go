@@ -38,7 +38,7 @@ func (query SearchQueryBuilder) Do() (*SearchResponse, error) {
 // An iteration begins when the CURSOR is set to Zero or not included with the request,
 // and completes when the cursor returned by the server is Zero.
 func (query SearchQueryBuilder) Cursor(cursor int) SearchQueryBuilder {
-	query.opts.Curosr = &cursor
+	query.opts.Cursor = &cursor
 	return query
 }
 
