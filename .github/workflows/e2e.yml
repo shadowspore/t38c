@@ -1,0 +1,34 @@
+name: E2E
+on:
+  tags:
+      - v*
+    branches:
+      - main
+  pull_request:
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: tile38/tile38:latest
+        ports:
+          - 9851:9851
+    steps:
+    - name: Checkout latest code
+        uses: actions/checkout@v2.3.4
+
+    - name: Install Go
+        uses: actions/setup-go@v2.1.3
+        with:
+          go-version: 1.16
+
+    - name: Download dependencies
+      run: go mod download && go mod tidy
+
+    # Run all tests that start with "TestE2E".
+    - name: Run tests
+      run: go test -v -run ^TestE2E ./...
+      env:
+          T38C_TEST_E2E: 1
+          T38C_TEST_ADDR: "localhost:9851"
