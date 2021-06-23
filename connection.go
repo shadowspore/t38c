@@ -21,3 +21,21 @@ func (client *Client) Ping() error {
 
 	return nil
 }
+
+// Health Check
+func (client *Client) HealthZ() error {
+	var response struct {
+		OK bool `json:"ok"`
+	}
+
+	err := client.jExecute(&response, "HEALTHZ")
+	if err != nil {
+		return err
+	}
+
+	if !response.OK {
+		return fmt.Errorf("health check failed: %v", response)
+	}
+
+	return nil
+}

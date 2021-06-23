@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/xjem/t38c/transport"
 	"github.com/tidwall/gjson"
+	"github.com/xjem/t38c/transport"
 )
 
 // Client allows you to interact with the Tile38 server.
@@ -79,6 +79,11 @@ func NewWithExecutor(exec Executor, debug bool) (*Client, error) {
 	if err := client.Ping(); err != nil {
 		return nil, err
 	}
+
+	// Health check can be used this way to test the readiness of tile38
+	// if healthError := client.HealthZ(); healthError != nil {
+	// 	return nil, healthError
+	// }
 
 	client.Webhooks = &Hooks{client}
 	client.Geofence = &Geofence{client}
