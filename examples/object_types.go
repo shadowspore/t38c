@@ -5,8 +5,9 @@ package main
 import (
 	"log"
 
+	"github.com/paulmach/orb"
+	geojson "github.com/paulmach/orb/geojson"
 	"github.com/xjem/t38c"
-	geojson "github.com/paulmach/go.geojson"
 )
 
 func main() {
@@ -21,7 +22,7 @@ func main() {
 	tile38.Keys.Set("fleet", "truck1").Bounds(30, -110, 40, -100).Do()      // nolint:errcheck
 	tile38.Keys.Set("fleet", "truck1").Hash("9tbnthxzr").Do()               // nolint:errcheck
 
-	polygon := geojson.NewPolygonGeometry([][][]float64{
+	polygon := geojson.NewGeometry(orb.Polygon{
 		{
 			{0, 0},
 			{10, 10},

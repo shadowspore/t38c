@@ -3,7 +3,7 @@ package t38c
 import (
 	"strconv"
 
-	geojson "github.com/paulmach/go.geojson"
+	geojson "github.com/paulmach/orb/geojson"
 )
 
 // InwAreaSelector struct

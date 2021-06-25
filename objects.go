@@ -4,7 +4,7 @@ import (
 	"strconv"
 	"time"
 
-	geojson "github.com/paulmach/go.geojson"
+	geojson "github.com/paulmach/orb/geojson"
 	"github.com/tidwall/gjson"
 )
 

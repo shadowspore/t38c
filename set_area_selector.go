@@ -1,6 +1,6 @@
 package t38c
 
-import geojson "github.com/paulmach/go.geojson"
+import geojson "github.com/paulmach/orb/geojson"
 
 // SetAreaSelector struct
 type SetAreaSelector struct {

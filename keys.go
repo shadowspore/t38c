@@ -4,7 +4,8 @@ import (
 	"encoding/json"
 	"strconv"
 
-	geojson "github.com/paulmach/go.geojson"
+	"github.com/paulmach/orb"
+	geojson "github.com/paulmach/orb/geojson"
 )
 
 // Keys struct
@@ -13,7 +14,7 @@ type Keys struct {
 }
 
 // Bounds returns the minimum bounding rectangle for all objects in a key.
-func (ks *Keys) Bounds(key string) ([][][]float64, error) {
+func (ks *Keys) Bounds(key string) (orb.Geometry, error) {
 	var resp struct {
 		Bounds geojson.Geometry `json:"bounds"`
 	}
@@ -23,7 +24,7 @@ func (ks *Keys) Bounds(key string) ([][][]float64, error) {
 		return nil, err
 	}
 
-	return resp.Bounds.Polygon, nil
+	return resp.Bounds.Coordinates, nil
 }
 
 // Del remove a specified object.
