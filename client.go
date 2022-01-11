@@ -21,6 +21,7 @@ type Client struct {
 	Channels  *Channels
 	Scripting *Scripting
 	Geofence  *Geofence
+	Server    *Server
 }
 
 type clientParams struct {
@@ -91,6 +92,7 @@ func NewWithExecutor(exec Executor, debug bool) (*Client, error) {
 	client.Search = &Search{client}
 	client.Scripting = &Scripting{client}
 	client.Channels = &Channels{client}
+	client.Server = &Server{client}
 
 	return client, nil
 }
