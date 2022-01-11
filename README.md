@@ -1,11 +1,16 @@
-# Tile38 Client
+# Tile38 Client for Go ⭐️
 [![Go](https://github.com/xjem/t38c/workflows/Go/badge.svg)](https://github.com/xjem/t38c/actions)
 [![Documentation](https://pkg.go.dev/badge/github.com/xjem/t38c)](https://pkg.go.dev/github.com/xjem/t38c?tab=doc)
 [![Go Report Card](https://goreportcard.com/badge/github.com/xjem/t38c)](https://goreportcard.com/report/github.com/xjem/t38c)
 [![codecov](https://codecov.io/gh/xjem/t38c/branch/master/graph/badge.svg)](https://codecov.io/gh/xjem/t38c)
 [![license](https://img.shields.io/github/license/xjem/t38c.svg)](https://github.com/xjem/t38c/blob/master/LICENSE)
 
-Supported features: [click](TODO.md)
+See what [Tile38](https://tile38.com/) is all about.
+
+- [Supported features](TODO.md) :heavy_check_mark:
+- [Examples](examples) :fire:
+
+### Installation
 
 ```
 go get github.com/xjem/t38c
@@ -54,4 +59,3 @@ func main() {
 	fmt.Println(response.Points[0].ID, response.Points[0].Point)
 }
 ```
-More examples: [click](examples)
