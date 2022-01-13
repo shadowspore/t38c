@@ -178,7 +178,7 @@
 
 # Group 'server'
 - [ ] CONFIG GET
-- [ ] FLUSHDB
+- [x] FLUSHDB
 - [ ] SERVER
 - [ ] READONLY
 - [ ] CONFIG REWRITE
