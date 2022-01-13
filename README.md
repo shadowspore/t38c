@@ -1,4 +1,4 @@
-# Tile38 Client for Go ⭐️
+# Tile38 Client for Go
 [![Go](https://github.com/xjem/t38c/workflows/Go/badge.svg)](https://github.com/xjem/t38c/actions)
 [![Documentation](https://pkg.go.dev/badge/github.com/xjem/t38c)](https://pkg.go.dev/github.com/xjem/t38c?tab=doc)
 [![Go Report Card](https://goreportcard.com/badge/github.com/xjem/t38c)](https://goreportcard.com/report/github.com/xjem/t38c)
@@ -7,8 +7,8 @@
 
 See what [Tile38](https://tile38.com/) is all about.
 
-- [Supported features](TODO.md) :heavy_check_mark:
-- [Examples](examples) :fire:
+- [Supported features](TODO.md)
+- [Examples](examples)
 
 ### Installation
 
