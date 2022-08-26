@@ -72,7 +72,7 @@ func (q KeysGetQueryBuilder) Bounds() (*GetBoundsResponse, error) {
 }
 
 type GetHashResponse struct {
-	Hash   string             `json:"bounds"`
+	Hash   string             `json:"hash"`
 	Fields map[string]float64 `json:"fields"`
 }
 
