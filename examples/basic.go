@@ -43,7 +43,7 @@ func main() {
 
 	// key value operations
 	// returns 'truck1'
-	truck1, err := tile38.Keys.Get("fleet", "truck1", false)
+	truck1, err := tile38.Keys.Get("fleet", "truck1").Object()
 	if err != nil {
 		log.Fatal(err)
 	}
