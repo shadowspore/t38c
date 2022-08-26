@@ -63,15 +63,6 @@ func (ob *Object) UnmarshalJSON(data []byte) error {
 	return err
 }
 
-// GetResponse struct
-type GetResponse struct {
-	Object *Object            `json:"object,omitempty"`
-	Point  *Point             `json:"point,omitempty"`
-	Bounds *Bounds            `json:"bounds,omitempty"`
-	Hash   *string            `json:"hash,omitempty"`
-	Fields map[string]float64 `json:"fields,omitempty"`
-}
-
 // SearchResponse struct
 type SearchResponse struct {
 	Cursor  int      `json:"cursor"`

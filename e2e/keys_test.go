@@ -25,7 +25,7 @@ func testKeys(client *t38c.Client) func(t *testing.T) {
 	return func(t *testing.T) {
 		require.NoError(t, client.Keys.Set("foo", "bar").Point(0, 0).Do())
 
-		resp, err := client.Keys.Get("foo", "bar", false)
+		resp, err := client.Keys.Get("foo", "bar").Object()
 		require.NoError(t, err)
 
 		require.Equal(t, geojson.NewPointGeometry([]float64{0, 0}), resp.Object.Geometry)
@@ -33,7 +33,7 @@ func testKeys(client *t38c.Client) func(t *testing.T) {
 		err = client.Keys.Set("foo", "baz").Bounds(0, 0, 20, 20).Field("age", 20).Expiration(2).Do()
 		require.NoError(t, err)
 
-		resp, err = client.Keys.Get("foo", "baz", true)
+		resp, err = client.Keys.Get("foo", "baz").WithFields().Object()
 		require.NoError(t, err)
 
 		require.Equal(t, geojson.NewPolygonGeometry([][][]float64{{
@@ -46,7 +46,7 @@ func testKeys(client *t38c.Client) func(t *testing.T) {
 
 		time.Sleep(time.Second * 3)
 
-		_, err = client.Keys.Get("foo", "baz", false)
+		_, err = client.Keys.Get("foo", "baz").Object()
 		require.Error(t, err)
 	}
 }

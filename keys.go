@@ -51,15 +51,8 @@ func (ks *Keys) FSet(key, objectID string) FSetQueryBuilder {
 }
 
 // Get returns object of an id.
-func (ks *Keys) Get(key, objectID string, withFields bool) (*GetResponse, error) {
-	args := []string{key, objectID}
-	if withFields {
-		args = append(args, "WITHFIELDS")
-	}
-
-	resp := new(GetResponse)
-	err := ks.client.jExecute(resp, "GET", args...)
-	return resp, err
+func (ks *Keys) Get(key, objectID string) KeysGetQueryBuilder {
+	return newKeysGetQueryBuilder(ks.client, key, objectID)
 }
 
 // JDel delete a value from a JSON document.
