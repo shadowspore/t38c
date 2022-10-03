@@ -25,7 +25,7 @@ func (c cmd) String() string {
 }
 
 func floatString(val float64) string {
-	return strconv.FormatFloat(val, 'g', 10, 64)
+	return strconv.FormatFloat(val, 'f', -1, 64)
 }
 
 func rawEventHandler(handler func(*GeofenceEvent)) func([]byte) error {

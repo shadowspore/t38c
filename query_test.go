@@ -160,6 +160,30 @@ func TestKeys(t *testing.T) {
 			Expected: "FSET agent 47 XX cash 100500",
 		},
 		{
+			Cmd: keys.FSet("agent", "47").
+				Field("id", 123456789012345680).
+				IfExists().toCmd(),
+			Expected: "FSET agent 47 XX id 123456789012345680",
+		},
+		{
+			Cmd: keys.FSet("agent", "47").
+				Field("id", -123456789012345680).
+				IfExists().toCmd(),
+			Expected: "FSET agent 47 XX id -123456789012345680",
+		},
+		{
+			Cmd: keys.FSet("agent", "47").
+				Field("small", 0.00000000012345678901234568).
+				IfExists().toCmd(),
+			Expected: "FSET agent 47 XX small 0.00000000012345678901234568",
+		},
+		{
+			Cmd: keys.FSet("agent", "47").
+				Field("small", -0.00000000012345678901234568).
+				IfExists().toCmd(),
+			Expected: "FSET agent 47 XX small -0.00000000012345678901234568",
+		},
+		{
 			Cmd:      keys.JSet("foo", "bar", "some.field", "some-value").Raw().toCmd(),
 			Expected: "JSET foo bar some.field some-value RAW",
 		},
