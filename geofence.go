@@ -22,6 +22,6 @@ func (gf *Geofence) Nearby(key string, lat, lon, meters float64) GeofenceQueryBu
 }
 
 // Roam geofence
-func (gf *Geofence) Roam(key, target, pattern string, meters int) GeofenceQueryBuilder {
-	return newGeofenceRoamQueryBuilder(gf.client, key, target, pattern, meters)
+func (gf *Geofence) Roam(key, target, pattern string, meters int,nodewell bool) GeofenceQueryBuilder {
+	return newGeofenceRoamQueryBuilder(gf.client, key, target, pattern, meters,nodewell)
 }
