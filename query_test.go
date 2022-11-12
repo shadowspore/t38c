@@ -14,14 +14,13 @@ func TestChannels(t *testing.T) {
 		Expected string
 	}{
 		{
-			Cmd:      channels.SetChan("foo", geofence.Roam("cat", "dog", "*", 50,false).Actions(Enter, Exit)).toCmd(),
+			Cmd:      channels.SetChan("foo", geofence.Roam("cat", "dog", "*", 50, false).Actions(Enter, Exit)).toCmd(),
 			Expected: "SETCHAN foo NEARBY cat FENCE DETECT enter,exit ROAM dog * 50",
 		},
 		{
-			Cmd:      channels.SetChan("foo", geofence.Roam("cat", "dog", "*", 50,true).Actions(Enter, Exit)).toCmd(),
+			Cmd:      channels.SetChan("foo", geofence.Roam("cat", "dog", "*", 50, true).Actions(Enter, Exit)).toCmd(),
 			Expected: "SETCHAN foo NEARBY cat FENCE NODWELL DETECT enter,exit ROAM dog * 50",
 		},
-
 	}
 
 	for _, test := range tests {
@@ -37,11 +36,11 @@ func TestHooks(t *testing.T) {
 		Expected string
 	}{
 		{
-			Cmd:      hooks.SetHook("foo", "localhost:1337", geofence.Roam("cat", "dog", "*", 50,false).Actions(Enter, Exit)).toCmd(),
+			Cmd:      hooks.SetHook("foo", "localhost:1337", geofence.Roam("cat", "dog", "*", 50, false).Actions(Enter, Exit)).toCmd(),
 			Expected: "SETHOOK foo localhost:1337 NEARBY cat FENCE DETECT enter,exit ROAM dog * 50",
 		},
 		{
-			Cmd:      hooks.SetHook("foo", "localhost:1337", geofence.Roam("cat", "dog", "*", 50,true).Actions(Enter, Exit)).toCmd(),
+			Cmd:      hooks.SetHook("foo", "localhost:1337", geofence.Roam("cat", "dog", "*", 50, true).Actions(Enter, Exit)).toCmd(),
 			Expected: "SETHOOK foo localhost:1337 NEARBY cat FENCE NODWELL DETECT enter,exit ROAM dog * 50",
 		},
 	}
@@ -116,14 +115,14 @@ func TestGeofence(t *testing.T) {
 			Expected: "NEARBY fleet CLIP CURSOR 5 FENCE DETECT enter,exit,cross COMMANDS set,del HASHES 5 POINT 10 20 30",
 		},
 		{
-			Cmd: geofence.Roam("agent", "target", "*", 100,false).
+			Cmd: geofence.Roam("agent", "target", "*", 100, false).
 				Distance().
 				Wherein("price", 20, 30).
 				WhereEval("foo", "arg1", "arg2").toCmd(),
 			Expected: "NEARBY agent WHEREIN price 2 20 30 WHEREEVAL foo 2 arg1 arg2 DISTANCE FENCE ROAM target * 100",
 		},
 		{
-			Cmd: geofence.Roam("agent", "target", "*", 100,true).
+			Cmd: geofence.Roam("agent", "target", "*", 100, true).
 				Distance().
 				Wherein("price", 20, 30).
 				WhereEval("foo", "arg1", "arg2").toCmd(),
