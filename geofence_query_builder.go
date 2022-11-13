@@ -20,6 +20,7 @@ type GeofenceQueryBuilder struct {
 	detectActions  []DetectAction
 	notifyCommands []NotifyCommand
 	searchOpts     searchOpts
+	isNodwell      bool
 }
 
 func newGeofenceQueryBuilder(client tile38Client, cmd, key string, area cmd) GeofenceQueryBuilder {
@@ -31,7 +32,7 @@ func newGeofenceQueryBuilder(client tile38Client, cmd, key string, area cmd) Geo
 	}
 }
 
-func newGeofenceRoamQueryBuilder(client tile38Client, key, target, pattern string, meters int) GeofenceQueryBuilder {
+func newGeofenceRoamQueryBuilder(client tile38Client, key, target, pattern string, meters int,nodwell bool) GeofenceQueryBuilder {
 	return GeofenceQueryBuilder{
 		client:      client,
 		cmd:         "NEARBY",
@@ -40,13 +41,19 @@ func newGeofenceRoamQueryBuilder(client tile38Client, key, target, pattern strin
 		target:      target,
 		pattern:     pattern,
 		meters:      meters,
+		isNodwell:   nodwell,
 	}
 }
+
 
 func (query GeofenceQueryBuilder) toCmd() cmd {
 	args := []string{query.key}
 	args = append(args, query.searchOpts.Args()...)
 	args = append(args, "FENCE")
+	if query.isNodwell {
+		args = append(args, "NODWELL")
+	}
+
 	if len(query.detectActions) > 0 {
 		actions := make([]string, len(query.detectActions))
 		for i := range query.detectActions {
