@@ -1,5 +1,7 @@
 package t38c
 
+import "context"
+
 // JSetQueryBuilder struct
 type JSetQueryBuilder struct {
 	client   tile38Client
@@ -37,9 +39,9 @@ func (query JSetQueryBuilder) toCmd() cmd {
 }
 
 // Do cmd
-func (query JSetQueryBuilder) Do() error {
+func (query JSetQueryBuilder) Do(ctx context.Context) error {
 	cmd := query.toCmd()
-	return query.client.jExecute(nil, cmd.Name, cmd.Args...)
+	return query.client.jExecute(ctx, nil, cmd.Name, cmd.Args...)
 }
 
 // Str allows value to be interpreted as a string

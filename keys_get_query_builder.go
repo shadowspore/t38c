@@ -1,6 +1,9 @@
 package t38c
 
-import "strconv"
+import (
+	"context"
+	"strconv"
+)
 
 type KeysGetQueryBuilder struct {
 	client        tile38Client
@@ -26,14 +29,14 @@ type GetObjectResponse struct {
 	Fields map[string]float64 `json:"fields"`
 }
 
-func (q KeysGetQueryBuilder) Object() (*GetObjectResponse, error) {
+func (q KeysGetQueryBuilder) Object(ctx context.Context) (*GetObjectResponse, error) {
 	resp := new(GetObjectResponse)
 	args := []string{q.key, q.objectID}
 	if q.withFields {
 		args = append(args, "WITHFIELDS")
 	}
 
-	err := q.client.jExecute(resp, "GET", args...)
+	err := q.client.jExecute(ctx, resp, "GET", args...)
 	return resp, err
 }
 
@@ -42,7 +45,7 @@ type GetPointResponse struct {
 	Fields map[string]float64 `json:"fields"`
 }
 
-func (q KeysGetQueryBuilder) Point() (*GetPointResponse, error) {
+func (q KeysGetQueryBuilder) Point(ctx context.Context) (*GetPointResponse, error) {
 	resp := new(GetPointResponse)
 	args := []string{q.key, q.objectID}
 	if q.withFields {
@@ -50,7 +53,7 @@ func (q KeysGetQueryBuilder) Point() (*GetPointResponse, error) {
 	}
 
 	args = append(args, "POINT")
-	err := q.client.jExecute(resp, "GET", args...)
+	err := q.client.jExecute(ctx, resp, "GET", args...)
 	return resp, err
 }
 
@@ -59,7 +62,7 @@ type GetBoundsResponse struct {
 	Fields map[string]float64 `json:"fields"`
 }
 
-func (q KeysGetQueryBuilder) Bounds() (*GetBoundsResponse, error) {
+func (q KeysGetQueryBuilder) Bounds(ctx context.Context) (*GetBoundsResponse, error) {
 	resp := new(GetBoundsResponse)
 	args := []string{q.key, q.objectID}
 	if q.withFields {
@@ -67,7 +70,7 @@ func (q KeysGetQueryBuilder) Bounds() (*GetBoundsResponse, error) {
 	}
 
 	args = append(args, "BOUNDS")
-	err := q.client.jExecute(resp, "GET", args...)
+	err := q.client.jExecute(ctx, resp, "GET", args...)
 	return resp, err
 }
 
@@ -76,7 +79,7 @@ type GetHashResponse struct {
 	Fields map[string]float64 `json:"fields"`
 }
 
-func (q KeysGetQueryBuilder) Hash(precision int) (*GetHashResponse, error) {
+func (q KeysGetQueryBuilder) Hash(ctx context.Context, precision int) (*GetHashResponse, error) {
 	resp := new(GetHashResponse)
 	args := []string{q.key, q.objectID}
 	if q.withFields {
@@ -84,6 +87,6 @@ func (q KeysGetQueryBuilder) Hash(precision int) (*GetHashResponse, error) {
 	}
 
 	args = append(args, "HASH", strconv.Itoa(precision))
-	err := q.client.jExecute(resp, "GET", args...)
+	err := q.client.jExecute(ctx, resp, "GET", args...)
 	return resp, err
 }

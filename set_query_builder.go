@@ -1,6 +1,9 @@
 package t38c
 
-import "strconv"
+import (
+	"context"
+	"strconv"
+)
 
 // SetQueryBuilder struct
 type SetQueryBuilder struct {
@@ -47,9 +50,9 @@ func (query SetQueryBuilder) toCmd() cmd {
 }
 
 // Do cmd
-func (query SetQueryBuilder) Do() error {
+func (query SetQueryBuilder) Do(ctx context.Context) error {
 	cmd := query.toCmd()
-	return query.client.jExecute(nil, cmd.Name, cmd.Args...)
+	return query.client.jExecute(ctx, nil, cmd.Name, cmd.Args...)
 }
 
 // Field sets the object field

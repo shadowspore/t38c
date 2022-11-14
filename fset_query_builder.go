@@ -1,5 +1,7 @@
 package t38c
 
+import "context"
+
 // FSetQueryBuilder struct
 type FSetQueryBuilder struct {
 	client   tile38Client
@@ -30,9 +32,9 @@ func (query FSetQueryBuilder) toCmd() cmd {
 }
 
 // Do cmd
-func (query FSetQueryBuilder) Do() error {
+func (query FSetQueryBuilder) Do(ctx context.Context) error {
 	cmd := query.toCmd()
-	return query.client.jExecute(nil, cmd.Name, cmd.Args...)
+	return query.client.jExecute(ctx, nil, cmd.Name, cmd.Args...)
 }
 
 // Field sets the object field

@@ -1,6 +1,7 @@
 package t38c
 
 import (
+	"context"
 	"strconv"
 	"strings"
 )
@@ -40,9 +41,9 @@ func (query SetHookQueryBuilder) toCmd() cmd {
 }
 
 // Do cmd
-func (query SetHookQueryBuilder) Do() error {
+func (query SetHookQueryBuilder) Do(ctx context.Context) error {
 	cmd := query.toCmd()
-	return query.client.jExecute(nil, cmd.Name, cmd.Args...)
+	return query.client.jExecute(ctx, nil, cmd.Name, cmd.Args...)
 }
 
 // Endpoint appends new endpoint to the hook.

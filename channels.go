@@ -8,12 +8,12 @@ type Channels struct {
 }
 
 // Chans returns all Channels matching pattern.
-func (ch *Channels) Chans(pattern string) ([]Chan, error) {
+func (ch *Channels) Chans(ctx context.Context, pattern string) ([]Chan, error) {
 	var resp struct {
 		Chans []Chan `json:"chans"`
 	}
 
-	err := ch.client.jExecute(&resp, "CHANS", pattern)
+	err := ch.client.jExecute(ctx, &resp, "CHANS", pattern)
 	if err != nil {
 		return nil, err
 	}
@@ -22,17 +22,17 @@ func (ch *Channels) Chans(pattern string) ([]Chan, error) {
 }
 
 // DelChan remove a specified channel.
-func (ch *Channels) DelChan(name string) error {
-	return ch.client.jExecute(nil, "DELCHAN", name)
+func (ch *Channels) DelChan(ctx context.Context, name string) error {
+	return ch.client.jExecute(ctx, nil, "DELCHAN", name)
 }
 
 // PDelChan removes all Channels that match the specified pattern.
-func (ch *Channels) PDelChan(pattern string) error {
-	return ch.client.jExecute(nil, "PDELCHAN", pattern)
+func (ch *Channels) PDelChan(ctx context.Context, pattern string) error {
+	return ch.client.jExecute(ctx, nil, "PDELCHAN", pattern)
 }
 
 // PSubscribe subscribes the client to the given patterns.
-func (ch *Channels) PSubscribe(ctx context.Context, handler func(*GeofenceEvent), pattern string) error {
+func (ch *Channels) PSubscribe(ctx context.Context, handler func(*GeofenceEvent) error, pattern string) error {
 	return ch.client.ExecuteStream(ctx, rawEventHandler(handler), "PSUBSCRIBE", pattern)
 }
 
@@ -45,6 +45,6 @@ func (ch *Channels) SetChan(name string, query GeofenceQueryBuilder) SetChannelQ
 }
 
 // Subscribe subscribes the client to the specified Channels.
-func (ch *Channels) Subscribe(ctx context.Context, handler func(*GeofenceEvent), Channels ...string) error {
+func (ch *Channels) Subscribe(ctx context.Context, handler func(*GeofenceEvent) error, Channels ...string) error {
 	return ch.client.ExecuteStream(ctx, rawEventHandler(handler), "SUBSCRIBE", Channels...)
 }

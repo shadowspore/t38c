@@ -1,5 +1,7 @@
 package t38c
 
+import "context"
+
 // ScanQueryBuilder struct
 type ScanQueryBuilder struct {
 	client       tile38Client
@@ -27,10 +29,10 @@ func (query ScanQueryBuilder) toCmd() cmd {
 }
 
 // Do cmd
-func (query ScanQueryBuilder) Do() (*SearchResponse, error) {
+func (query ScanQueryBuilder) Do(ctx context.Context) (*SearchResponse, error) {
 	cmd := query.toCmd()
 	resp := &SearchResponse{}
-	err := query.client.jExecute(&resp, cmd.Name, cmd.Args...)
+	err := query.client.jExecute(ctx, &resp, cmd.Name, cmd.Args...)
 	if err != nil {
 		return nil, err
 	}

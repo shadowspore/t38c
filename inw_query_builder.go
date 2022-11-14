@@ -1,5 +1,7 @@
 package t38c
 
+import "context"
+
 // InwQueryBuilder struct
 // Intersects Nearby Within
 type InwQueryBuilder struct {
@@ -34,10 +36,10 @@ func (query InwQueryBuilder) toCmd() cmd {
 }
 
 // Do cmd
-func (query InwQueryBuilder) Do() (*SearchResponse, error) {
+func (query InwQueryBuilder) Do(ctx context.Context) (*SearchResponse, error) {
 	cmd := query.toCmd()
 	resp := new(SearchResponse)
-	err := query.client.jExecute(resp, cmd.Name, cmd.Args...)
+	err := query.client.jExecute(ctx, resp, cmd.Name, cmd.Args...)
 	return resp, err
 }
 

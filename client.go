@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/tidwall/gjson"
 	"github.com/xjem/t38c/transport"
@@ -61,7 +62,7 @@ func New(addr string, opts ...ClientOption) (*Client, error) {
 		opt(params)
 	}
 
-	radixPool, err := transport.NewRadixPool(addr, params.poolSize, params.password)
+	radixPool, err := transport.NewRadix(addr, params.poolSize, params.password)
 	if err != nil {
 		return nil, err
 	}
@@ -77,7 +78,9 @@ func NewWithExecutor(exec Executor, debug bool) (*Client, error) {
 		debug: debug,
 	}
 
-	if err := client.Ping(); err != nil {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
+	defer cancel()
+	if err := client.Ping(ctx); err != nil {
 		return nil, err
 	}
 
@@ -97,8 +100,8 @@ func NewWithExecutor(exec Executor, debug bool) (*Client, error) {
 	return client, nil
 }
 
-func (client *Client) jExecute(resp interface{}, command string, args ...string) error {
-	b, err := client.Execute(command, args...)
+func (client *Client) jExecute(ctx context.Context, resp interface{}, command string, args ...string) error {
+	b, err := client.Execute(ctx, command, args...)
 	if err != nil {
 		return err
 	}
@@ -111,8 +114,8 @@ func (client *Client) jExecute(resp interface{}, command string, args ...string)
 }
 
 // Execute Tile38 command.
-func (client *Client) Execute(command string, args ...string) ([]byte, error) {
-	resp, err := client.exec.Execute(command, args...)
+func (client *Client) Execute(ctx context.Context, command string, args ...string) ([]byte, error) {
+	resp, err := client.exec.Execute(ctx, command, args...)
 	if client.debug {
 		log.Printf("[%s]: %s", newCmd(command, args...).String(), resp)
 	}

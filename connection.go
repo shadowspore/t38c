@@ -1,16 +1,17 @@
 package t38c
 
 import (
+	"context"
 	"fmt"
 )
 
 // Ping the server.
-func (client *Client) Ping() error {
+func (client *Client) Ping(ctx context.Context) error {
 	var resp struct {
 		Ping string `json:"ping"`
 	}
 
-	err := client.jExecute(&resp, "PING")
+	err := client.jExecute(ctx, &resp, "PING")
 	if err != nil {
 		return err
 	}
@@ -23,12 +24,12 @@ func (client *Client) Ping() error {
 }
 
 // Health Check
-func (client *Client) HealthZ() error {
+func (client *Client) HealthZ(ctx context.Context) error {
 	var response struct {
 		OK bool `json:"ok"`
 	}
 
-	err := client.jExecute(&response, "HEALTHZ")
+	err := client.jExecute(ctx, &response, "HEALTHZ")
 	if err != nil {
 		return err
 	}

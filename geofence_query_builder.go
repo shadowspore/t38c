@@ -32,7 +32,7 @@ func newGeofenceQueryBuilder(client tile38Client, cmd, key string, area cmd) Geo
 	}
 }
 
-func newGeofenceRoamQueryBuilder(client tile38Client, key, target, pattern string, meters int,nodwell bool) GeofenceQueryBuilder {
+func newGeofenceRoamQueryBuilder(client tile38Client, key, target, pattern string, meters int, nodwell bool) GeofenceQueryBuilder {
 	return GeofenceQueryBuilder{
 		client:      client,
 		cmd:         "NEARBY",
@@ -44,7 +44,6 @@ func newGeofenceRoamQueryBuilder(client tile38Client, key, target, pattern strin
 		isNodwell:   nodwell,
 	}
 }
-
 
 func (query GeofenceQueryBuilder) toCmd() cmd {
 	args := []string{query.key}
@@ -86,7 +85,7 @@ func (query GeofenceQueryBuilder) toCmd() cmd {
 }
 
 // Do cmd
-func (query GeofenceQueryBuilder) Do(ctx context.Context, handler func(*GeofenceEvent)) error {
+func (query GeofenceQueryBuilder) Do(ctx context.Context, handler func(*GeofenceEvent) error) error {
 	cmd := query.toCmd()
 	return query.client.ExecuteStream(ctx, rawEventHandler(handler), cmd.Name, cmd.Args...)
 }

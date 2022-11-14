@@ -1,6 +1,9 @@
 package t38c
 
-import "strconv"
+import (
+	"context"
+	"strconv"
+)
 
 // SetChannelQueryBuilder struct
 type SetChannelQueryBuilder struct {
@@ -35,9 +38,9 @@ func (query SetChannelQueryBuilder) toCmd() cmd {
 }
 
 // Do cmd
-func (query SetChannelQueryBuilder) Do() error {
+func (query SetChannelQueryBuilder) Do(ctx context.Context) error {
 	cmd := query.toCmd()
-	return query.client.jExecute(nil, cmd.Name, cmd.Args...)
+	return query.client.jExecute(ctx, nil, cmd.Name, cmd.Args...)
 }
 
 // Expiration set the specified expire time, in seconds.

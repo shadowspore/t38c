@@ -1,6 +1,7 @@
 package t38c
 
 import (
+	"context"
 	"encoding/json"
 	"strconv"
 
@@ -13,12 +14,12 @@ type Keys struct {
 }
 
 // Bounds returns the minimum bounding rectangle for all objects in a key.
-func (ks *Keys) Bounds(key string) ([][][]float64, error) {
+func (ks *Keys) Bounds(ctx context.Context, key string) ([][][]float64, error) {
 	var resp struct {
 		Bounds geojson.Geometry `json:"bounds"`
 	}
 
-	err := ks.client.jExecute(&resp, "BOUNDS", key)
+	err := ks.client.jExecute(ctx, &resp, "BOUNDS", key)
 	if err != nil {
 		return nil, err
 	}
@@ -27,18 +28,18 @@ func (ks *Keys) Bounds(key string) ([][][]float64, error) {
 }
 
 // Del remove a specified object.
-func (ks *Keys) Del(key, objectID string) error {
-	return ks.client.jExecute(nil, "DEL", key, objectID)
+func (ks *Keys) Del(ctx context.Context, key, objectID string) error {
+	return ks.client.jExecute(ctx, nil, "DEL", key, objectID)
 }
 
 // Drop remove all objects from specified key.
-func (ks *Keys) Drop(key string) error {
-	return ks.client.jExecute(nil, "DROP", key)
+func (ks *Keys) Drop(ctx context.Context, key string) error {
+	return ks.client.jExecute(ctx, nil, "DROP", key)
 }
 
 // Expire set a timeout on an id.
-func (ks *Keys) Expire(key, objectID string, seconds int) error {
-	return ks.client.jExecute(nil, "EXPIRE", key, objectID, strconv.Itoa(seconds))
+func (ks *Keys) Expire(ctx context.Context, key, objectID string, seconds int) error {
+	return ks.client.jExecute(ctx, nil, "EXPIRE", key, objectID, strconv.Itoa(seconds))
 }
 
 // FSet set the value for one or more fields of an id. Fields are double precision floating points.
@@ -56,12 +57,12 @@ func (ks *Keys) Get(key, objectID string) KeysGetQueryBuilder {
 }
 
 // JDel delete a value from a JSON document.
-func (ks *Keys) JDel(key, objectID, path string) error {
-	return ks.client.jExecute(nil, "JDEL", key, objectID, path)
+func (ks *Keys) JDel(ctx context.Context, key, objectID, path string) error {
+	return ks.client.jExecute(ctx, nil, "JDEL", key, objectID, path)
 }
 
 // JGet get a value from a JSON document.
-func (ks *Keys) JGet(key, objectID, path string) ([]byte, error) {
+func (ks *Keys) JGet(ctx context.Context, key, objectID, path string) ([]byte, error) {
 	var resp struct {
 		Value json.RawMessage `json:"value"`
 	}
@@ -71,7 +72,7 @@ func (ks *Keys) JGet(key, objectID, path string) ([]byte, error) {
 	// 	cmd.appendArgs("RAW")
 	// }
 
-	err := ks.client.jExecute(&resp, "JGET", key, objectID, path)
+	err := ks.client.jExecute(ctx, &resp, "JGET", key, objectID, path)
 	if err != nil {
 		return nil, err
 	}
@@ -84,12 +85,12 @@ func (ks *Keys) JSet(key, objectID, path, value string) JSetQueryBuilder {
 }
 
 // Keys returns all keys matching pattern.
-func (ks *Keys) Keys(pattern string) ([]string, error) {
+func (ks *Keys) Keys(ctx context.Context, pattern string) ([]string, error) {
 	var resp struct {
 		Keys []string `json:"keys"`
 	}
 
-	err := ks.client.jExecute(&resp, "KEYS", pattern)
+	err := ks.client.jExecute(ctx, &resp, "KEYS", pattern)
 	if err != nil {
 		return nil, err
 	}
@@ -98,28 +99,28 @@ func (ks *Keys) Keys(pattern string) ([]string, error) {
 }
 
 // PDel removes objects that match a specified pattern.
-func (ks *Keys) PDel(key, pattern string) error {
-	return ks.client.jExecute(nil, "PDEL", key, pattern)
+func (ks *Keys) PDel(ctx context.Context, key, pattern string) error {
+	return ks.client.jExecute(ctx, nil, "PDEL", key, pattern)
 }
 
 // Persist remove an existing timeout of an id.
-func (ks *Keys) Persist(key, objectID string) error {
-	return ks.client.jExecute(nil, "PERSIST", key, objectID)
+func (ks *Keys) Persist(ctx context.Context, key, objectID string) error {
+	return ks.client.jExecute(ctx, nil, "PERSIST", key, objectID)
 }
 
 // Rename renames collection key to newkey.
 // If newkey already exists, it will be deleted prior to renaming.
 // Returns “OK” for success or “ERR” when key or newkey are actively being used by a geofence or webhook.
-func (ks *Keys) Rename(key, newKey string) error {
-	return ks.client.jExecute(nil, "RENAME", key, newKey)
+func (ks *Keys) Rename(ctx context.Context, key, newKey string) error {
+	return ks.client.jExecute(ctx, nil, "RENAME", key, newKey)
 }
 
 // RenameNX renames collection key to newkey, if it does not exist yet.
 // If newkey already exists, this command does nothing.
 // Returns 1 if key was renamed to newkey, 0 if newkey already existed,
 // or “ERR” when key or newkey are actively being used by a geofence or webhook.
-func (ks *Keys) RenameNX(key, newKey string) error {
-	return ks.client.jExecute(nil, "RENAMENX", key, newKey)
+func (ks *Keys) RenameNX(ctx context.Context, key, newKey string) error {
+	return ks.client.jExecute(ctx, nil, "RENAMENX", key, newKey)
 }
 
 // Set the value of an id. If a value is already associated to that key/id, it’ll be overwritten.
@@ -128,12 +129,12 @@ func (ks *Keys) Set(key, objectID string) SetAreaSelector {
 }
 
 // Stats return stats for one or more keys.
-func (ks *Keys) Stats(keys ...string) ([]KeyStats, error) {
+func (ks *Keys) Stats(ctx context.Context, keys ...string) ([]KeyStats, error) {
 	var resp struct {
 		Stats []KeyStats `json:"stats"`
 	}
 
-	err := ks.client.jExecute(&resp, "STATS", keys...)
+	err := ks.client.jExecute(ctx, &resp, "STATS", keys...)
 	if err != nil {
 		return nil, err
 	}
@@ -142,12 +143,12 @@ func (ks *Keys) Stats(keys ...string) ([]KeyStats, error) {
 }
 
 // TTL get a timeout on an id.
-func (ks *Keys) TTL(key, objectID string) (int, error) {
+func (ks *Keys) TTL(ctx context.Context, key, objectID string) (int, error) {
 	var resp struct {
 		TTL int `json:"ttl"`
 	}
 
-	err := ks.client.jExecute(&resp, "TTL", key, objectID)
+	err := ks.client.jExecute(ctx, &resp, "TTL", key, objectID)
 	if err != nil {
 		return -1, err
 	}

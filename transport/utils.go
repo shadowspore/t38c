@@ -1,40 +1,38 @@
 package transport
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
-	"time"
 
-	"github.com/mediocregopher/radix/v3"
+	"github.com/mediocregopher/radix/v4"
 )
 
-func poolConnFn(password *string) radix.ConnFunc {
-	return radix.ConnFunc(func(net, addr string) (radix.Conn, error) {
-		conn, err := radix.Dial(net, addr,
-			radix.DialConnectTimeout(time.Second*10),
-		)
+func poolConnFn(password *string) func(ctx context.Context, net, addr string) (radix.Client, error) {
+	return func(ctx context.Context, net, addr string) (radix.Client, error) {
+		conn, err := radix.Dial(ctx, net, addr)
 		if err != nil {
 			return nil, err
 		}
 
-		if err := radixPrepareConn(conn, password); err != nil {
-			conn.Close()
+		if err := radixPrepareConn(ctx, conn, password); err != nil {
+			_ = conn.Close()
 			return nil, err
 		}
 
 		return conn, nil
-	})
+	}
 }
 
-func radixPrepareConn(conn radix.Conn, password *string) error {
+func radixPrepareConn(ctx context.Context, conn radix.Conn, password *string) error {
 	if password != nil {
-		if err := conn.Do(radix.Cmd(nil, "AUTH", *password)); err != nil {
+		if err := conn.Do(ctx, radix.Cmd(nil, "AUTH", *password)); err != nil {
 			return err
 		}
 	}
 
 	var b []byte
-	if err := conn.Do(radix.Cmd(&b, "OUTPUT", "json")); err != nil {
+	if err := conn.Do(ctx, radix.Cmd(&b, "OUTPUT", "json")); err != nil {
 		return err
 	}
 

@@ -6,12 +6,12 @@ import (
 	"github.com/xjem/t38c/transport"
 )
 
-var _ Executor = (*transport.RadixPool)(nil)
+var _ Executor = (*transport.Radix)(nil)
 
 // Executor represents Tile38 connection.
 // Communication should be in JSON format only.
 type Executor interface {
-	Execute(command string, args ...string) ([]byte, error)
+	Execute(ctx context.Context, command string, args ...string) ([]byte, error)
 	ExecuteStream(ctx context.Context, handler func([]byte) error, command string, args ...string) error
 	Close() error
 }
@@ -19,5 +19,5 @@ type Executor interface {
 // for internal usage
 type tile38Client interface {
 	Executor
-	jExecute(resp interface{}, command string, args ...string) error
+	jExecute(ctx context.Context, resp interface{}, command string, args ...string) error
 }
