@@ -10,13 +10,13 @@ See what [Tile38](https://tile38.com/) is all about.
 - [Supported features](TODO.md)
 - [Examples](examples)
 
-### Installation
+## Installation
 
 ```
 go get github.com/xjem/t38c@latest
 ```
 
-### Basic example
+## Basic example
 
 ```go
 package main
@@ -62,3 +62,7 @@ func main() {
 	fmt.Println(response.Points[0].ID, response.Points[0].Point)
 }
 ```
+
+## License
+
+Source code is available under the [MIT License](LICENSE).
