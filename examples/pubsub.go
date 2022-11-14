@@ -29,7 +29,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	handler := func(event *t38c.GeofenceEvent) error {
+	handler := t38c.EventHandlerFunc(func(event *t38c.GeofenceEvent) error {
 		b, err := json.Marshal(event)
 		if err != nil {
 			return fmt.Errorf("marshal event: %w", err)
@@ -37,7 +37,7 @@ func main() {
 
 		fmt.Printf("event: %s\n", b)
 		return nil
-	}
+	})
 
 	if err := tile38.Channels.Subscribe(context.Background(), handler, "busstop"); err != nil {
 		log.Fatal(err)

@@ -85,7 +85,7 @@ func (query GeofenceQueryBuilder) toCmd() cmd {
 }
 
 // Do cmd
-func (query GeofenceQueryBuilder) Do(ctx context.Context, handler func(*GeofenceEvent) error) error {
+func (query GeofenceQueryBuilder) Do(ctx context.Context, handler EventHandler) error {
 	cmd := query.toCmd()
 	return query.client.ExecuteStream(ctx, rawEventHandler(handler), cmd.Name, cmd.Args...)
 }

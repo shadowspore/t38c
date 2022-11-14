@@ -25,7 +25,7 @@ func testGeofence(t *testing.T, client *t38c.Client) {
 
 	errOk := errors.New("success")
 	n := 0
-	handler := func(event *t38c.GeofenceEvent) error {
+	handler := t38c.EventHandlerFunc(func(event *t38c.GeofenceEvent) error {
 		b, err := json.Marshal(event)
 		if err != nil {
 			return err
@@ -60,7 +60,7 @@ func testGeofence(t *testing.T, client *t38c.Client) {
 
 		n++
 		return nil
-	}
+	})
 
 	err := client.Geofence.Nearby("geofence-test", 33, -112, 10000).
 		Actions(t38c.Enter, t38c.Exit).

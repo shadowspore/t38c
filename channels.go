@@ -32,7 +32,7 @@ func (ch *Channels) PDelChan(ctx context.Context, pattern string) error {
 }
 
 // PSubscribe subscribes the client to the given patterns.
-func (ch *Channels) PSubscribe(ctx context.Context, handler func(*GeofenceEvent) error, pattern string) error {
+func (ch *Channels) PSubscribe(ctx context.Context, handler EventHandler, pattern string) error {
 	return ch.client.ExecuteStream(ctx, rawEventHandler(handler), "PSUBSCRIBE", pattern)
 }
 
@@ -45,6 +45,6 @@ func (ch *Channels) SetChan(name string, query GeofenceQueryBuilder) SetChannelQ
 }
 
 // Subscribe subscribes the client to the specified Channels.
-func (ch *Channels) Subscribe(ctx context.Context, handler func(*GeofenceEvent) error, Channels ...string) error {
+func (ch *Channels) Subscribe(ctx context.Context, handler EventHandler, Channels ...string) error {
 	return ch.client.ExecuteStream(ctx, rawEventHandler(handler), "SUBSCRIBE", Channels...)
 }

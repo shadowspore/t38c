@@ -13,26 +13,26 @@ type field struct {
 	Value float64
 }
 
-// KeyStats struct
+// KeyStats is a tile38 key stats.
 type KeyStats struct {
 	InMemorySize int `json:"in_memory_size"`
 	NumObjects   int `json:"num_objects"`
 	NumPoints    int `json:"num_points"`
 }
 
-// Point struct
+// Point is a tile38 point.
 type Point struct {
 	Lat float64 `json:"lat"`
 	Lon float64 `json:"lon"`
 }
 
-// Bounds struct
+// Bounds is a tile38 bounds object.
 type Bounds struct {
 	SW Point `json:"sw"`
 	NE Point `json:"ne"`
 }
 
-// Object struct
+// Object is a tile38 object.
 type Object struct {
 	FeatureCollection *geojson.FeatureCollection `json:"featureCollection,omitempty"`
 	Feature           *geojson.Feature           `json:"feature,omitempty"`
@@ -40,7 +40,7 @@ type Object struct {
 	String            *string                    `json:"string,omitempty"`
 }
 
-// UnmarshalJSON ...
+// UnmarshalJSON unmarshals object from the given json data.
 func (ob *Object) UnmarshalJSON(data []byte) error {
 	res := gjson.ParseBytes(data)
 	objectType := res.Get("type")
@@ -63,7 +63,7 @@ func (ob *Object) UnmarshalJSON(data []byte) error {
 	return err
 }
 
-// SearchResponse struct
+// SearchResponse is a tile38 search response.
 type SearchResponse struct {
 	Cursor  int      `json:"cursor"`
 	Count   int      `json:"count"`
@@ -95,7 +95,7 @@ type SearchResponse struct {
 	IDs []string `json:"ids,omitempty"`
 }
 
-// OutputFormat ...
+// OutputFormat specifies expected format.
 type OutputFormat cmd
 
 var (
@@ -116,19 +116,19 @@ var (
 	}
 )
 
-// Meta struct
+// Meta is tile38 metadata.
 type Meta struct {
 	Name  string
 	Value string
 }
 
-// Hook struct
+// Hook represents tile38 channel.
 type Hook struct {
 	Endpoints []string `json:"endpoints"`
 	Chan
 }
 
-// Chan struct
+// Chan represents tile38 channel.
 type Chan struct {
 	Name    string            `json:"name"`
 	Key     string            `json:"key"`
@@ -136,7 +136,22 @@ type Chan struct {
 	Meta    map[string]string `json:"meta"`
 }
 
-// GeofenceEvent struct
+// EventHandler handles tile38 events.
+type EventHandler interface {
+	// HandleEvent handles tile38 event.
+	HandleEvent(event *GeofenceEvent) error
+}
+
+// EventHandlerFunc is an adapter to allow the use of
+// ordinary functions as tile38 event handlers.
+type EventHandlerFunc func(event *GeofenceEvent) error
+
+// HandleEvent handles tile38 event.
+func (e EventHandlerFunc) HandleEvent(event *GeofenceEvent) error {
+	return e(event)
+}
+
+// GeofenceEvent is a tile38 geofence event.
 type GeofenceEvent struct {
 	Command string             `json:"command"`
 	Hook    string             `json:"hook,omitempty"`
@@ -154,7 +169,7 @@ type GeofenceEvent struct {
 	Fields  map[string]float64 `json:"fields,omitempty"`
 }
 
-// RoamObject struct
+// RoamObject is a tile38 roam object.
 type RoamObject struct {
 	Key    string  `json:"key"`
 	ID     string  `json:"id"`
