@@ -13,7 +13,7 @@ See what [Tile38](https://tile38.com/) is all about.
 ### Installation
 
 ```
-go get github.com/xjem/t38c
+go get github.com/xjem/t38c@latest
 ```
 
 ### Basic example
@@ -34,15 +34,14 @@ func main() {
 	}
 	defer client.Close()
 
-	if err := client.Keys.Set("fleet", "truck1").Point(33.5123, -112.2693).Do(); err != nil {
+	if err := client.Keys.Set("fleet", "truck1").Point(33.5123, -112.2693).Do(context.TODO()); err != nil {
 		panic(err)
 	}
 
 	if err := client.Keys.Set("fleet", "truck2").Point(33.4626, -112.1695).
-		// optional params
-		Field("speed", 20).
-		Expiration(20).
-		Do(); err != nil {
+		Field("speed", 20). // optional
+		Expiration(20).     // optional
+		Do(context.TODO()); err != nil {
 		panic(err)
 	}
 
@@ -50,7 +49,8 @@ func main() {
 	response, err := client.Search.Nearby("fleet", 33.462, -112.268, 6000).
 		Where("speed", 0, 100).
 		Match("truck*").
-		Format(t38c.FormatPoints).Do()
+		Format(t38c.FormatPoints).
+		Do(context.TODO())
 	if err != nil {
 		panic(err)
 	}
