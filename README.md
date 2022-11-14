@@ -28,7 +28,7 @@ import (
 )
 
 func main() {
-	tile38, err := t38c.New(t38c.Config{
+	client, err := t38c.New(t38c.Config{
 		Address: "localhost:9851",
 		Debug:   true, // print queries to stdout
 	})
