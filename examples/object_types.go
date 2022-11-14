@@ -1,12 +1,14 @@
+//go:build ignore
 // +build ignore
 
 package main
 
 import (
+	"context"
 	"log"
 
-	"github.com/xjem/t38c"
 	geojson "github.com/paulmach/go.geojson"
+	"github.com/xjem/t38c"
 )
 
 func main() {
@@ -16,10 +18,10 @@ func main() {
 	}
 	defer tile38.Close()
 
-	tile38.Keys.Set("fleet", "truck1").Point(33.5123, -112.2693).Do()       // nolint:errcheck
-	tile38.Keys.Set("fleet", "truck1").PointZ(33.5123, -112.2693, 225).Do() // nolint:errcheck
-	tile38.Keys.Set("fleet", "truck1").Bounds(30, -110, 40, -100).Do()      // nolint:errcheck
-	tile38.Keys.Set("fleet", "truck1").Hash("9tbnthxzr").Do()               // nolint:errcheck
+	tile38.Keys.Set("fleet", "truck1").Point(33.5123, -112.2693).Do(context.TODO())
+	tile38.Keys.Set("fleet", "truck1").PointZ(33.5123, -112.2693, 225).Do(context.TODO())
+	tile38.Keys.Set("fleet", "truck1").Bounds(30, -110, 40, -100).Do(context.TODO())
+	tile38.Keys.Set("fleet", "truck1").Hash("9tbnthxzr").Do(context.TODO())
 
 	polygon := geojson.NewPolygonGeometry([][][]float64{
 		{
@@ -29,5 +31,5 @@ func main() {
 			{0, 0},
 		},
 	})
-	tile38.Keys.Set("city", "tempe").Geometry(polygon).Do() // nolint:errcheck
+	tile38.Keys.Set("city", "tempe").Geometry(polygon).Do(context.TODO())
 }

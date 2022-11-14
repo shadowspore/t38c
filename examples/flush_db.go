@@ -1,8 +1,10 @@
+//go:build ignore
 // +build ignore
 
 package main
 
 import (
+	"context"
 	"log"
 
 	"github.com/xjem/t38c"
@@ -14,7 +16,7 @@ import (
 *	Shows how to erase all data in Tile38
 *	database using the FLUSHDB command.
 *
-*/
+ */
 
 func main() {
 	// Variables to be used along the way.
@@ -31,30 +33,30 @@ func main() {
 	defer tile38.Close()
 
 	// Add a point named 'truck1' to a collection named 'first fleet'.
-	if err = tile38.Keys.Set("first fleet", "truck1").Point(33.5123, -112.2693).Do(); err != nil {
+	if err = tile38.Keys.Set("first fleet", "truck1").Point(33.5123, -112.2693).Do(context.TODO()); err != nil {
 		log.Fatal(err)
 	}
 
 	// Add a point named 'truck2' to a collection named 'second fleet'.
-	if err = tile38.Keys.Set("second fleet", "truck2").Point(23.6951, -92.3581).Do(); err != nil {
+	if err = tile38.Keys.Set("second fleet", "truck2").Point(23.6951, -92.3581).Do(context.TODO()); err != nil {
 		log.Fatal(err)
 	}
 
 	// Get all keys.
 	// Returns ["first fleet","second fleet"].
-	_, err = tile38.Keys.Keys("*")
+	_, err = tile38.Keys.Keys(context.TODO(), "*")
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	// Flush ALL data in Tile38 database.
-	if err = tile38.Server.FlushDB(); err != nil {
+	if err = tile38.Server.FlushDB(context.TODO()); err != nil {
 		log.Fatal(err)
 	}
 
 	// Get all keys again.
 	// Returns [].
-	_, err = tile38.Keys.Keys("*")
+	_, err = tile38.Keys.Keys(context.TODO(), "*")
 	if err != nil {
 		log.Fatal(err)
 	}

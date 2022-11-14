@@ -1,3 +1,4 @@
+//go:build ignore
 // +build ignore
 
 package main
@@ -18,9 +19,14 @@ func main() {
 	}
 	defer tile38.Close()
 
-	handler := func(event *t38c.GeofenceEvent) {
-		b, _ := json.Marshal(event)
+	handler := func(event *t38c.GeofenceEvent) error {
+		b, err := json.Marshal(event)
+		if err != nil {
+			return fmt.Errorf("marshal event: %w", err)
+		}
+
 		fmt.Printf("event: %s\n", b)
+		return nil
 	}
 
 	if err := tile38.Geofence.Nearby("fleet", 33.462, -112.268, 6000).

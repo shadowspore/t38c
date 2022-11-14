@@ -1,8 +1,10 @@
+//go:build ignore
 // +build ignore
 
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -20,15 +22,11 @@ func main() {
 
 	results, err := tile38.Search.Nearby("fleet", 33.462, -112.268, 6000).
 		Where("speed", 70, math.MaxInt32).
-		Match("truck*").Do()
+		Match("truck*").Do(context.TODO())
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	printJSON("nearby:", results)
-}
-
-func printJSON(msg string, data interface{}) {
-	b, _ := json.Marshal(data)
-	fmt.Printf("%s: %s\n", msg, b)
+	b, _ := json.Marshal(results)
+	fmt.Printf("nearby: %s\n", b)
 }

@@ -1,8 +1,10 @@
+//go:build ignore
 // +build ignore
 
 package main
 
 import (
+	"context"
 	"log"
 
 	"github.com/xjem/t38c"
@@ -20,12 +22,12 @@ func main() {
 		Point(33.5123, -112.2693).
 		Field("speed", 90).
 		Field("age", 21).
-		Do(); err != nil {
+		Do(context.TODO()); err != nil {
 		log.Fatal(err)
 	}
 
 	// To set a field when an object already exists:
-	if err := tile38.Keys.FSet("fleet", "truck1").Field("speed", 90).Do(); err != nil {
+	if err := tile38.Keys.FSet("fleet", "truck1").Field("speed", 90).Do(context.TODO()); err != nil {
 		log.Fatal(err)
 	}
 }
