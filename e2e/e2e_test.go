@@ -21,6 +21,9 @@ func TestE2E(t *testing.T) {
 	t.Run("TestWithin", func(t *testing.T) {
 		testWithin(t, client)
 	})
+	t.Run("TestGeofence", func(t *testing.T) {
+		testGeofence(t, client)
+	})
 }
 
 func skipE2E(tb testing.TB) {
