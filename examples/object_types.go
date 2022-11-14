@@ -7,7 +7,8 @@ import (
 	"context"
 	"log"
 
-	geojson "github.com/paulmach/go.geojson"
+	"github.com/paulmach/orb"
+	"github.com/paulmach/orb/geojson"
 	"github.com/xjem/t38c"
 )
 
@@ -26,12 +27,12 @@ func main() {
 	tile38.Keys.Set("fleet", "truck1").Bounds(30, -110, 40, -100).Do(context.TODO())
 	tile38.Keys.Set("fleet", "truck1").Hash("9tbnthxzr").Do(context.TODO())
 
-	polygon := geojson.NewPolygonGeometry([][][]float64{
-		{
-			{0, 0},
-			{10, 10},
-			{10, 0},
-			{0, 0},
+	polygon := geojson.NewGeometry(orb.Polygon{
+		orb.Ring{
+			orb.Point{0, 0},
+			orb.Point{10, 10},
+			orb.Point{10, 0},
+			orb.Point{0, 0},
 		},
 	})
 	tile38.Keys.Set("city", "tempe").Geometry(polygon).Do(context.TODO())
