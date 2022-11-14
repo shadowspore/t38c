@@ -13,7 +13,10 @@ import (
 )
 
 func main() {
-	tile38, err := t38c.New("localhost:9851", t38c.Debug, t38c.SetPoolSize(10))
+	tile38, err := t38c.New(t38c.Config{
+		Address: "localhost:9851",
+		Debug:   true,
+	})
 	if err != nil {
 		log.Fatal(err)
 	}

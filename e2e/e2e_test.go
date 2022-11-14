@@ -12,7 +12,10 @@ import (
 func TestE2E(t *testing.T) {
 	skipE2E(t)
 
-	client, err := t38c.New(os.Getenv("T38C_TEST_ADDR"), t38c.Debug)
+	client, err := t38c.New(t38c.Config{
+		Address: os.Getenv("T38C_TEST_ADDR"),
+		Debug:   true,
+	})
 	require.NoError(t, err)
 
 	t.Run("TestKeys", func(t *testing.T) {

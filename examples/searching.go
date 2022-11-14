@@ -14,7 +14,10 @@ import (
 )
 
 func main() {
-	tile38, err := t38c.New("localhost:9851", t38c.Debug)
+	tile38, err := t38c.New(t38c.Config{
+		Address: "localhost:9851",
+		Debug:   true,
+	})
 	if err != nil {
 		log.Fatal(err)
 	}

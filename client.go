@@ -25,49 +25,33 @@ type Client struct {
 	Server    *Server
 }
 
-type clientParams struct {
-	debug    bool
-	password *string
-	poolSize int
-}
+// Config is a t38c client config.
+type Config struct {
+	// Tile38 server address.
+	//
+	// Example: localhost:9851
+	Address string
 
-// ClientOption ...
-type ClientOption func(*clientParams)
+	// Enables debug logging.
+	// Executed queries will be printed to stdout.
+	Debug bool
 
-// Debug option.
-var Debug = ClientOption(func(c *clientParams) {
-	c.debug = true
-})
+	// Allows to perform password authorization.
+	Password *string
 
-// WithPassword option.
-func WithPassword(password string) ClientOption {
-	return func(c *clientParams) {
-		c.password = &password
-	}
-}
-
-// SetPoolSize option.
-func SetPoolSize(size int) ClientOption {
-	return func(c *clientParams) {
-		c.poolSize = size
-	}
+	// ConnectionPoolSize sets number of connections in the pool.
+	// Defaults to 4.
+	ConnectionPoolSize int
 }
 
 // New creates a new Tile38 client.
-// By default uses redis pool with 5 connections.
-// In debug mode will also print commands which will be sent to the server.
-func New(addr string, opts ...ClientOption) (*Client, error) {
-	params := &clientParams{poolSize: 5}
-	for _, opt := range opts {
-		opt(params)
-	}
-
-	radixPool, err := transport.NewRadix(addr, params.poolSize, params.password)
+func New(cfg Config) (*Client, error) {
+	radixPool, err := transport.NewRadix(cfg.Address, cfg.ConnectionPoolSize, cfg.Password)
 	if err != nil {
 		return nil, err
 	}
 
-	return NewWithExecutor(radixPool, params.debug)
+	return NewWithExecutor(radixPool, cfg.Debug)
 }
 
 // NewWithExecutor creates a new Tile38 client with provided executor.

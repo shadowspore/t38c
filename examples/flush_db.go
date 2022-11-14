@@ -19,14 +19,11 @@ import (
  */
 
 func main() {
-	// Variables to be used along the way.
-	var (
-		err    error
-		tile38 *t38c.Client
-	)
-
 	// Create a Tile38 client.
-	tile38, err = t38c.New("localhost:9851", t38c.Debug)
+	tile38, err := t38c.New(t38c.Config{
+		Address: "localhost:9851",
+		Debug:   true,
+	})
 	if err != nil {
 		log.Fatal(err)
 	}
