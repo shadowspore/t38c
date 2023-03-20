@@ -1,4 +1,4 @@
-module github.com/xjem/t38c
+module github.com/sythang/t38c
 
 go 1.14
 
