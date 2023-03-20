@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 	geojson "github.com/paulmach/go.geojson"
-	"github.com/xjem/t38c"
+	"github.com/sythang/t38c"
 	"log"
 )
 
