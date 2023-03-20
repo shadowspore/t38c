@@ -101,7 +101,7 @@ func (client *Client) jExecute(ctx context.Context, resp interface{}, command st
 func (client *Client) Execute(ctx context.Context, command string, args ...string) ([]byte, error) {
 	resp, err := client.exec.Execute(ctx, command, args...)
 	if client.debug {
-		log.Printf("[%s]: %s", newCmd(command, args...).String(), resp)
+		log.Printf("\033[34m[%s]\u001B[0m: \u001B[32m%s\u001B[0m", newCmd(command, args...).String(), resp)
 	}
 
 	if err != nil {

@@ -149,3 +149,12 @@ func (query InwQueryBuilder) Format(fmt OutputFormat) InwQueryBuilder {
 	query.outputFormat = &fmt
 	return query
 }
+
+// RawQuery is similar to a Where clause, but it allows for the input of a raw query.
+// As of Tile38 1.30.0 FIELD is no longer limited to numbers.
+// Example can be searched for with `SCAN fleet WHERE driver.firstname == Josh IDS`
+// or `INTERSECTS fleet WHERE 'info.speed > 45 && info.age < 21' BOUNDS 30 -120 40 -100`
+func (query InwQueryBuilder) RawQuery(rawQuery string) InwQueryBuilder {
+	query.searchOpts.RawQuery = append(query.searchOpts.RawQuery, rawQuery)
+	return query
+}

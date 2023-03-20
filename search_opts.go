@@ -32,11 +32,16 @@ type searchOpts struct {
 	Wherein   []whereinOpt
 	Match     []string
 	WhereEval []whereEvalOpt
+	RawQuery  []string
 }
 
 func (opts searchOpts) Args() (args []string) {
 	for _, opt := range opts.Where {
 		args = append(args, "WHERE", opt.Field, floatString(opt.Min), floatString(opt.Max))
+	}
+
+	for _, opt := range opts.RawQuery {
+		args = append(args, "WHERE", opt)
 	}
 
 	for _, opt := range opts.Wherein {
